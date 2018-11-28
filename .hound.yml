@@ -1,0 +1,8 @@
+eslint:
+  enabled: true
+  config: .eslintrc.js
+
+fail_on_violations: true
+
+markdown:
+  enabled: true
