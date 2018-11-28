@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/andela/balder-ah-backend.svg?branch=master)](https://travis-ci.org/andela/balder-ah-backend)
+
 Authors Haven - A Social platform for the creative at heart.
 =======
 
