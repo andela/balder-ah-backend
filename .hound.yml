@@ -1,6 +1,6 @@
 eslint:
   enabled: true
-  config: .eslintrc.js
+  config_file: .eslintrc
 
 fail_on_violations: true
 

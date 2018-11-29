@@ -1,9 +1,9 @@
-const express = require('express');
+import express from 'express';
+import registerMiddlewares from './middlewares';
+import { User } from './db/models';
 
 const app = express();
 const PORT = process.env.PORT || 3000;
-const registerMiddlewares = require('./middlewares');
-const { User } = require('./db/models');
 
 registerMiddlewares(app);
 
