@@ -1,0 +1,19 @@
+{
+  "name": "balder-ah-backend-pip",
+  "scripts": {},
+  "env": {
+    "NPM_CONFIG_PRODUCTION": {
+      "required": false
+    },
+    "YARN_PRODUCTION": {
+      "required": false
+    }
+  },
+  "formation": {
+    "web": {
+      "quantity": 1
+    }
+  },
+  "addons": ["heroku-postgresql"],
+  "buildpacks": []
+}
