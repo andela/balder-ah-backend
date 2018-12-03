@@ -1,16 +1,16 @@
 import express from 'express';
+import { userRouter, otherRouter } from './routes';
 import registerMiddlewares from './middlewares';
-import { User } from './db/models';
 
 const app = express();
 const PORT = process.env.PORT || 3000;
 
 registerMiddlewares(app);
 
-// this tests that db is connected and models are working as expected
-// TODO: should be removed
-app.get('*', (req, res) => User.all()
-  .then(users => res.send(users))
-  .catch(err => res.send(err.message)));
+app.use('/api', userRouter);
+
+app.use('/', otherRouter);
 
 const server = app.listen(PORT, () => console.log(`Server listening on port ${server.address().port}`));
+
+export default app;
