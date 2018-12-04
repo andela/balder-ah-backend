@@ -1,7 +1,7 @@
 import userRouter from './users';
-import otherRouter from './others';
+import articlesRouter from './articles';
 
 export {
   userRouter,
-  otherRouter
+  articlesRouter,
 };

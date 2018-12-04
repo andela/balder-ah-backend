@@ -3,7 +3,6 @@ import user from '../db/models';
 import { generateToken } from '../middlewares/authentication';
 
 const { User } = user;
-
 /**
   * @description class representing User Authentication
   *
@@ -22,7 +21,7 @@ class userHandler {
     * @memberof UserHandler
     */
   static async registerUser(request, response) {
-    const { username, email } = request.body;
+    const { username, email, rememberMe } = request.body;
     const password = bcrypt.hashSync(request.body.password, 10);
     try {
       const userInfo = await User.create({
@@ -35,7 +34,11 @@ class userHandler {
         username: userInfo.username
       };
       const time = {};
-      time.expiresIn = '24h';
+      if (!rememberMe) {
+        time.expiresIn = '24h';
+      } else {
+        time.expiresIn = '240h';
+      }
       const token = generateToken(payload, time);
       response.status(201)
         .json({
@@ -43,7 +46,7 @@ class userHandler {
           token
         });
     } catch (error) {
-      response.status(500)
+      return response.status(500)
         .json({
           status: 'Fail',
           error
@@ -52,7 +55,7 @@ class userHandler {
   }
 
   /**
-  * @description - This method is responsible for logging in users
+  * @description - This method is responsible for loggin in users
   *
   * @static
   * @param {object} request - Request sent to the router

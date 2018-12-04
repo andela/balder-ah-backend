@@ -1,5 +1,8 @@
 import jwt from 'jsonwebtoken';
+import Models from '../db/models'
 import 'dotenv/config';
+
+const { Article } = Models;
 
 /**
   * @description class representing User Authentication with JWT
@@ -64,11 +67,43 @@ class VerifyUser {
       return next();
     });
   }
+
+  /**
+    * @description - This method is responsible for checking if a user is valid
+    *
+    * @static
+    * @param {object} request - Request sent to the router
+    * @param {object} response - Response sent from the controller
+    * @param {object} next - callback function to transfer to the next method
+    *
+    * @returns {object} - object representing response message
+    *
+    * @memberof VerifyUser
+    */
+  static async checkUser(request, response, next) {
+    const { slug } = request.params;
+    const findArticle = await Article.findOne({
+      where: {
+        slug
+      }
+    });
+    const userId = findArticle.dataValues.id;
+    const decodedId = parseInt(request.userData.payload.id, 10);
+    const newId = parseInt(userId, 10);
+    if (decodedId === newId) {
+      return next();
+    }
+    return response.status(403).json({
+      status: 'Fail',
+      message: 'You are not allowed to perform this action',
+    });
+  }
 }
 
-const { generateToken, verifyToken } = VerifyUser;
+const { generateToken, verifyToken, checkUser } = VerifyUser;
 
 export {
   generateToken,
-  verifyToken
+  verifyToken,
+  checkUser
 };

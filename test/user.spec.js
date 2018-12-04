@@ -1,8 +1,9 @@
 import chai from 'chai';
 import chaiHttp from 'chai-http';
 import server from '../src/server';
+
 import {
-  successfulSignup, successfulLogin, nonExistingEmail, incorrectPassword
+  successfulSignup1, successfulLogin, nonExistingEmail, incorrectPassword
 } from '../src/db/seeders/user';
 
 const { expect } = chai;
@@ -13,7 +14,7 @@ describe('Test for user signup', () => {
   it('Should return 201 for success', async () => {
     const response = await chai.request(server)
       .post('/api/users/signup')
-      .send(successfulSignup);
+      .send(successfulSignup1);
     expect(response).to.have.status(201);
     expect(response.body.message).to.be.a('string');
     expect(response.body).to.have.property('token');

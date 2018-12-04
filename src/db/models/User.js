@@ -37,8 +37,8 @@ export default (sequelize, DataTypes) => {
       allowNull: true
     },
   });
-
-  User.associate = () => {};
-
+  User.associate = (models) => {
+    User.hasMany(models.Article, { foreignKey: 'userId', as: 'author' });
+  };
   return User;
 };
