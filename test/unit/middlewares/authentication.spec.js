@@ -2,10 +2,7 @@ import chai, { expect } from 'chai';
 import sinon from 'sinon';
 import sinonChai from 'sinon-chai';
 import jwt from 'jsonwebtoken';
-import {
-  verifyToken,
-  generateToken
-} from '../../../src/middlewares/authentication';
+import { verifyToken, generateToken } from '../../../src/middlewares/authentication';
 
 chai.should();
 chai.use(sinonChai);
@@ -55,7 +52,7 @@ describe('VerifyUser', () => {
       };
       const errorMsg = {
         status: 'Fail',
-        message: 'No token supplied'
+        message: 'No token supplied, please login or signup'
       };
 
       const next = sinon.spy();
@@ -122,9 +119,8 @@ describe('VerifyUser', () => {
       sinon.stub(response, 'status').returnsThis();
 
       // wait 5seconds after token has expired
-      setTimeout(done => {
+      setTimeout((done) => {
         verifyToken(request, response, next);
-
         expect(next.calledOnce).to.be.false;
         response.status.should.have.been.calledWith(403);
         done();

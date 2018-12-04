@@ -26,13 +26,13 @@ const badTitle = {
   title: 'M',
   description: 'Emeka Disappoinment',
   body: 'I will always do it'
-}
+};
 
 const badDescription = {
   title: 'Testing Microphone',
   description: 'Re',
   body: 'Check them out'
-}
+};
 
 export {
   createArticle,

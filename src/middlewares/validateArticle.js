@@ -1,4 +1,4 @@
-export const checkInput = (request, response, next) => {
+const checkInput = (request, response, next) => {
   const {
     title,
     description,
@@ -24,3 +24,5 @@ export const checkInput = (request, response, next) => {
   }
   return next();
 };
+
+export default checkInput;

@@ -1,8 +1,9 @@
 import { compareSync } from 'bcrypt';
-import { User } from '../db/models';
+import models from '../db/models';
 import { generateToken } from '../middlewares/authentication';
 import errorResponse from '../helpers';
 
+const { User } = models;
 /**
  * @description class representing User Authentication
  *
@@ -51,14 +52,12 @@ class userHandler {
           );
       }
     } catch ({ errors: validationErrors }) {
-      response
-        .status(400)
-        .send(errorResponse([...validationErrors.map(error => error.message)]));
+      response.status(400).send(errorResponse([...validationErrors.map(error => error.message)]));
     }
   }
 
   /**
-   * @description - This method is responsible for loggin in users
+   * @description - This method is responsible for logging in users
    *
    * @static
    * @param {object} request - Request sent to the router
@@ -98,7 +97,6 @@ class userHandler {
       } else {
         time.expiresIn = '240h';
       }
-
       try {
         const token = generateToken(payload, time);
         response.status(200).json({
@@ -106,14 +104,12 @@ class userHandler {
           token
         });
       } catch (error) {
-        res
-          .status(500)
-          .send(errorResponse(['Failed to generate token for user']));
+        response.status(500).send(errorResponse(['Failed to generate token for user']));
       }
     } catch (error) {
       response.status(500).json({
         status: 'Fail',
-        error
+        error: error.message
       });
     }
   }

@@ -1,14 +1,11 @@
 import chai, { expect } from 'chai';
 import chaiHttp from 'chai-http';
-import server from '../../../../src/server';
 import sinon from 'sinon';
 import sinonChai from 'sinon-chai';
-import { User, Article } from '../../../../src/db/models';
+import server from '../../../../src/server';
+import models from '../../../../src/db/models';
 import { createArticle } from '../../../../src/db/seeders/articles';
-import {
-  successfulLogin,
-  successfulSignup
-} from '../../../../src/db/seeders/user';
+import { loginData, successfulSignup } from '../../../../src/db/seeders/user';
 import ArticleController from '../../../../src/controllers/article';
 import ArticleModel from '../../../../src/helpers/articles';
 import { checkUser } from '../../../../src/middlewares/authentication';
@@ -17,6 +14,7 @@ chai.use(chaiHttp);
 chai.use(sinonChai);
 
 let request;
+const { User, Article } = models;
 const articlesEndpoint = '/api/articles';
 const loginEndpoint = '/api/users/login';
 const signupEndpoint = '/api/users/signup';
@@ -32,18 +30,23 @@ describe('Article Controller', () => {
 
     await request.post(signupEndpoint).send(successfulSignup);
 
-    const loginResponnse = await request
-      .post(loginEndpoint)
-      .send(successfulLogin);
-    token = loginResponnse.body.token;
+    const loginResponnse = await request.post(loginEndpoint).send(loginData);
+    const { body: responseBody } = loginResponnse;
+    const { token: responseToken } = responseBody;
 
-    const result = await request
+    token = responseToken;
+
+    const createArticleResponse = await request
       .post(articlesEndpoint)
       .set('Authorization', token)
       .send(createArticle);
 
-    newArticle = result.body.newArticle;
-    slug = newArticle.slug;
+    const { body: newArticleResponse } = createArticleResponse;
+    const { newArticle: createdArticle } = newArticleResponse;
+
+    newArticle = createdArticle;
+    const { slug: articleSlug } = newArticle;
+    slug = articleSlug;
   });
 
   afterEach(() => {
@@ -60,7 +63,7 @@ describe('Article Controller', () => {
 
   describe('createArticle', () => {
     it('ecnounter server error creating article', async () => {
-      const request = {
+      const newRequest = {
         body: { title: 'A nice blog post' },
         userData: { payload: { id: 4000 } }
       };
@@ -73,7 +76,7 @@ describe('Article Controller', () => {
 
       sinon.stub(response, 'status').returnsThis();
 
-      await ArticleController.createArticle(request, response);
+      await ArticleController.createArticle(newRequest, response);
 
       response.status.should.have.been.calledOnce;
       response.status.should.have.been.calledWith(500);
@@ -82,7 +85,7 @@ describe('Article Controller', () => {
 
   describe('getAllArticles()', () => {
     it('should fail to get all articles', async () => {
-      const request = {};
+      const newRequest = {};
       const response = {
         status: sinon.stub().returnsThis(),
         json: () => {}
@@ -90,14 +93,14 @@ describe('Article Controller', () => {
 
       stubList.push(sinon.stub(ArticleModel, 'getAllArticle').returns(false));
 
-      await ArticleController.getAllArticles(request, response);
+      await ArticleController.getAllArticles(newRequest, response);
 
       response.status.should.have.been.calledOnce;
       response.status.should.have.been.calledWith(404);
     });
 
     it('should throw 500 getting all articles', async () => {
-      const request = {};
+      const newRequest = {};
       const response = {
         status: sinon.stub().returnsThis(),
         json: () => {}
@@ -105,7 +108,7 @@ describe('Article Controller', () => {
 
       stubList.push(sinon.stub(ArticleModel, 'getAllArticle').throws());
 
-      await ArticleController.getAllArticles(request, response);
+      await ArticleController.getAllArticles(newRequest, response);
 
       response.status.should.have.been.calledOnce;
       response.status.should.have.been.calledWith(500);
@@ -114,7 +117,7 @@ describe('Article Controller', () => {
 
   describe('updateArticles()', () => {
     it('should error 404 for invalid slug', async () => {
-      const request = {
+      const newRequest = {
         params: {
           slug: 11
         }
@@ -129,14 +132,14 @@ describe('Article Controller', () => {
       stubList.push(sinon.stub(ArticleModel, 'queryForArticle').returns(false));
       sinon.stub(response, 'status').returnsThis();
 
-      await ArticleController.updateArticle(request, response);
+      await ArticleController.updateArticle(newRequest, response);
 
       response.status.should.have.been.calledOnce;
       response.status.should.have.been.calledWith(404);
     });
 
     it('encounter server error updating article', async () => {
-      const request = {
+      const newRequest = {
         body: {
           title: () => {}
         }
@@ -149,7 +152,7 @@ describe('Article Controller', () => {
 
       sinon.stub(response, 'status').returnsThis();
 
-      await ArticleModel.update(request, response, {}, slug);
+      await ArticleModel.update(newRequest, response, {}, slug);
 
       response.status.should.have.been.calledOnce;
       response.status.should.have.been.calledWith(500);
@@ -158,7 +161,7 @@ describe('Article Controller', () => {
 
   describe('getArticle()', () => {
     it('should encounter server error 500', async () => {
-      const request = {
+      const newRequest = {
         params: {
           slug: 11
         }
@@ -170,12 +173,10 @@ describe('Article Controller', () => {
         json() {}
       };
 
-      stubList.push(
-        sinon.stub(ArticleModel, 'getOneArticle').throwsException()
-      );
+      stubList.push(sinon.stub(ArticleModel, 'getOneArticle').throwsException());
       sinon.stub(response, 'status').returnsThis();
 
-      await ArticleController.getArticle(request, response);
+      await ArticleController.getArticle(newRequest, response);
 
       response.status.should.have.been.calledOnce;
       response.status.should.have.been.calledWith(500);
@@ -184,7 +185,7 @@ describe('Article Controller', () => {
 
   describe('deleteArticle()', () => {
     it('should not find article', async () => {
-      const request = {
+      const newRequest = {
         params: {
           slug: 11
         }
@@ -199,14 +200,14 @@ describe('Article Controller', () => {
       stubList.push(sinon.stub(ArticleModel, 'queryForArticle').returns(false));
       sinon.stub(response, 'status').returnsThis();
 
-      await ArticleController.deleteArticle(request, response);
+      await ArticleController.deleteArticle(newRequest, response);
 
       response.status.should.have.been.calledOnce;
       response.status.should.have.been.calledWith(404);
     });
 
     it('throws error deleting article', async () => {
-      const request = {
+      const newRequest = {
         params: {
           slug: 11
         }
@@ -223,7 +224,7 @@ describe('Article Controller', () => {
 
       sinon.stub(response, 'status').returnsThis();
 
-      await ArticleController.deleteArticle(request, response);
+      await ArticleController.deleteArticle(newRequest, response);
 
       response.status.should.have.been.calledOnce;
       response.status.should.have.been.calledWith(500);
@@ -233,7 +234,7 @@ describe('Article Controller', () => {
   describe('VerifyUser', () => {
     describe('checkUser()', () => {
       it('should check if user is article owner', async () => {
-        const request = {
+        const newRequest = {
           params: {
             slug
           },
@@ -252,7 +253,7 @@ describe('Article Controller', () => {
         sinon.stub(response, 'status').returnsThis();
         const next = sinon.spy();
 
-        await checkUser(request, response, next);
+        await checkUser(newRequest, response, next);
 
         response.status.should.have.been.calledOnce;
         response.status.should.have.been.calledWith(403);

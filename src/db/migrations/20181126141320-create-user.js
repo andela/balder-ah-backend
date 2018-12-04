@@ -9,16 +9,24 @@ export default {
     username: {
       type: Sequelize.STRING,
       unique: true,
-      allowNull: false,
+      allowNull: false
     },
     email: {
       type: Sequelize.STRING,
       unique: true,
-      allowNull: false,
+      allowNull: false
     },
     password: {
       type: Sequelize.STRING,
-      allowNull: false,
+      allowNull: false
+    },
+    bio: {
+      type: Sequelize.STRING,
+      allowNull: true
+    },
+    image: {
+      type: Sequelize.STRING,
+      allowNull: true
     },
     createdAt: {
       allowNull: false,

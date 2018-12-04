@@ -2,7 +2,7 @@ import express from 'express';
 import ArticleController from '../controllers/article';
 import verifySlug from '../middlewares/verifySlug';
 import { verifyToken, checkUser } from '../middlewares/authentication';
-import { checkInput } from '../middlewares/validateArticle';
+import checkInput from '../middlewares/validateArticle';
 
 const articlesRouter = express.Router();
 
