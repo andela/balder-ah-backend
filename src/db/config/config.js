@@ -25,7 +25,7 @@ module.exports = {
   test: {
     use_env_variable: 'DATABASE_URL',
     dialect: 'postgres',
-    logging: LOGGING === 'false' && true
+    logging: LOGGING === 'true' && true
   },
   production: {
     use_env_variable: 'DATABASE_URL'

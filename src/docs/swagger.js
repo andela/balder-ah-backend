@@ -169,7 +169,7 @@ export default {
         responses: {
           200: {
             description: '',
-            headers: {}
+            headers: {},
           }
         }
       },
@@ -189,7 +189,7 @@ export default {
         responses: {
           200: {
             description: '',
-            headers: {}
+            headers: {},
           }
         }
       }
@@ -246,7 +246,115 @@ export default {
         responses: {
           200: {
             description: '',
-            headers: {}
+            headers: {},
+          }
+        }
+      }
+    },
+    '/auth/facebook': {
+      get: {
+        tags: ['users', 'social'],
+        summary: 'Login/Signup to the app via facebook',
+        description: '',
+        produces: ['application/json'],
+        responses: {
+          201: {
+            description: 'signup successful',
+            schema: {
+              properties: {
+                message: {
+                  type: 'string'
+                },
+                token: {
+                  type: 'string'
+                }
+              }
+            }
+          },
+          200: {
+            description: 'login successful',
+            schema: {
+              properties: {
+                message: {
+                  type: 'string'
+                },
+                token: {
+                  type: 'string'
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    '/auth/google': {
+      get: {
+        tags: ['users', 'social'],
+        summary: 'Login/Signup to the app via google',
+        description: '',
+        produces: ['application/json'],
+        responses: {
+          201: {
+            description: 'signup successful',
+            schema: {
+              properties: {
+                message: {
+                  type: 'string'
+                },
+                token: {
+                  type: 'string'
+                }
+              }
+            }
+          },
+          200: {
+            description: 'login successful',
+            schema: {
+              properties: {
+                message: {
+                  type: 'string'
+                },
+                token: {
+                  type: 'string'
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    '/auth/twitter': {
+      get: {
+        tags: ['users', 'social'],
+        summary: 'Login/Signup to the app via twitter',
+        description: '',
+        produces: ['application/json'],
+        responses: {
+          201: {
+            description: 'signup successful',
+            schema: {
+              properties: {
+                message: {
+                  type: 'string'
+                },
+                token: {
+                  type: 'string'
+                }
+              }
+            }
+          },
+          200: {
+            description: 'login successful',
+            schema: {
+              properties: {
+                message: {
+                  type: 'string'
+                },
+                token: {
+                  type: 'string'
+                }
+              }
+            }
           }
         }
       }
@@ -420,6 +528,15 @@ export default {
           type: 'string'
         },
         image: {
+          type: 'string'
+        },
+        googleid: {
+          type: 'string'
+        },
+        facebookid: {
+          type: 'string'
+        },
+        twitterid: {
           type: 'string'
         },
         createdAt: {

@@ -18,7 +18,19 @@ export default {
     },
     password: {
       type: Sequelize.STRING,
-      allowNull: false
+      allowNull: true
+    },
+    googleid: {
+      type: Sequelize.STRING,
+      allowNull: true
+    },
+    facebookid: {
+      type: Sequelize.STRING,
+      allowNull: true
+    },
+    twitterid: {
+      type: Sequelize.STRING,
+      allowNull: true
     },
     bio: {
       type: Sequelize.STRING,
