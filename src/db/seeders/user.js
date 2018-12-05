@@ -1,4 +1,3 @@
-/* eslint-disable max-len */
 const successfulSignup = {
   email: 'marc@gmail.com',
   username: 'marcus',

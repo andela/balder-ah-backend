@@ -1,5 +1,5 @@
 import express from 'express';
-import { userRouter, articlesRouter } from './routes';
+import { userRouter, articlesRouter, otherRouter } from './routes';
 import registerMiddlewares from './middlewares';
 
 const app = express();
@@ -9,8 +9,10 @@ registerMiddlewares(app);
 
 app.use('/api', userRouter);
 app.use('/api', articlesRouter);
+app.use('/', otherRouter);
 
-
-const server = app.listen(PORT, () => console.log(`Server listening on port ${server.address().port}`));
+const server = app.listen(PORT, () =>
+  console.log(`Server listening on port ${server.address().port}`)
+);
 
 export default app;

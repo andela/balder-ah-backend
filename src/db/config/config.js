@@ -4,7 +4,13 @@ const dotenv = require('dotenv');
 dotenv.config();
 
 const {
-  DB_USER, DB_PASSWORD, DB_NAME, DB_HOST, DB_PORT, DB_DIALECT
+  DB_USER,
+  DB_PASSWORD,
+  DB_NAME,
+  DB_HOST,
+  DB_PORT,
+  DB_DIALECT,
+  LOGGING
 } = process.env;
 
 module.exports = {
@@ -18,7 +24,8 @@ module.exports = {
   },
   test: {
     use_env_variable: 'DATABASE_URL',
-    dialect: 'postgres'
+    dialect: 'postgres',
+    logging: LOGGING === 'false' ? false : true
   },
   production: {
     use_env_variable: 'DATABASE_URL'

@@ -34,7 +34,7 @@ export default (sequelize, DataTypes) => {
       type: DataTypes.INTEGER
     }
   });
-  Article.associate = (models) => {
+  Article.associate = models => {
     Article.belongsTo(models.User, {
       foreignKey: 'userId',
       as: 'author'

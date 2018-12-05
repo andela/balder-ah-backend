@@ -1,43 +1,65 @@
+import bcrypt from 'bcrypt';
+
 export default (sequelize, DataTypes) => {
-  const User = sequelize.define('User', {
-    username: {
-      type: DataTypes.STRING,
-      allowNull: false,
-      unique: {
-        args: true,
-        msg: 'Username already in use'
-      },
-      validate: {
-        notEmpty: {
+  const User = sequelize.define(
+    'User',
+    {
+      username: {
+        type: DataTypes.STRING,
+        allowNull: false,
+        unique: {
           args: true,
-          msg: 'Username required!',
+          msg: 'Username is already taken'
         },
-      }
-    },
-    email: {
-      type: DataTypes.STRING,
-      allowNull: false,
-      unique: {
-        args: true,
-        msg: 'Email already in use'
+        validate: {
+          notEmpty: {
+            args: true,
+            msg: 'Please provide username'
+          }
+        }
       },
-      validate: {
-        notEmpty: {
+      email: {
+        type: DataTypes.STRING,
+        allowNull: false,
+        unique: {
           args: true,
-          msg: 'Email required!',
+          msg: 'Email address is already registered'
         },
-        isEmail: {
-          args: true,
-          msg: 'Invalid email format'
+        validate: {
+          notEmpty: {
+            args: true,
+            msg: 'Please provide email address'
+          },
+          isEmail: {
+            args: true,
+            msg: 'Email address is invalid'
+          }
+        }
+      },
+      password: {
+        type: DataTypes.STRING,
+        allowNull: true,
+        validate: {
+          isByteLength: {
+            args: 8,
+            msg: 'Password must be at least 8 characters long'
+          },
+          isAlphanumeric: {
+            msg: 'Password should be alphanumeric e.g. abc123'
+          }
         }
       }
     },
-    password: {
-      type: DataTypes.STRING,
-      allowNull: true
-    },
-  });
-  User.associate = (models) => {
+    {
+      hooks: {
+        beforeCreate(user) {
+          const rawPassword = user.password;
+          user.password = bcrypt.hashSync(rawPassword, 10);
+        }
+      }
+    }
+  );
+  User.associate = models => {
     User.hasMany(models.Article, { foreignKey: 'userId', as: 'author' });
   };
   return User;

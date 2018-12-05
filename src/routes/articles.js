@@ -16,10 +16,15 @@ const {
 
 const { slugChecker } = verifySlug;
 
-articlesRouter.get('/articles', getAllArticles);
-articlesRouter.get('/articles/:slug', verifyToken, slugChecker, getArticle);
-articlesRouter.post('/articles/', verifyToken, checkInput, createArticle);
-articlesRouter.put('/articles/:slug', verifyToken, slugChecker, checkUser, updateArticle);
-articlesRouter.delete('/articles/:slug', verifyToken, slugChecker, checkUser, deleteArticle);
+articlesRouter
+  .route('/articles')
+  .get(getAllArticles)
+  .post(verifyToken, checkInput, createArticle);
+
+articlesRouter
+  .route('/articles/:slug')
+  .get(verifyToken, slugChecker, getArticle)
+  .put(verifyToken, slugChecker, checkUser, updateArticle)
+  .delete(verifyToken, slugChecker, checkUser, deleteArticle);
 
 export default articlesRouter;
