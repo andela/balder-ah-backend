@@ -4,6 +4,7 @@ import sinon from 'sinon';
 import sinonChai from 'sinon-chai';
 import server from '../../../src/server';
 import models from '../../../src/db/models';
+import { generateToken } from '../../../src/middlewares/authentication';
 
 import {
   nonExistingEmail,
@@ -25,7 +26,12 @@ import {
   invalidImageUrl,
   noImageUpdate,
   noBioUpdate,
-  undefinedPassword
+  undefinedPassword,
+  resetPasswordSuccessful,
+  resetPasswordWithWrongEmail,
+  updatePasswordSuccessfully,
+  updateWithWrongPassword,
+  emptyResetEmail
 } from '../../../src/db/seeders/user';
 import { loginUser, registerUser } from '../../../src/controllers/users';
 
@@ -37,6 +43,8 @@ chai.use(sinonChai);
 
 let request;
 let jwtSecret;
+let resetToken;
+const time = { expiresIn: '24hr' };
 
 const signupEndpoint = '/api/users/signup';
 const loginEndpoint = '/api/users/login';
@@ -49,6 +57,7 @@ describe('Users Authentication', () => {
 
   before(() => {
     request = chai.request(server).keepOpen();
+    resetToken = generateToken({ payload: { ...successfulSignup } }, time);
   });
 
   after(async () => {
@@ -100,7 +109,7 @@ describe('Users Authentication', () => {
     it('should fail for password not being alphanumeric', async () => {
       const response = await request
         .post(signupEndpoint)
-        .send({ ...invalidUserData, password: '_abc' });
+        .send({ ...invalidUserData, password: '' });
 
       expectStatusCode(response);
       expectErrorMessage(response, 'Password should be alphanumeric e.g. abc123');
@@ -166,9 +175,9 @@ describe('Users Authentication', () => {
       };
 
       const response = {
-        status() {},
-        send() {},
-        json() {}
+        status() { },
+        send() { },
+        json() { }
       };
 
       sinon.stub(response, 'status').returnsThis();
@@ -187,9 +196,9 @@ describe('Users Authentication', () => {
       };
 
       const response = {
-        status() {},
-        send() {},
-        json() {}
+        status() { },
+        send() { },
+        json() { }
       };
 
       jwtSecret = process.env.TOKEN_SECRET_KEY;
@@ -212,9 +221,9 @@ describe('Users Authentication', () => {
       };
 
       const response = {
-        status() {},
-        send() {},
-        json() {}
+        status() { },
+        send() { },
+        json() { }
       };
 
       jwtSecret = process.env.TOKEN_SECRET_KEY;
@@ -433,6 +442,79 @@ describe('Users Authentication', () => {
         .to.be.an('object')
         .to.have.property('body')
         .to.contain('please enter a valid image URL');
+    });
+  });
+  describe('Test for creating password reset token', () => {
+    it('Should return 201 for success', async () => {
+      const response = await request.post(signupEndpoint).send(successfulSignup);
+      expect(response).to.have.status(201);
+      expect(response.body.message).to.be.a('string');
+      expect(response.body).to.have.property('token');
+    });
+    it('should return 200 for success', async () => {
+      const response = await chai.request(server)
+        .post('/api/users/resetpassword')
+        .send(resetPasswordSuccessful);
+      expect(response).to.have.status(200);
+      expect(response.body.status).to.equal('Success');
+      expect(response.body.message).to.be.a('string');
+      expect(response.body.message).to.equal('Password reset link has been sent to your mail');
+    });
+    it('should return 400 for wrong password reset email', async () => {
+      const response = await chai.request(server)
+        .post('/api/users/resetpassword')
+        .send(resetPasswordWithWrongEmail);
+      expect(response).to.have.status(400);
+      expect(response.body.status).to.equal('Fail');
+      expect(response.body.message).to.be.a('string');
+      expect(response.body.message).to.equal('The email does not exist, please sign up.');
+    });
+    it('should return 400 for empty email field', async () => {
+      const response = await chai.request(server)
+        .post('/api/users/resetpassword')
+        .send(emptyResetEmail);
+      expect(response).to.have.status(400);
+      expect(response.body.status).to.equal('Fail');
+      expect(response.body.message).to.be.a('string');
+      expect(response.body.message).to.equal('The email field cannot be empty');
+    });
+    it('should return 500 when email field is undefined', async () => {
+      const response = await chai.request(server)
+        .post('/api/users/resetpassword')
+        .send();
+      expect(response).to.have.status(500);
+      expect(response.body.status).to.equal('Error');
+    });
+  });
+  describe('Test for update user password', () => {
+    it('should return 200 for success', async () => {
+      const response = await chai.request(server)
+        .post('/api/users/updatepassword')
+        .query({ token: resetToken })
+        .send(updatePasswordSuccessfully);
+      expect(response).to.have.status(200);
+      expect(response.body.status).to.equal('Success');
+      expect(response.body.message).to.be.a('string');
+      expect(response.body.message).to.equal('Password updated successfully');
+    });
+    it('should return 400 for mismatching password', async () => {
+      updateWithWrongPassword.token = resetToken;
+      const response = await chai.request(server)
+        .post('/api/users/updatepassword')
+        .query({ token: resetToken })
+        .send(updateWithWrongPassword);
+      expect(response).to.have.status(400);
+      expect(response.body.status).to.equal('Fail');
+      expect(response.body.message).to.be.a('string');
+      expect(response.body.message).to.equal('The passwords do not match, confirm and type again.');
+    });
+    it('should return 500 when password fields are undefined', async () => {
+      const response = await chai.request(server)
+        .post('/api/users/updatepassword')
+        .query({ token: resetToken })
+        .send();
+      expect(response).to.have.status(500);
+      expect(response.body.status).to.equal('Error');
     });
   });
 });

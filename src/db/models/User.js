@@ -44,8 +44,11 @@ export default (sequelize, DataTypes) => {
             args: 8,
             msg: 'Password must be at least 8 characters long'
           },
-          isAlphanumeric: {
-            msg: 'Password should be alphanumeric e.g. abc123'
+          isAlphanumeric(value) {
+            value = value.trim();
+            if (!/[^\s\\]/.test(value)) {
+              throw new Error('Password should be alphanumeric e.g. abc123');
+            }
           }
         }
       },
@@ -59,19 +62,26 @@ export default (sequelize, DataTypes) => {
       },
       twitterid: {
         type: DataTypes.STRING,
-        allowNull: true
-      },
-      bio: {
-        type: DataTypes.STRING,
-        allowNull: true
-      },
-      image: {
-        type: DataTypes.STRING,
-        allowNull: true,
-        validate: {
-          isUrl: {
-            args: true,
-            msg: 'Invalid image format'
+        token: {
+          type: DataTypes.STRING,
+          allowNull: true
+        },
+        passwordExpiresIn: {
+          type: DataTypes.BIGINT,
+          allowNull: true
+        },
+        bio: {
+          type: DataTypes.STRING,
+          allowNull: true
+        },
+        image: {
+          type: DataTypes.STRING,
+          allowNull: true,
+          validate: {
+            isUrl: {
+              args: true,
+              msg: 'Invalid image format'
+            }
           }
         }
       },
@@ -88,6 +98,10 @@ export default (sequelize, DataTypes) => {
     {
       hooks: {
         beforeCreate(user) {
+          const rawPassword = user.password;
+          user.password = bcrypt.hashSync(rawPassword, 10);
+        },
+        beforeUpdate(user) {
           const rawPassword = user.password;
           user.password = bcrypt.hashSync(rawPassword, 10);
         }
