@@ -48,6 +48,20 @@ export default (sequelize, DataTypes) => {
             msg: 'Password should be alphanumeric e.g. abc123'
           }
         }
+      },
+      bio: {
+        type: DataTypes.STRING,
+        allowNull: true
+      },
+      image: {
+        type: DataTypes.STRING,
+        allowNull: true,
+        validate: {
+          isUrl: {
+            args: true,
+            msg: 'Invalid image format'
+          }
+        }
       }
     },
     {
@@ -59,7 +73,7 @@ export default (sequelize, DataTypes) => {
       }
     }
   );
-  User.associate = models => {
+  User.associate = (models) => {
     User.hasMany(models.Article, { foreignKey: 'userId', as: 'author' });
   };
   return User;

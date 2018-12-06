@@ -10,7 +10,7 @@ const {
   DB_HOST,
   DB_PORT,
   DB_DIALECT,
-  LOGGING
+  LOGGING,
 } = process.env;
 
 module.exports = {
@@ -25,7 +25,7 @@ module.exports = {
   test: {
     use_env_variable: 'DATABASE_URL',
     dialect: 'postgres',
-    logging: LOGGING === 'false' ? false : true
+    logging: LOGGING === 'false' && true
   },
   production: {
     use_env_variable: 'DATABASE_URL'

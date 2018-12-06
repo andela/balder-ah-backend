@@ -7,7 +7,7 @@ const { APP_BASE_URL } = process.env;
 export default {
   swagger: '2.0',
   info: {
-    description: `Welcome to Authors Haven's API documentation. The base url for the API is ${APP_BASE_URL}/api`,
+    description: `Welcome to the documentation of Authors Haven API. The base url for working with this api is ${APP_BASE_URL}/api`,
     version: '1.0.0',
     title: 'Authors Haven API',
     contact: {
@@ -26,11 +26,15 @@ export default {
   tags: [
     {
       name: 'users',
-      description: 'The users of Author\'s Haven'
+      description: "The users of Author's Haven"
     },
     {
       name: 'articles',
       description: 'The articles created by Author\'s Haven users'
+    },
+    {
+      name: 'profiles',
+      description: 'The details of the users of Author\'s Haven'
     }
   ],
   schemes: ['https', 'http'],
@@ -101,7 +105,7 @@ export default {
             description: 'Existing user that want to login',
             schema: {
               properties: {
-                username: {
+                email: {
                   required: true,
                   type: 'string'
                 },
@@ -163,14 +167,12 @@ export default {
           }
         ],
         responses: {
-          '200': {
+          200: {
             description: '',
             headers: {}
           }
         }
-      }
-    },
-    '/articles': {
+      },
       get: {
         summary: 'Get all article',
         operationId: 'ArticlesGet',
@@ -185,7 +187,7 @@ export default {
           }
         ],
         responses: {
-          '200': {
+          200: {
             description: '',
             headers: {}
           }
@@ -199,14 +201,12 @@ export default {
         produces: ['application/json'],
         parameters: [],
         responses: {
-          '200': {
+          200: {
             description: '',
             headers: {}
           }
         }
-      }
-    },
-    '/articles/slug': {
+      },
       put: {
         summary: 'Update an article',
         operationId: 'ArticlesUserIdSlugPut',
@@ -230,7 +230,7 @@ export default {
           }
         ],
         responses: {
-          '200': {
+          200: {
             description: '',
             headers: {}
           }
@@ -244,10 +244,153 @@ export default {
         produces: ['application/json'],
         parameters: [],
         responses: {
-          '200': {
+          200: {
             description: '',
             headers: {}
           }
+        }
+      }
+    },
+    '/user': {
+      get: {
+        tags: ['users, profile'],
+        summary: 'Gets the profile/details of the currently logged in user',
+        description: '',
+        parameters: [],
+        produces: ['application/json'],
+        responses: {
+          200: {
+            description: 'Retrieved user successfully',
+            schema: {
+              properties: {
+                status: {
+                  type: 'string'
+                },
+                message: {
+                  type: 'string'
+                },
+                currentUser: {
+                  type: 'object',
+                  properties: {
+                    username: { type: 'string' },
+                    email: { type: 'string' },
+                    bio: { type: 'string' },
+                    image: { type: 'string' }
+                  }
+                }
+              },
+              example: {
+                status: 'Success',
+                message: 'Retrieved user successfully',
+                currentUser: {
+                  username: 'testuser',
+                  email: 'test@mailinator.com',
+                  bio: null,
+                  image: null
+                }
+              }
+            }
+          },
+          400: {
+            description: 'Validation exception'
+          }
+        }
+      },
+      put: {
+        tags: ['users, profile'],
+        summary: 'Gets the profile/details of the currently logged in user',
+        description: '',
+        parameters: [
+          {
+            name: 'user',
+            in: 'body',
+            description: 'User object that is to be updated',
+            schema: {
+              properties: {
+                username: {
+                  required: true,
+                  type: 'string'
+                },
+                email: {
+                  required: true,
+                  type: 'string'
+                },
+                bio: {
+                  required: true,
+                  type: 'string'
+                },
+                image: {
+                  required: true,
+                  type: 'string'
+                }
+              }
+            }
+          }
+        ],
+        produces: ['application/json'],
+        responses: {
+          200: {
+            description: 'Updated profile successfully',
+            schema: {
+              properties: {
+                status: {
+                  type: 'string'
+                },
+                message: {
+                  type: 'string'
+                }
+              },
+              example: {
+                status: 'Success',
+                message: 'Updated profile successfully'
+              }
+            }
+          },
+          400: {
+            description: 'Validation exception'
+          }
+        }
+      }
+    },
+    '/profiles/:username': {
+      tags: ['users, profile'],
+      summary: 'Get user profile',
+      description: '',
+      parameters: [],
+      produces: ['application/json'],
+      responses: {
+        200: {
+          description: 'Retrieved profile successfully',
+          schema: {
+            properties: {
+              status: {
+                type: 'string'
+              },
+              message: {
+                type: 'string'
+              },
+              userProfile: {
+                type: 'object',
+                properties: {
+                  username: { type: 'string' },
+                  bio: { type: 'string' },
+                  image: { type: 'string' }
+                }
+              }
+            },
+            example: {
+              status: 'Success',
+              message: 'Retrieved profile successfully',
+              userProfile: {
+                username: 'testuser',
+                bio: 'This is a short bio',
+                image: 'https://example.com/image.jpg'
+              }
+            }
+          }
+        },
+        404: {
+          description: 'User not found'
         }
       }
     }
@@ -255,6 +398,7 @@ export default {
   definitions: {
     users: {
       required: ['username', 'email', 'password'],
+      requiredForUpdate: ['email', 'username', 'bio', 'image'],
       properties: {
         id: {
           readOnly: true,
@@ -270,6 +414,12 @@ export default {
           uniqueItems: true
         },
         password: {
+          type: 'string'
+        },
+        bio: {
+          type: 'string'
+        },
+        image: {
           type: 'string'
         },
         createdAt: {

@@ -45,29 +45,24 @@ class VerifyUser {
     if (!token) {
       return response.status(403).json({
         status: 'Fail',
-        message: 'No token supplied'
+        message: 'No token supplied, please login or signup'
       });
     }
-
-    return jwt.verify(
-      token,
-      process.env.TOKEN_SECRET_KEY,
-      (error, userData) => {
-        if (error) {
-          if (error.message.includes('signature')) {
-            return response.status(403).json({
-              status: 'Fail',
-              message: 'Your input is not a JWT token'
-            });
-          }
+    return jwt.verify(token, process.env.TOKEN_SECRET_KEY, (error, userData) => {
+      if (error) {
+        if (error.message.includes('signature')) {
           return response.status(403).json({
-            message: error
+            status: 'Fail',
+            message: 'Your input is not a JWT token'
           });
         }
-        request.userData = userData;
-        return next();
+        return response.status(403).json({
+          message: error.message
+        });
       }
-    );
+      request.userData = userData;
+      return next();
+    });
   }
 
   /**
@@ -89,7 +84,7 @@ class VerifyUser {
         slug
       }
     });
-    const userId = findArticle.dataValues.id;
+    const { userId } = findArticle.dataValues;
     const decodedId = parseInt(request.userData.payload.id, 10);
     const newId = parseInt(userId, 10);
     if (decodedId === newId) {

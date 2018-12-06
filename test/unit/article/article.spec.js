@@ -1,12 +1,12 @@
 import chai from 'chai';
 import chaiHttp from 'chai-http';
 import server from '../../../src/server';
-import { User, Article } from '../../../src/db/models';
+import models from '../../../src/db/models';
 
 import {
   successfulSignup,
   successfulSignup2,
-  successfulLogin,
+  loginData,
   successfulLogin2
 } from '../../../src/db/seeders/user';
 
@@ -18,6 +18,7 @@ import {
   badDescription
 } from '../../../src/db/seeders/articles';
 
+const { User, Article } = models;
 const { expect } = chai;
 
 chai.use(chaiHttp);
@@ -47,9 +48,7 @@ describe('Test for article', () => {
 
   describe('Test for user signup', () => {
     it('Should return 201 for success', async () => {
-      const response = await request
-        .post(signupEndpoint)
-        .send(successfulSignup);
+      const response = await request.post(signupEndpoint).send(successfulSignup);
 
       expect(response).to.have.status(201);
       expect(response.body.message).to.be.a('string');
@@ -57,9 +56,7 @@ describe('Test for article', () => {
     });
 
     it('Should return 201 for success', async () => {
-      const response = await request
-        .post(signupEndpoint)
-        .send(successfulSignup2);
+      const response = await request.post(signupEndpoint).send(successfulSignup2);
 
       expect(response).to.have.status(201);
       expect(response.body.message).to.be.a('string');
@@ -69,16 +66,14 @@ describe('Test for article', () => {
 
   describe('Test for no articles', () => {
     before(async () => {
-      const secondUser = await request
-        .post(loginEndpoint)
-        .send(successfulLogin2);
+      const secondUser = await request.post(loginEndpoint).send(successfulLogin2);
       secondUserToken = secondUser.body.token;
     });
   });
 
   describe('Test for creating articles', () => {
     before(async () => {
-      const firstUser = await request.post(loginEndpoint).send(successfulLogin);
+      const firstUser = await request.post(loginEndpoint).send(loginData);
       firstUserToken = firstUser.body.token;
     });
 
@@ -89,7 +84,6 @@ describe('Test for article', () => {
         .send(createArticle);
       // eslint-disable-next-line prefer-destructuring
       slug = response.body.newArticle.slug;
-
       expect(response.body)
         .to.have.property('message')
         .eql('Article created successfully');
@@ -151,26 +145,20 @@ describe('Test for article', () => {
 
       expect(response.body.status).to.be.equal('Fail');
       expect(response.status).to.equal(400);
-      expect(response.body.message).to.be.deep.equals(
-        'All fields are required'
-      );
+      expect(response.body.message).to.be.deep.equals('All fields are required');
     });
   });
 
   describe('Test for get articles', () => {
     before(async () => {
-      const secondUser = await request
-        .post(loginEndpoint)
-        .send(successfulLogin2);
+      const secondUser = await request.post(loginEndpoint).send(successfulLogin2);
       secondUserToken = secondUser.body.token;
     });
     it('should get all articles', async () => {
       const response = await request.get(articlesEndpoint);
 
       expect(response.body.status).to.be.equal('Success');
-      expect(response.body.message).to.be.deep.equals(
-        'All articles found successfully'
-      );
+      expect(response.body.message).to.be.deep.equals('All articles found successfully');
     });
 
     it('should get one article', async () => {
@@ -180,9 +168,7 @@ describe('Test for article', () => {
 
       expect(response.body.status).to.be.equal('Success');
       expect(response.status).to.equal(200);
-      expect(response.body.message).to.be.deep.equals(
-        'Article found successfully'
-      );
+      expect(response.body.message).to.be.deep.equals('Article found successfully');
     });
 
     it('should not get an unknown article', async () => {
@@ -198,14 +184,12 @@ describe('Test for article', () => {
 
   describe('Test for updating articles', () => {
     before(async () => {
-      const firstUser = await request.post(loginEndpoint).send(successfulLogin);
+      const firstUser = await request.post(loginEndpoint).send(loginData);
       firstUserToken = firstUser.body.token;
     });
 
     before(async () => {
-      const secondUser = await request
-        .post(loginEndpoint)
-        .send(successfulLogin2);
+      const secondUser = await request.post(loginEndpoint).send(successfulLogin2);
       secondUserToken = secondUser.body.token;
     });
 
@@ -214,11 +198,8 @@ describe('Test for article', () => {
         .put(`${articlesEndpoint}/${slug}`)
         .set('Authorization', firstUserToken)
         .send(updateArticle);
-
       expect(response.body.status).to.be.equal('Success');
-      expect(response.body.message).to.be.deep.equals(
-        'Article has been updated successfully'
-      );
+      expect(response.body.message).to.be.deep.equals('Article has been updated successfully');
     });
 
     it('should not update an unknown article', async () => {
@@ -245,14 +226,12 @@ describe('Test for article', () => {
 
   describe('Test for deleting articles', () => {
     before(async () => {
-      const firstUser = await request.post(loginEndpoint).send(successfulLogin);
+      const firstUser = await request.post(loginEndpoint).send(loginData);
       firstUserToken = firstUser.body.token;
     });
 
     before(async () => {
-      const secondUser = await request
-        .post(loginEndpoint)
-        .send(successfulLogin2);
+      const secondUser = await request.post(loginEndpoint).send(successfulLogin2);
       secondUserToken = secondUser.body.token;
     });
 
@@ -260,12 +239,9 @@ describe('Test for article', () => {
       const response = await request
         .delete(`${articlesEndpoint}/${slug}`)
         .set('Authorization', firstUserToken);
-
       expect(response.body.status).to.be.equal('Success');
       expect(response.status).to.equal(200);
-      expect(response.body.message).to.be.deep.equals(
-        'Article deleted successfully'
-      );
+      expect(response.body.message).to.be.deep.equals('Article deleted successfully');
     });
 
     it('should not delete an article', async () => {
