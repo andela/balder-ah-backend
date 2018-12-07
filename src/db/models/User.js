@@ -38,7 +38,7 @@ export default (sequelize, DataTypes) => {
       },
       password: {
         type: DataTypes.STRING,
-        allowNull: true,
+        allowNull: false,
         validate: {
           isByteLength: {
             args: 8,

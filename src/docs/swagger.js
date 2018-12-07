@@ -37,8 +37,8 @@ export default {
       description: "The details of the users of Author's Haven"
     },
     {
-      name: 'email verification',
-      description: "This verifies a newly registered user's email"
+      name: 'ratings',
+      description: 'The ratings posted on articles on Author\'s Haven'
     }
   ],
   schemes: ['https', 'http'],
@@ -242,7 +242,7 @@ export default {
     },
     '/verification': {
       get: {
-        tags: ['email, verification'],
+        tags: ['users, email'],
         summary: 'Verify a new user',
         description: '',
         parameters: [],
@@ -289,35 +289,41 @@ export default {
     },
     '/articles': {
       post: {
+        tags: ['articles'],
         summary: 'Create article',
-        operationId: 'ArticlesUserIdPost',
-        produces: ['application/json'],
+        description: '',
         parameters: [
           {
-            name: 'Body',
+            name: 'article',
             in: 'body',
             required: true,
             description: '',
             schema: {
-              $ref: '#/definitions/CreatearticleRequest'
+              title: {
+                required: true,
+                type: 'string'
+              },
+              description: {
+                required: true,
+                type: 'string'
+              },
+              body: {
+                required: true,
+                type: 'string'
+              }
             }
-          },
-          {
-            name: 'Content-Type',
-            in: 'header',
-            required: true,
-            type: 'string',
-            description: ''
           }
         ],
+        produces: ['application/json'],
         responses: {
           200: {
             description: '',
-            headers: {}
+            schema: {}
           }
         }
       },
       get: {
+        tags: ['articles'],
         summary: 'Get all article',
         operationId: 'ArticlesGet',
         produces: ['application/json'],
@@ -373,6 +379,19 @@ export default {
             description: ''
           }
         ],
+        responses: {
+          200: {
+            description: '',
+            headers: {}
+          }
+        }
+      },
+      delete: {
+        tags: ['articles'],
+        summary: 'Delete an article',
+        operationId: 'UnnammedEndpointDelete',
+        produces: ['application/json'],
+        parameters: [],
         responses: {
           200: {
             description: '',
@@ -460,20 +479,6 @@ export default {
             required: true
           }
         ]
-      }
-    },
-    '//': {
-      delete: {
-        summary: 'Delete an article',
-        operationId: 'UnnammedEndpointDelete',
-        produces: ['application/json'],
-        parameters: [],
-        responses: {
-          200: {
-            description: '',
-            headers: {}
-          }
-        }
       }
     },
     '/auth/facebook': {
@@ -764,6 +769,12 @@ export default {
         twitterid: {
           type: 'string'
         },
+        isVerified: {
+          type: 'string'
+        },
+        emailtoken: {
+          type: 'string'
+        },
         createdAt: {
           readOnly: true,
           type: 'string'
@@ -774,14 +785,9 @@ export default {
         }
       }
     },
-    CreatearticleRequest: {
-      title: 'CreateArticleRequest',
-      example: {
-        title: 'Bootcamping',
-        description: 'I was too nervous',
-        body: 'Nah, I can become anything I want'
-      },
-      type: 'object',
+    articles: {
+
+      required: ['title', 'description', 'body'],
       properties: {
         title: {
           type: 'string'
@@ -791,30 +797,38 @@ export default {
         },
         body: {
           type: 'string'
+        },
+        userId: {
+          type: 'string'
+        },
+        createdAt: {
+          readOnly: true,
+          type: 'string'
+        },
+        updatedAt: {
+          readOnly: true,
+          type: 'string'
         }
-      },
-      required: ['title', 'description', 'body']
+      }
     },
-    UpdateanarticleRequest: {
-      title: 'UpdateaAarticleRequest',
-      example: {
-        title: '',
-        description: '',
-        body: ''
-      },
-      type: 'object',
+    ratings: {
+      required: ['rating', 'articleSlug'],
       properties: {
-        title: {
+        rating: {
           type: 'string'
         },
-        description: {
+        articleSlug: {
           type: 'string'
         },
-        body: {
+        createdAt: {
+          readOnly: true,
+          type: 'string'
+        },
+        updatedAt: {
+          readOnly: true,
           type: 'string'
         }
-      },
-      required: ['title', 'description', 'body']
+      }
     }
   }
 };

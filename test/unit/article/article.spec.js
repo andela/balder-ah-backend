@@ -15,7 +15,8 @@ import {
   updateArticle,
   inCompleteArticle,
   badTitle,
-  badDescription
+  badDescription,
+  rate2, rate4, rate5, rate6, emptyRating
 } from '../../../src/db/seeders/articles';
 
 const { User, Article } = models;
@@ -146,6 +147,83 @@ describe('Test for article', () => {
       expect(response.body.status).to.be.equal('Fail');
       expect(response.status).to.equal(400);
       expect(response.body.message).to.be.deep.equals('All fields are required');
+    });
+
+    describe('tests for article ratings', () => {
+      it('should rate an article', async () => {
+        const response = await request
+          .post(`${articlesEndpoint}/${slug}`)
+          .set('Authorization', firstUserToken)
+          .send(rate2);
+
+        expect(response.status).to.equal(201);
+        expect(response.body.message).to.be.deep.equals('Rating recorded successfully');
+        expect(response.body).to.be.a('object');
+        expect(response.body).to.have.property('result');
+        expect(response.body.result).to.have.property('rating');
+        expect(response.body.result.rating).to.be.deep.equals('2');
+      });
+      it('should rate an article', async () => {
+        const response = await request
+          .post(`${articlesEndpoint}/${slug}`)
+          .set('Authorization', firstUserToken)
+          .send(rate4);
+
+        expect(response.status).to.equal(201);
+        expect(response.body.message).to.be.deep.equals('Rating recorded successfully');
+        expect(response.body).to.be.a('object');
+        expect(response.body).to.have.property('result');
+        expect(response.body.result).to.have.property('rating');
+        expect(response.body.result.rating).to.be.deep.equals('4');
+      });
+
+      it('should rate an article', async () => {
+        const response = await request
+          .post(`${articlesEndpoint}/${slug}`)
+          .set('Authorization', firstUserToken)
+          .send(rate5);
+
+        expect(response.status).to.equal(201);
+        expect(response.body.message).to.be.deep.equals('Rating recorded successfully');
+        expect(response.body).to.be.a('object');
+        expect(response.body).to.have.property('result');
+        expect(response.body.result).to.have.property('rating');
+        expect(response.body.result.rating).to.be.deep.equals('5');
+      });
+
+      it('should get average rating on an article', async () => {
+        const articleRatingStar = (Number(rate2.rating)
+        + Number(rate4.rating) + Number(rate5.rating)) / 3;
+        const response = await request
+          .get(`${articlesEndpoint}/${slug}`)
+          .set('Authorization', firstUserToken);
+        expect(response.status).to.equal(200);
+        expect(response.body).to.have.property('articleRatingStar');
+        expect(response.body.articleRatingStar).to.be.deep.equals(articleRatingStar.toFixed(1));
+      });
+
+      it('should fail for undefined and empty rating', async () => {
+        const response = await request
+          .post(`${articlesEndpoint}/${slug}`)
+          .set('Authorization', firstUserToken)
+          .send(emptyRating);
+
+        expect(response.status).to.equal(400);
+        expect(response.body.errors).to.be.an('object')
+          .to.have.property('body')
+          .to.contain('please add a rating parameter');
+      });
+
+      it('should fail for rating beyond 5 or non-integer', async () => {
+        const response = await request
+          .post(`${articlesEndpoint}/${slug}`)
+          .set('Authorization', firstUserToken)
+          .send(rate6);
+        expect(response.status).to.equal(400);
+        expect(response.body.errors).to.be.an('object')
+          .to.have.property('body')
+          .to.contain('rating should be a positive integer between 1 to 5');
+      });
     });
   });
 

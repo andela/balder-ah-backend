@@ -34,11 +34,33 @@ const badDescription = {
   body: 'Check them out'
 };
 
+const rate2 = {
+  rating: '2'
+};
+
+const rate4 = {
+  rating: '4'
+};
+
+const rate5 = {
+  rating: '5'
+};
+
+const rate6 = {
+  rating: '6j'
+};
+
+const emptyRating = {
+  rating: ''
+};
+
 export {
   createArticle,
   createArticle2,
   updateArticle,
   inCompleteArticle,
   badTitle,
-  badDescription
+  badDescription,
+  rate2, rate4, rate5,
+  rate6, emptyRating
 };

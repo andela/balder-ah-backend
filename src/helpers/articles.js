@@ -7,6 +7,12 @@ const { Article } = Models;
  * @class ArticleModel
  */
 class ArticleModel {
+  /**
+   * @description - This method is responsible for quering the database for an article
+   * @static
+   * @returns {object} - object representing response message
+   * @memberof ArticleModel
+   */
   static async createArticle(...args) {
     const newArticle = await Article.create(...args);
     return newArticle;
@@ -35,6 +41,14 @@ class ArticleModel {
     return allArticle;
   }
 
+  /**
+   * @description - This method is responsible for quering the database for an article
+   * @static
+   * @param {object} slug - Request sent to the middleware
+   * @param {object} response - Response sent from the controller
+   * @returns {object} - object representing response message
+   * @memberof ArticleModel
+   */
   static async getOneArticle(slug) {
     const oneArticle = await Article.findOne({
       where: {
@@ -56,7 +70,7 @@ class ArticleModel {
   /**
    * @description - This method is responsible for quering the database for an article
    * @static
-   * @param {object} request - Request sent to the router
+   * @param {object} slug - Request sent to the middleware
    * @param {object} response - Response sent from the controller
    * @returns {object} - object representing response message
    * @memberof ArticleModel
@@ -78,6 +92,8 @@ class ArticleModel {
    * @static
    * @param {object} request - Request sent to the router
    * @param {object} response - Response sent from the controller
+   * @param {object} data - Request sent to the middleware
+   * @param {object} slug - Request sent to the middleware
    * @returns {object} - object representing response message
    * @memberof ArticleModel
    */
@@ -116,7 +132,7 @@ class ArticleModel {
   /**
    * @description - This method is responsible for querying the database to delete exising articles
    * @static
-   * @param {object} request - Request sent to the router
+   * @param {object} slug - Request sent to the middleware
    * @param {object} response - Response sent from the controller
    * @returns {object} - object representing response message
    * @memberof ArticleModel
@@ -131,10 +147,9 @@ class ArticleModel {
   }
 
   /**
-   * @description - This method is responsible for querting the database to check if a slug exists
+   * @description - This method is responsible for querying the database to check if a slug exists
    * @static
-   * @param {object} request - Request sent to the router
-   * @param {object} response - Response sent from the controller
+   * @param {object} slug - Request sent to the middleware
    * @returns {object} - object representing response message
    * @memberof ArticleModel
    */
