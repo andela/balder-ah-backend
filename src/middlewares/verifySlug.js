@@ -5,6 +5,7 @@ const verifySlug = {
     const articleSlug = request.params.slug;
     const foundArticle = await ArticleModel.checkSlug(articleSlug);
     if (foundArticle.slug === articleSlug) {
+      request.article = foundArticle;
       return next();
     }
     return response.status(404).json({
