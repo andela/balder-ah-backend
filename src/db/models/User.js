@@ -49,6 +49,18 @@ export default (sequelize, DataTypes) => {
           }
         }
       },
+      googleid: {
+        type: DataTypes.STRING,
+        allowNull: true
+      },
+      facebookid: {
+        type: DataTypes.STRING,
+        allowNull: true
+      },
+      twitterid: {
+        type: DataTypes.STRING,
+        allowNull: true
+      },
       bio: {
         type: DataTypes.STRING,
         allowNull: true
