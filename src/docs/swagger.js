@@ -726,6 +726,90 @@ export default {
           description: 'User not found'
         }
       }
+    },
+    '/profiles/username/follow': {
+      post: {
+        summary: 'Follow user',
+        operationId: 'FollowPost',
+        produces: [
+          'application/json'
+        ],
+        parameters: [],
+        responses: {
+          200: {
+            description: '',
+            headers: {}
+          }
+        },
+        security: [
+          {
+            auth: []
+          }
+        ]
+      }
+    },
+    '/profiles/username/unfollow': {
+      delete: {
+        summary: 'Unfollow user',
+        operationId: 'UnfollowDelete',
+        produces: [
+          'application/json'
+        ],
+        parameters: [],
+        responses: {
+          200: {
+            description: '',
+            headers: {}
+          }
+        },
+        security: [
+          {
+            auth: []
+          }
+        ]
+      }
+    },
+    '/profiles/username/followings': {
+      get: {
+        summary: 'Get all following',
+        operationId: 'FollowingsGet',
+        produces: [
+          'application/json'
+        ],
+        parameters: [],
+        responses: {
+          200: {
+            description: '',
+            headers: {}
+          }
+        },
+        security: [
+          {
+            auth: []
+          }
+        ]
+      }
+    },
+    '/profiles/username/followers': {
+      get: {
+        summary: 'Get all followers',
+        operationId: 'FollowersGet',
+        produces: [
+          'application/json'
+        ],
+        parameters: [],
+        responses: {
+          200: {
+            description: '',
+            headers: {}
+          }
+        },
+        security: [
+          {
+            auth: []
+          }
+        ]
+      }
     }
   },
   definitions: {
