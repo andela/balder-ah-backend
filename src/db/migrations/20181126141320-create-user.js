@@ -40,6 +40,15 @@ export default {
       type: Sequelize.STRING,
       allowNull: true
     },
+    isVerified: {
+      type: Sequelize.BOOLEAN,
+      defaultValue: false,
+      allowNull: false
+    },
+    emailtoken: {
+      type: Sequelize.STRING,
+      allowNull: true
+    },
     createdAt: {
       allowNull: false,
       type: Sequelize.DATE

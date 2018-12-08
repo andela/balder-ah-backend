@@ -30,11 +30,15 @@ export default {
     },
     {
       name: 'articles',
-      description: 'The articles created by Author\'s Haven users'
+      description: "The articles created by Author's Haven users"
     },
     {
       name: 'profiles',
-      description: 'The details of the users of Author\'s Haven'
+      description: "The details of the users of Author's Haven"
+    },
+    {
+      name: 'email verification',
+      description: "This verifies a newly registered user's email"
     }
   ],
   schemes: ['https', 'http'],
@@ -139,6 +143,53 @@ export default {
           },
           400: {
             description: 'Invalid login credentials'
+          }
+        }
+      }
+    },
+    '/verification': {
+      get: {
+        tags: ['email, verification'],
+        summary: 'Verify a new user',
+        description: '',
+        parameters: [],
+        produces: ['application/json'],
+        responses: {
+          204: {
+            description: 'Email already verified',
+            schema: {
+              properties: {
+                message: {
+                  type: 'string'
+                }
+              },
+              example: {
+                message: 'Email already verified'
+              }
+            }
+          },
+          201: {
+            description: 'User verified',
+            schema: {
+              properties: {
+                status: {
+                  type: 'string'
+                },
+                message: {
+                  type: 'string'
+                }
+              },
+              example: {
+                status: 'Success',
+                message: 'Your email: johndoe@example.com has been verified'
+              }
+            }
+          },
+          500: {
+            description: 'Encountered an error verifying user'
+          },
+          404: {
+            description: 'User not found'
           }
         }
       }
