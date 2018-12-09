@@ -2,6 +2,7 @@ import Slug from 'slug';
 import ArticleModel from '../helpers/articles';
 import { articleAverageRating } from './articleRatingController';
 import TagHelpers from '../helpers/tagHelpers';
+import FavoriteModelHelper from '../helpers/favorite';
 
 /**
  * @description class representing Article Controller
@@ -69,6 +70,7 @@ class ArticleController {
       allArticles = allArticles.map((article) => {
         article = article.toJSON();
         article.tags = article.tags.map(tagname => tagname.name);
+        article.favoritesCount = article.favoritesCount.length;
         return article;
       });
       return response.status(200).json({
@@ -114,9 +116,15 @@ class ArticleController {
    */
   static async getArticle(request, response) {
     const articleSlug = request.params.slug;
+    const { isLoggedIn } = request;
     try {
       const getOneArticle = (await ArticleModel.getOneArticle(articleSlug)).toJSON();
       getOneArticle.tags = getOneArticle.tags.map(tagname => tagname.name);
+      getOneArticle.favoritesCount = getOneArticle.favoritesCount.length;
+      getOneArticle.favorited = isLoggedIn
+        ? await FavoriteModelHelper
+          .hasBeenFavorited(getOneArticle.id, request.userData.payload.id)
+        : false;
       const articleRatingStar = await articleAverageRating(request);
 
       return response.status(200).json({

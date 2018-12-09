@@ -66,6 +66,29 @@ class VerifyUser {
   }
 
   /**
+   * @static
+   * @description checks login status of a request
+   * @param {*} request - request object
+   * @param {*} response response object
+   * @param {*} next - next callback
+   * @returns {*} calls the next middleware
+   * @memberof VerifyUser
+   */
+  static checkAuthStatus(request, response, next) {
+    try {
+      const token = request.headers.authorization || request.body.token;
+      const decoded = jwt.verify(token, process.env.TOKEN_SECRET_KEY);
+
+      request.userData = decoded;
+      request.isLoggedIn = true;
+      next();
+    } catch (error) {
+      request.isLoggedIn = false;
+      next();
+    }
+  }
+
+  /**
    * @description - This method is responsible for checking if a user is valid
    *
    * @static
@@ -97,6 +120,16 @@ class VerifyUser {
   }
 }
 
-const { generateToken, verifyToken, checkUser } = VerifyUser;
+const {
+  generateToken,
+  verifyToken,
+  checkUser,
+  checkAuthStatus
+} = VerifyUser;
 
-export { generateToken, verifyToken, checkUser };
+export {
+  generateToken,
+  verifyToken,
+  checkUser,
+  checkAuthStatus
+};
