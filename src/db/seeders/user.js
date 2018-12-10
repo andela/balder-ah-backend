@@ -164,6 +164,23 @@ const removeSeedUsers = async () => {
 
 const fakeToken = 'nvejvkneje.jhrnejne.nvuenfvemivmnemerfne';
 const incompleteToken = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJwYXlsb2FkIjp7ImlkIjoxLCJ1c2VybmFtZSI6Imp1d2l6eTI0Nzg5In0sImlhdCI6MTU0Mzc3NzgyOCwiZXhwIjoxNTQzODY0MjI4fQ.VWp2lkDvHZjFsDW7X0_OQhjKIDounpMDYyM_gwvJaR';
+const resetPasswordSuccessful = {
+  email: 'marc@gmail.com',
+};
+const resetPasswordWithWrongEmail = {
+  email: 'okoro@gmail.com',
+};
+const updatePasswordSuccessfully = {
+  password: 'wiseV2424',
+  confirmNewPassword: 'wiseV2424'
+};
+const updateWithWrongPassword = {
+  password: 'wise2424',
+  confirmNewPassword: 'wise242@'
+};
+const emptyResetEmail = {
+  email: '',
+};
 
 export {
   successfulSignup1,
@@ -193,5 +210,10 @@ export {
   invalidImageUrl,
   noImageUpdate,
   noBioUpdate,
-  undefinedPassword
+  undefinedPassword,
+  resetPasswordSuccessful,
+  resetPasswordWithWrongEmail,
+  updatePasswordSuccessfully,
+  updateWithWrongPassword,
+  emptyResetEmail
 };

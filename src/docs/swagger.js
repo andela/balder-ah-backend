@@ -147,6 +147,99 @@ export default {
         }
       }
     },
+    'users/forget': {
+      post: {
+        tags: ['users'],
+        summary: 'Generates token for user reset password',
+        description: '',
+        parameters: [
+          {
+            name: 'user',
+            in: 'body',
+            description: 'Existing user that wants to reset password',
+            schema: {
+              properties: {
+                email: {
+                  required: true,
+                  type: 'string'
+                }
+              }
+            }
+          }
+        ],
+        produces: ['application/json'],
+        responses: {
+          200: {
+            description: 'successful operation',
+            schema: {
+              properties: {
+                message: {
+                  type: 'string'
+                },
+                token: {
+                  type: 'string'
+                }
+              },
+              example: {
+                message: 'Password reset link has been sent to your mail',
+                token: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJwYXlsb2FkIjp7ImlkIjoyNSwidXNlcm5hbWUiOiJtYXJjNTAifSwiaWF0IjoxNTQzNzAxMTY2LCJleHAiOjE1NDQ1NjUxNjZ9.jbGxB1LwW3CpT9KyFq9hXdSeztQ8xLrFWE-DQszcmkk'
+              }
+            }
+          },
+          400: {
+            description: 'Invalid email'
+          }
+        }
+      }
+    },
+    'users/passwordupdate': {
+      post: {
+        tags: ['users'],
+        summary: 'Resets user password',
+        description: '',
+        parameters: [
+          {
+            name: 'user',
+            in: 'body',
+            description: 'Existing user that wants to update password',
+            schema: {
+              properties: {
+                newPassword: {
+                  required: true,
+                  type: 'string'
+                },
+                confirmPassword: {
+                  required: true,
+                  type: 'string'
+                },
+              }
+            }
+          }
+        ],
+        produces: ['application/json'],
+        responses: {
+          200: {
+            description: 'successful operation',
+            schema: {
+              properties: {
+                message: {
+                  type: 'string'
+                },
+                token: {
+                  type: 'string'
+                }
+              },
+              example: {
+                message: 'The passwords do not match, confirm and type again.',
+              }
+            }
+          },
+          400: {
+            description: 'Invalid email'
+          }
+        }
+      }
+    },
     '/verification': {
       get: {
         tags: ['email, verification'],

@@ -13,7 +13,7 @@
     "migrate": "sequelize db:migrate",
     "migrate:test": "sequelize db:migrate:undo:all && npm run migrate",
     "postinstall": "npm run dev",
-    "test": "export NODE_ENV=test && npm run migrate:test && nyc --reporter=html --reporter=text mocha --recursive --require babel-register --exit",
+    "test": "export NODE_ENV=test && npm run migrate:test && nyc --reporter=html --reporter=text mocha --recursive --require babel-register --exit --timeout 20000",
     "test:watch": "nodemon --watch test --exec npm test",
     "coverage": "nyc report --reporter=text-lcov | coveralls"
   },
