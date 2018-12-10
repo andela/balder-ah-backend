@@ -5,7 +5,8 @@ import {
   articlesRouter,
   otherRouter,
   profileRouter,
-  socialAuthRouter
+  socialAuthRouter,
+  emailRouter
 } from './routes';
 import registerMiddlewares from './middlewares';
 import './services/passport';
@@ -19,6 +20,7 @@ app.use(passport.initialize());
 app.use(passport.session());
 
 app.use('/api', userRouter);
+app.use('/api', emailRouter);
 app.use('/api', articlesRouter);
 app.use('/api', profileRouter);
 app.use('/api/auth', socialAuthRouter);

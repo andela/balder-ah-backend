@@ -74,6 +74,15 @@ export default (sequelize, DataTypes) => {
             msg: 'Invalid image format'
           }
         }
+      },
+      isVerified: {
+        type: DataTypes.BOOLEAN,
+        defaultValue: false,
+        allowNull: false
+      },
+      emailtoken: {
+        type: DataTypes.STRING,
+        allowNull: true
       }
     },
     {

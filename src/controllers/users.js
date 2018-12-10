@@ -1,5 +1,7 @@
+import crypto from 'crypto';
 import { compareSync } from 'bcrypt';
 import models from '../db/models';
+import emailSender from '../helpers/emailSender';
 import { generateToken } from '../middlewares/authentication';
 import errorResponse from '../helpers';
 
@@ -33,10 +35,18 @@ class userHandler {
         id: userInfo.id,
         username: userInfo.username
       };
-
-      const time = {};
-      time.expiresIn = '24h';
       try {
+        if (userInfo) {
+          const generatedEmailToken = crypto.randomBytes(16).toString('hex');
+          const verifier = await User.update({
+            emailtoken: generatedEmailToken
+          }, { where: { email } });
+          if (verifier) {
+            emailSender(userInfo.email, generatedEmailToken);
+          }
+        }
+        const time = {};
+        time.expiresIn = '24h';
         const token = generateToken(payload, time);
         response.status(201).json({
           message: 'Signed up successfully',
