@@ -1,6 +1,7 @@
 import Slug from 'slug';
 import ArticleModel from '../helpers/articles';
 import { articleAverageRating } from './articleRatingController';
+import TagHelpers from '../helpers/tagHelpers';
 
 /**
  * @description class representing Article Controller
@@ -16,9 +17,15 @@ class ArticleController {
    * @memberof ArticleController
    */
   static async createArticle(request, response) {
-    const { title, description, body } = request.body;
+    const {
+      title,
+      description,
+      body,
+      tags
+    } = request.body;
     const userId = request.userData.payload.id;
     try {
+      const tagResponse = await TagHelpers.addNewTag(tags);
       const slugGen = Slug(`${title} ${Date.now()}`);
       const newArticle = await ArticleModel.createArticle({
         slug: slugGen,
@@ -27,10 +34,11 @@ class ArticleController {
         body,
         userId
       });
+      await newArticle.setTags(tagResponse);
       return response.status(201).json({
         status: 'Success',
         message: 'Article created successfully',
-        newArticle
+        newArticle,
       });
     } catch (error) {
       return response.status(500).json({
@@ -51,13 +59,18 @@ class ArticleController {
   static async getAllArticles(request, response) {
     try {
       const { page } = request.query;
-      const allArticles = await ArticleModel.getAllArticle(page);
+      let allArticles = await ArticleModel.getAllArticle(page);
       if (!allArticles.length) {
         return response.status(404).json({
           status: 'Fail',
           message: 'No article found'
         });
       }
+      allArticles = allArticles.map((article) => {
+        article = article.toJSON();
+        article.tags = article.tags.map(tagname => tagname.name);
+        return article;
+      });
       return response.status(200).json({
         status: 'Success',
         message: 'All articles found successfully',
@@ -102,7 +115,8 @@ class ArticleController {
   static async getArticle(request, response) {
     const articleSlug = request.params.slug;
     try {
-      const getOneArticle = await ArticleModel.getOneArticle(articleSlug);
+      const getOneArticle = (await ArticleModel.getOneArticle(articleSlug)).toJSON();
+      getOneArticle.tags = getOneArticle.tags.map(tagname => tagname.name);
       const articleRatingStar = await articleAverageRating(request);
 
       return response.status(200).json({
