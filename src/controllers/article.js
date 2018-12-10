@@ -2,24 +2,20 @@ import Slug from 'slug';
 import ArticleModel from '../helpers/articles';
 
 /**
-  * @description class representing Article Controller
-  * @class ArticleController
-  */
+ * @description class representing Article Controller
+ * @class ArticleController
+ */
 class ArticleController {
   /**
-    * @description - This method is responsible for creating new articles
-    * @static
-    * @param {object} request - Request sent to the router
-    * @param {object} response - Response sent from the controller
-    * @returns {object} - object representing response message
-    * @memberof ArticleController
-    */
+   * @description - This method is responsible for creating new articles
+   * @static
+   * @param {object} request - Request sent to the router
+   * @param {object} response - Response sent from the controller
+   * @returns {object} - object representing response message
+   * @memberof ArticleController
+   */
   static async createArticle(request, response) {
-    const {
-      title,
-      description,
-      body
-    } = request.body;
+    const { title, description, body } = request.body;
     const userId = request.userData.payload.id;
     try {
       const slugGen = Slug(`${title} ${Date.now()}`);
@@ -44,13 +40,13 @@ class ArticleController {
   }
 
   /**
-    * @description - This method is responsible for fetching all articles
-    * @static
-    * @param {object} request - Request sent to the router
-    * @param {object} response - Response sent from the controller
-    * @returns {object} - object representing response message
-    * @memberof ArticleController
-    */
+   * @description - This method is responsible for fetching all articles
+   * @static
+   * @param {object} request - Request sent to the router
+   * @param {object} response - Response sent from the controller
+   * @returns {object} - object representing response message
+   * @memberof ArticleController
+   */
   static async getAllArticles(request, response) {
     try {
       const allArticles = await ArticleModel.getAllArticle();
@@ -74,13 +70,13 @@ class ArticleController {
   }
 
   /**
-    * @description - This method is responsible for updating existing articles
-    * @static
-    * @param {object} request - Request sent to the router
-    * @param {object} response - Response sent from the controller
-    * @returns {object} - object representing response message
-    * @memberof ArticleController
-    */
+   * @description - This method is responsible for updating existing articles
+   * @static
+   * @param {object} request - Request sent to the router
+   * @param {object} response - Response sent from the controller
+   * @returns {object} - object representing response message
+   * @memberof ArticleController
+   */
   static async updateArticle(request, response) {
     const articleSlug = request.params.slug;
     const findArticle = await ArticleModel.queryForArticle(articleSlug);
@@ -94,13 +90,13 @@ class ArticleController {
   }
 
   /**
-    * @description - This method is responsible for creating fetching one article
-    * @static
-    * @param {object} request - Request sent to the router
-    * @param {object} response - Response sent from the controller
-    * @returns {object} - object representing response message
-    * @memberof ArticleController
-    */
+   * @description - This method is responsible for creating fetching one article
+   * @static
+   * @param {object} request - Request sent to the router
+   * @param {object} response - Response sent from the controller
+   * @returns {object} - object representing response message
+   * @memberof ArticleController
+   */
   static async getArticle(request, response) {
     const articleSlug = request.params.slug;
     try {
@@ -119,13 +115,13 @@ class ArticleController {
   }
 
   /**
-    * @description - This method is responsible for deleting an existing article
-    * @static
-    * @param {object} request - Request sent to the router
-    * @param {object} response - Response sent from the controller
-    * @returns {void} - void representing response message
-    * @memberof ArticleController
-    */
+   * @description - This method is responsible for deleting an existing article
+   * @static
+   * @param {object} request - Request sent to the router
+   * @param {object} response - Response sent from the controller
+   * @returns {void} - void representing response message
+   * @memberof ArticleController
+   */
   static async deleteArticle(request, response) {
     const articleSlug = request.params.slug;
     const findArticle = await ArticleModel.queryForArticle(articleSlug);

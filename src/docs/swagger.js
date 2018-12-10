@@ -313,7 +313,7 @@ export default {
         responses: {
           200: {
             description: '',
-            headers: {},
+            headers: {}
           }
         }
       },
@@ -333,7 +333,7 @@ export default {
         responses: {
           200: {
             description: '',
-            headers: {},
+            headers: {}
           }
         }
       }
@@ -381,6 +381,87 @@ export default {
         }
       }
     },
+    '/articles/{slug}/comments': {
+      get: {
+        summary: 'Get article comments',
+        description: 'Returns all comments associated with an article',
+
+        consumes: ['application/x-www-form-urlencoded'],
+        responses: {
+          200: {
+            description: ''
+          }
+        },
+        parameters: [
+          {
+            type: 'string',
+            name: 'slug',
+            in: 'path',
+            required: true
+          }
+        ]
+      },
+      post: {
+        summary: 'Comment on an article',
+        description: 'Allows a user or author to comment on an article',
+
+        consumes: ['application/x-www-form-urlencoded'],
+        responses: {
+          201: {
+            description: ''
+          }
+        },
+        parameters: [
+          {
+            type: 'string',
+            name: 'slug',
+            in: 'path',
+            description: 'article slug to comment on',
+            required: true
+          },
+          {
+            type: 'string',
+            name: 'body',
+            required: true,
+            in: 'formData'
+          },
+          {
+            type: 'string',
+            name: 'Authorization',
+            description: 'Authorization token',
+            required: true,
+            in: 'header'
+          }
+        ]
+      }
+    },
+    '/articles/{slug}/comments/{commentId}': {
+      get: {
+        summary: 'Get one comment on a specific article',
+        description: 'Returns a comment on an article',
+
+        consumes: ['application/x-www-form-urlencoded'],
+        responses: {
+          200: {
+            description: ''
+          }
+        },
+        parameters: [
+          {
+            type: 'string',
+            name: 'slug',
+            in: 'path',
+            required: true
+          },
+          {
+            type: 'string',
+            name: 'commentId',
+            in: 'path',
+            required: true
+          }
+        ]
+      }
+    },
     '//': {
       delete: {
         summary: 'Delete an article',
@@ -390,7 +471,7 @@ export default {
         responses: {
           200: {
             description: '',
-            headers: {},
+            headers: {}
           }
         }
       }

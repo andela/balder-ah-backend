@@ -159,7 +159,7 @@ const addSeedUser = async (seedUser) => {
 };
 
 const removeSeedUsers = async () => {
-  await User.truncate();
+  await User.truncate({ cascade: true });
 };
 
 const fakeToken = 'nvejvkneje.jhrnejne.nvuenfvemivmnemerfne';

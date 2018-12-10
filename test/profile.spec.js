@@ -1,6 +1,9 @@
-import chai from 'chai';
+import chai, { expect } from 'chai';
 import chaiHttp from 'chai-http';
+import sinon from 'sinon';
+import sinonChai from 'sinon-chai';
 import server from '../src/server';
+import models from '../src/db/models';
 
 import {
   completeProfileData,
@@ -9,16 +12,27 @@ import {
   fakeUsername,
   lengthyUsername
 } from '../src/db/seeders/user';
+import {
+  getCurrentUser,
+  getUserProfile,
+  updateProfile
+} from '../src/controllers/userProfileHandler';
+import checkUsernameParam from '../src/middlewares/paramsHandler';
 
-const { expect } = chai;
+const { User } = models;
 
+chai.should();
 chai.use(chaiHttp);
+chai.use(sinonChai);
 
 describe('Test for getting user profile', () => {
   before(async () => {
     // create remove existing users
     await addSeedUser(completeProfileData);
   });
+
+  afterEach(() => sinon.restore());
+
   after(async () => {
     await removeSeedUsers();
   });
@@ -44,5 +58,123 @@ describe('Test for getting user profile', () => {
       .to.be.an('object')
       .to.have.property('body')
       .to.contain('please username should be less than 100 characters');
+  });
+
+  it('fakes server error when getting current user', async () => {
+    const request = {
+      userData: {
+        payload: {
+          id: 1
+        }
+      }
+    };
+
+    const response = {
+      status() {},
+      json() {}
+    };
+
+    sinon.stub(User, 'findOne').throws();
+    sinon.stub(response, 'status').returnsThis();
+
+    await getCurrentUser(request, response);
+
+    expect(response.status).to.have.been.calledWith(500);
+  });
+
+  it('fakes server error when updating user profile', async () => {
+    const request = {
+      userData: {
+        payload: {
+          id: 1
+        }
+      }
+    };
+
+    const response = {
+      status() {},
+      json() {}
+    };
+
+    sinon.stub(User, 'findOne').throws();
+    sinon.stub(response, 'status').returnsThis();
+
+    await updateProfile(request, response);
+
+    expect(response.status).to.have.been.calledWith(500);
+  });
+
+  it('fakes update profile and cover all branch', async () => {
+    const request = {
+      userData: {
+        payload: {
+          id: 1
+        }
+      },
+      body: {
+        username: '',
+        email: '',
+        bio: '',
+        image: ''
+      }
+    };
+
+    const response = {
+      status() {},
+      json() {}
+    };
+
+    const userModel = User;
+
+    sinon.stub(userModel, 'findOne').resolves({
+      username: 'johnwick',
+      email: 'johnwick@mail.com',
+      bio: 'I love to shoot',
+      image: '🔫',
+      id: 1
+    });
+
+    sinon.stub(userModel, 'update').returns(true);
+    sinon.stub(response, 'status').returnsThis();
+
+    await updateProfile(request, response);
+    expect(response.status).to.have.been.calledWith(200);
+  });
+
+  it('fakes server error when getting user profile', async () => {
+    const request = {
+      params: {
+        username: ''
+      }
+    };
+
+    const response = {
+      status() {},
+      json() {}
+    };
+
+    sinon.stub(User, 'findOne').throws();
+    sinon.stub(response, 'status').returnsThis();
+
+    await getUserProfile(request, response);
+
+    expect(response.status).to.have.been.calledWith(500);
+  });
+
+  it('fail to check username', async () => {
+    const request = {
+      params: {
+        username: ''
+      }
+    };
+    const response = {
+      status() {},
+      json() {}
+    };
+
+    sinon.stub(response, 'status').returnsThis();
+    await checkUsernameParam(request, response);
+
+    expect(response.status).to.have.been.calledWith(400);
   });
 });

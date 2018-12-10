@@ -60,15 +60,16 @@ describe('Users Authentication', () => {
     resetToken = generateToken({ payload: { ...successfulSignup } }, time);
   });
 
+  afterEach(() => {
+    sinon.restore();
+    process.env.TOKEN_SECRET_KEY = jwtSecret;
+  });
+
   after(async () => {
     await User.destroy({ cascade: true, truncate: true });
     await Article.destroy({ cascade: true, truncate: true });
 
     request.close();
-  });
-
-  afterEach(() => {
-    process.env.TOKEN_SECRET_KEY = jwtSecret;
   });
 
   describe('Validate signup', () => {
@@ -233,6 +234,26 @@ describe('Users Authentication', () => {
 
       response.status.should.have.been.calledOnce;
       response.status.should.have.been.calledWith(500);
+    });
+
+    it('fake server error when loggin in', async () => {
+      const requestObj = {
+        body: {
+          email: '',
+          password: '',
+          rememberMe: ''
+        }
+      };
+      const response = {
+        status() {},
+        json() {}
+      };
+
+      sinon.stub(response, 'status').returnsThis();
+      sinon.stub(User, 'findOne').throws();
+      await loginUser(requestObj, response);
+
+      expect(response.status).to.have.been.calledWith(500);
     });
   });
 
