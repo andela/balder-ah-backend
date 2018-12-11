@@ -33,7 +33,7 @@ import {
   updateWithWrongPassword,
   emptyResetEmail
 } from '../../../src/db/seeders/user';
-import { loginUser, registerUser } from '../../../src/controllers/users';
+import { loginUser, registerUser } from '../../../src/controllers/userController';
 
 const { User, Article } = models;
 const { expect } = chai;

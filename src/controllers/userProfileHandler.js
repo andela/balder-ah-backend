@@ -5,9 +5,9 @@ const { User } = user;
 /**
  * @description class representing user profiles
  *
- * @class UserProfileHandler
+ * @class UserProfileController
  */
-class UserProfileHandler {
+class UserProfileController {
   /**
    * @description - This method is responsible for retrieving a currently logged in user
    *
@@ -17,7 +17,7 @@ class UserProfileHandler {
    *
    * @returns {object} - object representing response message
    *
-   * @memberof UserProfileHandler
+   * @memberof UserProfileController
    */
   static async getCurrentUser(request, response) {
     const { payload } = request.userData;
@@ -57,7 +57,7 @@ class UserProfileHandler {
    *
    * @returns {object} - object representing response message
    *
-   * @memberof UserProfileHandler
+   * @memberof UserProfileController
    */
   static async updateProfile(request, response) {
     const { payload } = request.userData;
@@ -100,7 +100,7 @@ class UserProfileHandler {
    *
    * @returns {object} - object representing response message and user object
    *
-   * @memberof UserProfileHandler
+   * @memberof UserProfileController
    */
   static async getUserProfile(request, response) {
     const { username } = request.params;
@@ -132,6 +132,6 @@ class UserProfileHandler {
   }
 }
 
-const { getCurrentUser, updateProfile, getUserProfile } = UserProfileHandler;
+const { getCurrentUser, updateProfile, getUserProfile } = UserProfileController;
 
 export { getCurrentUser, updateProfile, getUserProfile };

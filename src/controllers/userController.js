@@ -9,9 +9,9 @@ const { User } = models;
 /**
  * @description class representing User Authentication
  *
- * @class UserHandler
+ * @class UserController
  */
-class userHandler {
+class UserController {
   /**
    * @description - This method is responsible for creating new users
    *
@@ -21,7 +21,7 @@ class userHandler {
    *
    * @returns {object} - object representing response message
    *
-   * @memberof UserHandler
+   * @memberof UserController
    */
   static async registerUser(request, response) {
     const { username, email, password } = request.body;
@@ -75,7 +75,7 @@ class userHandler {
    *
    * @returns {object} - object representing response message
    *
-   * @memberof UserHandler
+   * @memberof UserController
    */
   static async loginUser(request, response) {
     const { email, password, rememberMe } = request.body;
@@ -125,6 +125,6 @@ class userHandler {
   }
 }
 
-const { registerUser, loginUser } = userHandler;
+const { registerUser, loginUser } = UserController;
 
 export { registerUser, loginUser };

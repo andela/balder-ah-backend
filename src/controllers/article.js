@@ -1,5 +1,6 @@
 import Slug from 'slug';
 import ArticleModel from '../helpers/articles';
+import { articleAverageRating } from './articleRatingController';
 
 /**
  * @description class representing Article Controller
@@ -101,10 +102,13 @@ class ArticleController {
     const articleSlug = request.params.slug;
     try {
       const getOneArticle = await ArticleModel.getOneArticle(articleSlug);
+      const articleRatingStar = await articleAverageRating(request);
+
       return response.status(200).json({
         status: 'Success',
         message: 'Article found successfully',
-        getOneArticle
+        getOneArticle,
+        articleRatingStar
       });
     } catch (error) {
       return response.status(500).json({
