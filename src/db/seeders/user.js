@@ -162,6 +162,51 @@ const removeSeedUsers = async () => {
   await User.truncate({ cascade: true });
 };
 
+const firstUserSignup = {
+  email: 'emkay@gmail.com',
+  username: 'emkay',
+  password: 'emkay123'
+};
+
+const secondUserSignup = {
+  email: 'ogidan@gmail.com',
+  username: 'ogidan',
+  password: 'ogidan123'
+};
+
+const thirdUserSignup = {
+  email: 'ejola@gmail.com',
+  username: 'ejola',
+  password: 'ejola123'
+};
+
+const firstUserLogin = {
+  email: 'emkay@gmail.com',
+  password: 'emkay123'
+};
+
+const secondUserLogin = {
+  email: 'ogidan@gmail.com',
+  password: 'ogidan123'
+};
+
+const thirdUserLogin = {
+  email: 'ejola@gmail.com',
+  password: 'ejola123'
+};
+
+const fourthUserSignup = {
+  email: 'okoro@gmail.com',
+  username: 'okoro',
+  password: 'okoro123'
+};
+
+const fourthUserLogin = {
+  email: 'ejola@gmail.com',
+  username: 'ejola',
+  password: 'ejola123'
+};
+
 const fakeToken = 'nvejvkneje.jhrnejne.nvuenfvemivmnemerfne';
 const incompleteToken = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJwYXlsb2FkIjp7ImlkIjoxLCJ1c2VybmFtZSI6Imp1d2l6eTI0Nzg5In0sImlhdCI6MTU0Mzc3NzgyOCwiZXhwIjoxNTQzODY0MjI4fQ.VWp2lkDvHZjFsDW7X0_OQhjKIDounpMDYyM_gwvJaR';
 const resetPasswordSuccessful = {
@@ -215,5 +260,13 @@ export {
   resetPasswordWithWrongEmail,
   updatePasswordSuccessfully,
   updateWithWrongPassword,
-  emptyResetEmail
+  emptyResetEmail,
+  firstUserSignup,
+  firstUserLogin,
+  secondUserSignup,
+  secondUserLogin,
+  thirdUserSignup,
+  thirdUserLogin,
+  fourthUserSignup,
+  fourthUserLogin
 };
