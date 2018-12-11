@@ -50,8 +50,9 @@ class ArticleController {
    */
   static async getAllArticles(request, response) {
     try {
-      const allArticles = await ArticleModel.getAllArticle();
-      if (!allArticles) {
+      const { page } = request.query;
+      const allArticles = await ArticleModel.getAllArticle(page);
+      if (!allArticles.length) {
         return response.status(404).json({
           status: 'Fail',
           message: 'No article found'

@@ -238,7 +238,11 @@ describe('Test for article', () => {
       expect(response.body.status).to.be.equal('Success');
       expect(response.body.message).to.be.deep.equals('All articles found successfully');
     });
-
+    it('should get all articles', async () => {
+      const response = await request.get(articlesEndpoint).query({ page: 'were' });
+      expect(response.status).to.equal(400);
+      expect(response.body.errors.body[0]).to.be.equal('Page can only be numbers');
+    });
     it('should get one article', async () => {
       const response = await request
         .get(`${articlesEndpoint}/${slug}`)
