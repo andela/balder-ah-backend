@@ -110,16 +110,18 @@ class ArticleModel {
       if (body) {
         updatedData.body = body;
       }
-      await Article.update(updatedData, {
+
+      const updatedArticle = await Article.update(updatedData, {
         returning: true,
         where: {
           slug
         }
       });
+
       return response.status(200).json({
         status: 'Success',
         message: 'Article has been updated successfully',
-        updatedData
+        updatedArticle: updatedArticle[1][0],
       });
     } catch (error) {
       return response.status(500).json({
