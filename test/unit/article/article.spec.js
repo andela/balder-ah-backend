@@ -89,6 +89,7 @@ describe('Test for article', () => {
         .to.have.property('message')
         .eql('Article created successfully');
       expect(response.status).to.equal(201);
+      expect(response.body.newArticle.readtime).to.be.equal('4 mins');
     });
 
     it('should post a new article', async () => {
@@ -103,6 +104,7 @@ describe('Test for article', () => {
         .to.have.property('message')
         .eql('Article created successfully');
       expect(response.status).to.equal(201);
+      expect(response.body.newArticle.readtime).to.be.equal('4 mins');
     });
 
     it('should not post a new artivcle with low description length', async () => {
@@ -247,6 +249,7 @@ describe('Test for article', () => {
       expect(response.body.status).to.be.equal('Success');
       expect(response.status).to.equal(200);
       expect(response.body.message).to.be.deep.equals('Article found successfully');
+      expect(response.body.getOneArticle.readtime).to.be.equal('4 mins');
     });
 
     it('should not get an unknown article', async () => {
@@ -278,6 +281,8 @@ describe('Test for article', () => {
         .send(updateArticle);
       expect(response.body.status).to.be.equal('Success');
       expect(response.body.message).to.be.deep.equals('Article has been updated successfully');
+      expect(response.body.updatedArticle.readtime).to.be.equal('2 mins');
+
     });
 
     it('should not update an unknown article', async () => {

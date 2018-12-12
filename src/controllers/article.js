@@ -87,7 +87,7 @@ class ArticleController {
         message: 'Article not found'
       });
     }
-    ArticleModel.update(request, response, findArticle, articleSlug);
+    await ArticleModel.update(request, response, findArticle, articleSlug);
   }
 
   /**
