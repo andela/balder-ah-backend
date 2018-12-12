@@ -5,16 +5,19 @@
   "main": "dist/server.js",
   "scripts": {
     "clean": "rimraf dist",
+    "check-coverage": "nyc check-coverage --statements 90 --lines 90 --branches 90 --functions 90",
     "dev": "npm-run-all --parallel clean build migrate",
-    "dev:start": "npm run dev && npm run start",
+    "dev:start": "npm run dev && cross-env NODE_ENV=development npm run start",
     "dev:start:watch": "nodemon --watch src --exec 'npm run dev:start'",
     "start": "node dist/server.js",
     "build": "babel ./src -d dist",
     "migrate": "sequelize db:migrate",
     "migrate:test": "sequelize db:migrate:undo:all && npm run migrate",
     "postinstall": "npm run dev",
-    "test": "export NODE_ENV=test && npm run migrate:test && nyc --reporter=html --reporter=text mocha --recursive --require babel-register --exit --timeout 20000",
-    "test:watch": "nodemon --watch test --exec npm test",
+    "test-env": "cross-env NODE_ENV=test",
+    "test": "npm run test-env npm run migrate:test && npm run test-report",
+    "test-report": "npm run test-env nyc --reporter=html --reporter=text mocha",
+    "test:watch": "nodemon --watch test --exec npm run test-env npm test",
     "coverage": "nyc report --reporter=text-lcov | coveralls"
   },
   "author": "Andela Simulations Programme",
@@ -51,9 +54,11 @@
     "chai": "4.2.0",
     "chai-http": "4.2.0",
     "coveralls": "^3.0.2",
+    "cross-env": "5.2.0",
     "eslint": "^5.9.0",
     "eslint-config-airbnb-base": "^13.1.0",
     "eslint-plugin-import": "^2.14.0",
+    "ghooks": "2.0.4",
     "mocha": "5.2.0",
     "nodemon": "1.18.7",
     "npm-run-all": "4.1.5",
@@ -62,5 +67,10 @@
     "sequelize-cli": "5.3.0",
     "sinon": "7.1.1",
     "sinon-chai": "3.3.0"
+  },
+  "config": {
+    "ghooks": {
+      "pre-commit": "npm run test && npm run check-coverage"
+    }
   }
 }

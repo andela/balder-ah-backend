@@ -8,6 +8,8 @@ chai.should();
 chai.use(sinonChai);
 
 describe('VerifyUser', () => {
+  afterEach(() => sinon.restore());
+
   const fakePayload = {
     id: 1,
     username: 'johnwick'
