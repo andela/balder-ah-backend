@@ -63,5 +63,4 @@ class EmailVerifier {
 
 const { emailVerifier } = EmailVerifier;
 
-export default { emailVerifier };
-
+export default emailVerifier;

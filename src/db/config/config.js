@@ -3,29 +3,18 @@ const dotenv = require('dotenv');
 
 dotenv.config();
 
-const {
-  DB_USER,
-  DB_PASSWORD,
-  DB_NAME,
-  DB_HOST,
-  DB_PORT,
-  DB_DIALECT,
-  LOGGING,
-} = process.env;
+const { LOGGING } = process.env;
+const dialect = 'postgres';
 
 module.exports = {
   development: {
-    username: DB_USER,
-    password: DB_PASSWORD,
-    database: DB_NAME,
-    host: DB_HOST,
-    port: DB_PORT,
-    dialect: DB_DIALECT
+    use_env_variable: 'DATABASE_URL',
+    dialect
   },
   test: {
-    use_env_variable: 'DATABASE_URL',
-    dialect: 'postgres',
-    logging: LOGGING === 'true' && true
+    use_env_variable: 'DATABASE_URL_TEST',
+    logging: !!(LOGGING === 'true'),
+    dialect
   },
   production: {
     use_env_variable: 'DATABASE_URL'
