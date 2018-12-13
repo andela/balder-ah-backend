@@ -66,10 +66,6 @@ export default (sequelize, DataTypes) => {
           type: DataTypes.STRING,
           allowNull: true
         },
-        passwordExpiresIn: {
-          type: DataTypes.BIGINT,
-          allowNull: true
-        },
         bio: {
           type: DataTypes.STRING,
           allowNull: true

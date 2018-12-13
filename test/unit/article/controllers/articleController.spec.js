@@ -85,14 +85,16 @@ describe('Article Controller', () => {
 
   describe('getAllArticles()', () => {
     it('should fail to get all articles', async () => {
-      const newRequest = {};
+      const newRequest = {
+        query: {
+          page: 'something'
+        }
+      };
       const response = {
         status: sinon.stub().returnsThis(),
         json: () => {}
       };
-
       stubList.push(sinon.stub(ArticleModel, 'getAllArticle').returns(false));
-
       await ArticleController.getAllArticles(newRequest, response);
 
       response.status.should.have.been.calledOnce;

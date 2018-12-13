@@ -21,13 +21,24 @@ class ArticleModel {
   /**
    * @description - This method is responsible for querying all articles from the database
    * @static
-   * @param {object} request - Request sent to the router
-   * @param {object} response - Response sent from the controller
+   * @param {object} page - Page number for calculating offset used for querying the database
    * @returns {object} - object representing response message
    * @memberof ArticleModel
    */
-  static async getAllArticle() {
+  static async getAllArticle(page) {
+    const allArticles = await Article.findAndCountAll();
+    const articleCount = allArticles.count;
+    const numberOfArtclesPerPage = 10;
+
+    const currentPage = page || 1;
+    const startFrom = numberOfArtclesPerPage * (currentPage - 1);
+    if (articleCount < 1) {
+      return [];
+    }
     const allArticle = await Article.findAll({
+      offset: startFrom,
+      limit: numberOfArtclesPerPage,
+      order: [['createdAt', 'DESC']],
       attributes: {
         exclude: ['userId']
       },

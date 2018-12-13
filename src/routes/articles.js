@@ -7,6 +7,7 @@ import verifySlug from '../middlewares/verifySlug';
 import { verifyToken, checkUser } from '../middlewares/authentication';
 import checkInput from '../middlewares/validateArticle';
 import articleRatingValidatior from '../middlewares/validateRating';
+import PaginationHelper from '../helpers/paginationHelper';
 
 const articlesRouter = express.Router();
 
@@ -22,9 +23,11 @@ const { slugChecker } = verifySlug;
 
 const articlesBaseEndpoint = '/articles';
 
+const { checkQueryparameter } = PaginationHelper;
+
 articlesRouter
   .route(articlesBaseEndpoint)
-  .get(getAllArticles)
+  .get(checkQueryparameter, getAllArticles)
   .post(verifyToken, checkInput, createArticle);
 
 articlesRouter
