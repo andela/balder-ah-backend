@@ -607,7 +607,7 @@ export default {
     },
     '/user': {
       get: {
-        tags: ['user, profile'],
+        tags: ['users', 'profile'],
         summary: 'Gets the profile/details of the currently logged in user',
         description: '',
         parameters: [],
@@ -651,7 +651,7 @@ export default {
         }
       },
       put: {
-        tags: ['users, profile'],
+        tags: ['users', 'profile'],
         summary: 'Gets the profile/details of the currently logged in user',
         description: '',
         parameters: [
@@ -847,7 +847,93 @@ export default {
           }
         ]
       }
-    }
+    },
+    '/articles/:slug/favorite': {
+      post: {
+        tags: ['articles'],
+        summary: 'Favorite an article',
+        produces: ['application/json'],
+        responses: {
+          200: {
+            description: 'article favorited successfully',
+            schema: {
+              properties: {
+                status: {
+                  type: 'string'
+                },
+                message: {
+                  type: 'string'
+                },
+                article: {
+                  type: 'object',
+                  properties: {
+                    id: { type: 'number' },
+                    slug: { type: 'string' },
+                    title: { type: 'string' },
+                    description: { type: 'string' },
+                    body: { type: 'string' },
+                    imgUrl: { type: 'string' },
+                    createdAt: { type: 'string' },
+                    updatedAt: { type: 'string' },
+                    author: { type: 'object' },
+                    favoritesCount: { type: 'number' },
+                    favorited: { type: 'boolean' },
+                  }
+                }
+              }
+            }
+          },
+          404: {
+            description: 'Article not found'
+          },
+          403: {
+            description: 'User not authenticated'
+          }
+        }
+      },
+      delete: {
+        tags: ['articles'],
+        summary: 'Unfavorite an article',
+        produces: ['application/json'],
+        responses: {
+          200: {
+            description: 'article unfavorited successfully',
+            schema: {
+              properties: {
+                status: {
+                  type: 'string'
+                },
+                message: {
+                  type: 'string'
+                },
+                article: {
+                  type: 'object',
+                  properties: {
+                    id: { type: 'number' },
+                    slug: { type: 'string' },
+                    title: { type: 'string' },
+                    description: { type: 'string' },
+                    body: { type: 'string' },
+                    imgUrl: { type: 'string' },
+                    createdAt: { type: 'string' },
+                    updatedAt: { type: 'string' },
+                    author: { type: 'object' },
+                    favoritesCount: { type: 'number' },
+                    favorited: { type: 'boolean' },
+                  }
+                }
+              }
+            }
+          },
+          404: {
+            description: 'Article not found'
+          },
+          403: {
+            description: 'User not authenticated'
+          }
+        }
+      },
+    },
   },
   definitions: {
     users: {

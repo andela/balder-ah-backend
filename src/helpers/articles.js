@@ -57,6 +57,10 @@ class ArticleModel {
             attributes: []
           }
         },
+        {
+          association: 'favoritesCount',
+          attributes: ['userId']
+        }
       ]
     });
     return allArticle;
@@ -64,10 +68,8 @@ class ArticleModel {
 
   /**
    * @description - This method is responsible for quering the database for an article
-   * @static
-   * @param {object} slug - Request sent to the middleware
-   * @param {object} response - Response sent from the controller
-   * @returns {object} - object representing response message
+   * @param {string} slug
+   * @returns {object} article which found
    * @memberof ArticleModel
    */
   static async getOneArticle(slug) {
@@ -90,6 +92,9 @@ class ArticleModel {
             attributes: []
           }
         },
+        {
+          association: 'favoritesCount'
+        },
       ]
     });
     return oneArticle;
@@ -98,8 +103,7 @@ class ArticleModel {
   /**
    * @description - This method is responsible for quering the database for an article
    * @static
-   * @param {object} slug - Request sent to the middleware
-   * @param {object} response - Response sent from the controller
+   * @param {string} slug
    * @returns {object} - object representing response message
    * @memberof ArticleModel
    */
@@ -165,10 +169,9 @@ class ArticleModel {
   }
 
   /**
-   * @description - This method is responsible for querying the database to delete exising articles
+   * @description - This method is responsible for querying the database to delete existing articles
    * @static
-   * @param {object} slug - Request sent to the middleware
-   * @param {object} response - Response sent from the controller
+   * @param {string} slug
    * @returns {object} - object representing response message
    * @memberof ArticleModel
    */
@@ -192,7 +195,7 @@ class ArticleModel {
   /**
    * @description - This method is responsible for querying the database to check if a slug exists
    * @static
-   * @param {object} slug - Request sent to the middleware
+   * @param {string} slug
    * @returns {object} - object representing response message
    * @memberof ArticleModel
    */

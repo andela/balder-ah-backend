@@ -122,7 +122,7 @@ describe('Test for article', () => {
 
       expect(response.body)
         .to.have.property('message')
-        .eql('Please enter characters  between 3 and 50');
+        .eql('Please enter characters between 3 and 50');
       expect(response.status).to.equal(400);
     });
 
@@ -134,7 +134,7 @@ describe('Test for article', () => {
 
       expect(response.body)
         .to.have.property('message')
-        .eql('Please enter characters  between 5 and 100');
+        .eql('Please enter characters between 5 and 100');
       expect(response.status).to.equal(400);
     });
 

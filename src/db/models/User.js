@@ -114,6 +114,7 @@ export default (sequelize, DataTypes) => {
       as: 'following',
       through: 'Follows'
     });
+    User.hasMany(models.Favorite, { foreignKey: 'userId', as: 'favorites' });
   };
   return User;
 };

@@ -14,13 +14,13 @@ const checkInput = (request, response, next) => {
   if (title.trim().length < 3 || title.trim().length > 50) {
     return response.status(400).json({
       status: 'Fail',
-      message: 'Please enter characters  between 3 and 50'
+      message: 'Please enter characters between 3 and 50'
     });
   }
   if (description.trim().length < 5 || description.trim().length > 100) {
     return response.status(400).json({
       status: 'Fail',
-      message: 'Please enter characters  between 5 and 100'
+      message: 'Please enter characters between 5 and 100'
     });
   }
   if (tags === undefined) {

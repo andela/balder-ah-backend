@@ -2,9 +2,9 @@ import express from 'express';
 import ArticleController from '../controllers/article';
 import Comment from '../controllers/comment';
 import { rateArticle } from '../controllers/articleRatingController';
-
+import FavoriteArticleController from '../controllers/favoriteArticleController';
 import verifySlug from '../middlewares/verifySlug';
-import { verifyToken, checkUser } from '../middlewares/authentication';
+import { verifyToken, checkUser, checkAuthStatus } from '../middlewares/authentication';
 import checkInput from '../middlewares/validateArticle';
 import articleRatingValidatior from '../middlewares/validateRating';
 import PaginationHelper from '../helpers/paginationHelper';
@@ -19,6 +19,8 @@ const {
   deleteArticle
 } = ArticleController;
 
+const { favoriteArticle, unfavoriteArticle } = FavoriteArticleController;
+
 const { slugChecker } = verifySlug;
 
 const articlesBaseEndpoint = '/articles';
@@ -27,12 +29,12 @@ const { checkQueryparameter } = PaginationHelper;
 
 articlesRouter
   .route(articlesBaseEndpoint)
-  .get(checkQueryparameter, getAllArticles)
+  .get(checkAuthStatus, checkQueryparameter, getAllArticles)
   .post(verifyToken, checkInput, createArticle);
 
 articlesRouter
   .route(`${articlesBaseEndpoint}/:slug`)
-  .get(verifyToken, slugChecker, getArticle)
+  .get(checkAuthStatus, slugChecker, getArticle)
   .put(verifyToken, slugChecker, checkUser, updateArticle)
   .delete(verifyToken, slugChecker, checkUser, deleteArticle)
   .post(verifyToken, slugChecker, articleRatingValidatior, rateArticle);
@@ -54,5 +56,10 @@ articlesRouter
 articlesRouter
   .route(`${articlesBaseEndpoint}/:slug/comments/:commentId`)
   .get([slugChecker, Comment.getOne]);
+
+articlesRouter
+  .route(`${articlesBaseEndpoint}/:slug/favorite`)
+  .post(verifyToken, slugChecker, favoriteArticle)
+  .delete(verifyToken, slugChecker, unfavoriteArticle);
 
 export default articlesRouter;
