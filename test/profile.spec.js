@@ -27,7 +27,6 @@ chai.use(sinonChai);
 
 describe('Test for getting user profile', () => {
   before(async () => {
-    // create remove existing users
     await addSeedUser(completeProfileData);
   });
 

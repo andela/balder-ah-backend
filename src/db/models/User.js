@@ -62,22 +62,19 @@ export default (sequelize, DataTypes) => {
       },
       twitterid: {
         type: DataTypes.STRING,
-        token: {
-          type: DataTypes.STRING,
-          allowNull: true
-        },
-        bio: {
-          type: DataTypes.STRING,
-          allowNull: true
-        },
-        image: {
-          type: DataTypes.STRING,
-          allowNull: true,
-          validate: {
-            isUrl: {
-              args: true,
-              msg: 'Invalid image format'
-            }
+        allowNull: true
+      },
+      bio: {
+        type: DataTypes.STRING,
+        allowNull: true
+      },
+      image: {
+        type: DataTypes.STRING,
+        allowNull: true,
+        validate: {
+          isUrl: {
+            args: true,
+            msg: 'Invalid image format'
           }
         }
       },

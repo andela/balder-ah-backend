@@ -1,6 +1,8 @@
 import Models from '../db/models';
+import TagHelpers from './tagHelpers';
 
-const { Article } = Models;
+const { Article, ArticleTags } = Models;
+
 
 /**
  * @description class representing Article Helpers
@@ -8,9 +10,10 @@ const { Article } = Models;
  */
 class ArticleModel {
   /**
-   * @description - This method is responsible for quering the database for an article
+   * @description - This method is responsible for creating a new article
    * @static
-   * @returns {object} - object representing response message
+   * @param {object} all arguments conatining objects needed to create a new article
+   * @returns {object} - object representing newly created article
    * @memberof ArticleModel
    */
   static async createArticle(...args) {
@@ -46,7 +49,14 @@ class ArticleModel {
         {
           association: 'author',
           attributes: ['username']
-        }
+        },
+        {
+          association: 'tags',
+          attributes: ['name'],
+          through: {
+            attributes: []
+          }
+        },
       ]
     });
     return allArticle;
@@ -72,7 +82,14 @@ class ArticleModel {
         {
           association: 'author',
           attributes: ['username']
-        }
+        },
+        {
+          association: 'tags',
+          attributes: ['name'],
+          through: {
+            attributes: []
+          }
+        },
       ]
     });
     return oneArticle;
@@ -109,7 +126,9 @@ class ArticleModel {
    * @memberof ArticleModel
    */
   static async update(request, response, data, slug) {
-    const { title, description, body } = request.body;
+    const {
+      title, description, body, tags
+    } = request.body;
     try {
       const updatedData = {};
       if (title) {
@@ -121,7 +140,7 @@ class ArticleModel {
       if (body) {
         updatedData.body = body;
       }
-
+      const tagResponse = await TagHelpers.addNewTag(tags);
       const updatedArticle = await Article.update(updatedData, {
         returning: true,
         where: {
@@ -129,10 +148,13 @@ class ArticleModel {
         }
       });
 
+      const searchedSlug = slug;
+      const foundArticle = await Article.findOne({ where: { slug: searchedSlug } });
+      foundArticle.setTags(tagResponse);
       return response.status(200).json({
         status: 'Success',
         message: 'Article has been updated successfully',
-        updatedArticle: updatedArticle[1][0],
+        updatedArticle: updatedArticle[1][0]
       });
     } catch (error) {
       return response.status(500).json({
@@ -151,11 +173,19 @@ class ArticleModel {
    * @memberof ArticleModel
    */
   static async delete(slug) {
+    const fondArticle = await Article.findOne({
+      where: {
+        slug
+      }
+    });
     const deletedItem = await Article.destroy({
       where: {
         slug
       }
     });
+    if (deletedItem) {
+      ArticleTags.destroy({ where: { articleId: fondArticle.id } });
+    }
     return deletedItem;
   }
 

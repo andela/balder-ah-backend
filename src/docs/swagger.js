@@ -310,6 +310,10 @@ export default {
               body: {
                 required: true,
                 type: 'string'
+              },
+              tags: {
+                required: true,
+                type: 'array'
               }
             }
           }
@@ -336,6 +340,18 @@ export default {
             description: ''
           }
         ],
+        responses: {
+          200: {
+            description: '',
+            headers: {}
+          }
+        }
+      },
+      delete: {
+        summary: 'Delete an article',
+        operationId: 'UnnammedEndpointDelete',
+        produces: ['application/json'],
+        parameters: [],
         responses: {
           200: {
             description: '',
@@ -591,7 +607,7 @@ export default {
     },
     '/user': {
       get: {
-        tags: ['users, profile'],
+        tags: ['user, profile'],
         summary: 'Gets the profile/details of the currently logged in user',
         description: '',
         parameters: [],
@@ -690,45 +706,61 @@ export default {
         }
       }
     },
-    '/profiles/:username': {
-      tags: ['users, profile'],
-      summary: 'Get user profile',
-      description: '',
-      parameters: [],
-      produces: ['application/json'],
-      responses: {
-        200: {
-          description: 'Retrieved profile successfully',
-          schema: {
-            properties: {
-              status: {
-                type: 'string'
-              },
-              message: {
-                type: 'string'
-              },
-              userProfile: {
-                type: 'object',
-                properties: {
-                  username: { type: 'string' },
-                  bio: { type: 'string' },
-                  image: { type: 'string' }
-                }
-              }
-            },
-            example: {
-              status: 'Success',
-              message: 'Retrieved profile successfully',
-              userProfile: {
-                username: 'testuser',
-                bio: 'This is a short bio',
-                image: 'https://example.com/image.jpg'
+    '/profiles/{username}': {
+      get: {
+        tags: ['profiles'],
+        summary: 'Get user profile',
+        description: '',
+        parameters: [
+          {
+            name: 'username',
+            in: 'path',
+            description: 'Username to be found',
+            schema: {
+              properties: {
+                username: {
+                  required: true,
+                  type: 'string'
+                },
               }
             }
           }
-        },
-        404: {
-          description: 'User not found'
+        ],
+        produces: ['application/json'],
+        responses: {
+          200: {
+            description: 'Retrieved profile successfully',
+            schema: {
+              properties: {
+                status: {
+                  type: 'string'
+                },
+                message: {
+                  type: 'string'
+                },
+                userProfile: {
+                  type: 'object',
+                  properties: {
+                    username: { type: 'string' },
+                    bio: { type: 'string' },
+                    image: { type: 'string' }
+                  }
+                }
+              },
+              example: {
+                status: 'Success',
+                message: 'Retrieved profile successfully',
+                userProfile: {
+                  username: 'testuser',
+                  bio: 'This is a short bio',
+                  image: 'https://example.com/image.jpg'
+                }
+              }
+            }
+          },
+          404: {
+            description: 'User not found'
+          }
         }
       }
     },
@@ -870,8 +902,7 @@ export default {
       }
     },
     articles: {
-
-      required: ['title', 'description', 'body'],
+      required: ['title', 'description', 'body', 'tags'],
       properties: {
         title: {
           type: 'string'
@@ -881,6 +912,9 @@ export default {
         },
         body: {
           type: 'string'
+        },
+        tags: {
+          type: 'array'
         },
         userId: {
           type: 'string'

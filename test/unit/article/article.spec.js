@@ -16,7 +16,14 @@ import {
   inCompleteArticle,
   badTitle,
   badDescription,
-  rate2, rate4, rate5, rate6, emptyRating
+  rate2,
+  rate4,
+  rate5,
+  rate6,
+  emptyRating,
+  noTagsArticle,
+  wrongTagsInputArticle,
+  emptyStringTagsInput
 } from '../../../src/db/seeders/articles';
 
 const { User, Article } = models;
@@ -107,7 +114,7 @@ describe('Test for article', () => {
       expect(response.body.newArticle.readtime).to.be.equal('4 mins');
     });
 
-    it('should not post a new artivcle with low description length', async () => {
+    it('should not post a new article with low title length', async () => {
       const response = await request
         .post(articlesEndpoint)
         .set('Authorization', firstUserToken)
@@ -119,7 +126,7 @@ describe('Test for article', () => {
       expect(response.status).to.equal(400);
     });
 
-    it('should not post a new artivcle with low description length', async () => {
+    it('should not post a new article with low description length', async () => {
       const response = await request
         .post(articlesEndpoint)
         .set('Authorization', firstUserToken)
@@ -195,7 +202,7 @@ describe('Test for article', () => {
 
       it('should get average rating on an article', async () => {
         const articleRatingStar = (Number(rate2.rating)
-        + Number(rate4.rating) + Number(rate5.rating)) / 3;
+          + Number(rate4.rating) + Number(rate5.rating)) / 3;
         const response = await request
           .get(`${articlesEndpoint}/${slug}`)
           .set('Authorization', firstUserToken);
@@ -226,127 +233,164 @@ describe('Test for article', () => {
           .to.have.property('body')
           .to.contain('rating should be a positive integer between 1 to 5');
       });
-    });
-  });
+      it('should not post an article without a tags field', async () => {
+        const response = await request
+          .post(articlesEndpoint)
+          .set('Authorization', firstUserToken)
+          .send(noTagsArticle);
+        expect(response.body.status).to.be.equal('Fail');
+        expect(response.status).to.equal(400);
+        expect(response.body.message).to.be.deep.equals('Please add a tags field');
+      });
 
-  describe('Test for get articles', () => {
-    before(async () => {
-      const secondUser = await request.post(loginEndpoint).send(successfulLogin2);
-      secondUserToken = secondUser.body.token;
-    });
-    it('should get all articles', async () => {
-      const response = await request.get(articlesEndpoint);
+      it('should not post an article without a wrong type of tags input', async () => {
+        const response = await request
+          .post(articlesEndpoint)
+          .set('Authorization', firstUserToken)
+          .send(wrongTagsInputArticle);
+        expect(response.body.status).to.be.equal('Fail');
+        expect(response.status).to.equal(400);
+        expect(response.body.message).to.be.deep.equals('Please tags should be an array of tags');
+      });
+      it('should not post an article with empty string of tags', async () => {
+        const response = await request
+          .post(articlesEndpoint)
+          .set('Authorization', firstUserToken)
+          .send(emptyStringTagsInput);
+        expect(response.body.status).to.be.equal('Fail');
+        expect(response.status).to.equal(400);
+        expect(response.body.message).to.be.deep.equals('Please all tags should be strings');
+      });
 
-      expect(response.body.status).to.be.equal('Success');
-      expect(response.body.message).to.be.deep.equals('All articles found successfully');
-    });
-    it('should get all articles', async () => {
-      const response = await request.get(articlesEndpoint).query({ page: 'were' });
-      expect(response.status).to.equal(400);
-      expect(response.body.errors.body[0]).to.be.equal('Page can only be numbers');
-    });
-    it('should get one article', async () => {
-      const response = await request
-        .get(`${articlesEndpoint}/${slug}`)
-        .set('Authorization', secondUserToken);
-
-      expect(response.body.status).to.be.equal('Success');
-      expect(response.status).to.equal(200);
-      expect(response.body.message).to.be.deep.equals('Article found successfully');
-      expect(response.body.getOneArticle.readtime).to.be.equal('4 mins');
-    });
-
-    it('should not get an unknown article', async () => {
-      const response = await request
-        .get(`${articlesEndpoint}/biro-jdfap-nvs-12344532`)
-        .set('Authorization', secondUserToken);
-
-      expect(response.body.status).to.be.equal('Fail');
-      expect(response.status).to.equal(404);
-      expect(response.body.message).to.be.deep.equals('Article not found');
-    });
-  });
-
-  describe('Test for updating articles', () => {
-    before(async () => {
-      const firstUser = await request.post(loginEndpoint).send(loginData);
-      firstUserToken = firstUser.body.token;
+      it('should not post an article with empty string of tags', async () => {
+        const response = await request
+          .post(articlesEndpoint)
+          .set('Authorization', firstUserToken)
+          .send(emptyStringTagsInput);
+        expect(response.body.status).to.be.equal('Fail');
+        expect(response.status).to.equal(400);
+        expect(response.body.message).to.be.deep.equals('Please all tags should be strings');
+      });
     });
 
-    before(async () => {
-      const secondUser = await request.post(loginEndpoint).send(successfulLogin2);
-      secondUserToken = secondUser.body.token;
+    describe('Test for get articles', () => {
+      before(async () => {
+        const secondUser = await request.post(loginEndpoint).send(successfulLogin2);
+        secondUserToken = secondUser.body.token;
+      });
+      it('should get all articles', async () => {
+        const response = await request.get(articlesEndpoint);
+        expect(response.body.status).to.be.equal('Success');
+        expect(response.body.message).to.be.deep.equals('All articles found successfully');
+      });
+
+      it('should get all articles', async () => {
+        const response = await request.get(articlesEndpoint).query({ page: 'were' });
+        expect(response.status).to.equal(400);
+        expect(response.body.errors.body[0]).to.be.equal('Page can only be numbers');
+      });
+
+      it('should get one article', async () => {
+        const response = await request
+          .get(`${articlesEndpoint}/${slug}`)
+          .set('Authorization', secondUserToken);
+        expect(response.body.status).to.be.equal('Success');
+        expect(response.status).to.equal(200);
+        expect(response.body.message).to.be.deep.equals('Article found successfully');
+        expect(response.body.getOneArticle.readtime).to.be.equal('4 mins');
+      });
+
+      it('should not get an unknown article', async () => {
+        const response = await request
+          .get(`${articlesEndpoint}/biro-jdfap-nvs-12344532`)
+          .set('Authorization', secondUserToken);
+
+        expect(response.body.status).to.be.equal('Fail');
+        expect(response.status).to.equal(404);
+        expect(response.body.message).to.be.deep.equals('Article not found');
+      });
     });
 
-    it('should update an article', async () => {
-      const response = await request
-        .put(`${articlesEndpoint}/${slug}`)
-        .set('Authorization', firstUserToken)
-        .send(updateArticle);
-      expect(response.body.status).to.be.equal('Success');
-      expect(response.body.message).to.be.deep.equals('Article has been updated successfully');
-      expect(response.body.updatedArticle.readtime).to.be.equal('2 mins');
+    describe('Test for updating articles', () => {
+      before(async () => {
+        const firstUser = await request.post(loginEndpoint).send(loginData);
+        firstUserToken = firstUser.body.token;
+      });
 
+      before(async () => {
+        const secondUser = await request.post(loginEndpoint).send(successfulLogin2);
+        secondUserToken = secondUser.body.token;
+      });
+
+      it('should update an article', async () => {
+        const response = await request
+          .put(`${articlesEndpoint}/${slug}`)
+          .set('Authorization', firstUserToken)
+          .send(updateArticle);
+        expect(response.body.status).to.be.equal('Success');
+        expect(response.body.message).to.be.deep.equals('Article has been updated successfully');
+        expect(response.body.updatedArticle.readtime).to.be.equal('2 mins');
+      });
+
+      it('should not update an unknown article', async () => {
+        const response = await request
+          .put(`${articlesEndpoint}/hfd-fdfd-vwdcas-325525`)
+          .set('Authorization', firstUserToken)
+          .send(updateArticle);
+
+        expect(response.body.status).to.be.equal('Fail');
+        expect(response.body.message).to.be.deep.equals('Article not found');
+      });
+
+      it("should not allow a user to update another user's article", async () => {
+        const response = await request
+          .put(`${articlesEndpoint}/hfd-fdfd-vwdcas-325525`)
+          .set('Authorization', secondUserToken)
+          .send(updateArticle);
+
+        expect(response.body.status).to.be.equal('Fail');
+        expect(response.status).to.equal(404);
+        expect(response.body.message).to.be.deep.equals('Article not found');
+      });
     });
 
-    it('should not update an unknown article', async () => {
-      const response = await request
-        .put(`${articlesEndpoint}/hfd-fdfd-vwdcas-325525`)
-        .set('Authorization', firstUserToken)
-        .send(updateArticle);
+    describe('Test for deleting articles', () => {
+      before(async () => {
+        const firstUser = await request.post(loginEndpoint).send(loginData);
+        firstUserToken = firstUser.body.token;
+      });
 
-      expect(response.body.status).to.be.equal('Fail');
-      expect(response.body.message).to.be.deep.equals('Article not found');
-    });
+      before(async () => {
+        const secondUser = await request.post(loginEndpoint).send(successfulLogin2);
+        secondUserToken = secondUser.body.token;
+      });
 
-    it("should not allow a user to update another user's article", async () => {
-      const response = await request
-        .put(`${articlesEndpoint}/hfd-fdfd-vwdcas-325525`)
-        .set('Authorization', secondUserToken)
-        .send(updateArticle);
+      it('should delete an article', async () => {
+        const response = await request
+          .delete(`${articlesEndpoint}/${slug}`)
+          .set('Authorization', firstUserToken);
+        expect(response.body.status).to.be.equal('Success');
+        expect(response.status).to.equal(200);
+        expect(response.body.message).to.be.deep.equals('Article deleted successfully');
+      });
 
-      expect(response.body.status).to.be.equal('Fail');
-      expect(response.status).to.equal(404);
-      expect(response.body.message).to.be.deep.equals('Article not found');
-    });
-  });
+      it('should not delete an article', async () => {
+        const response = await request
+          .delete(`${articlesEndpoint}/${secondSlug}`)
+          .set('Authorization', 'jdkfdjkfdkf');
 
-  describe('Test for deleting articles', () => {
-    before(async () => {
-      const firstUser = await request.post(loginEndpoint).send(loginData);
-      firstUserToken = firstUser.body.token;
-    });
+        expect(response.status).to.equal(403);
+      });
 
-    before(async () => {
-      const secondUser = await request.post(loginEndpoint).send(successfulLogin2);
-      secondUserToken = secondUser.body.token;
-    });
+      it('should not delete an unknown article', async () => {
+        const response = await request
+          .delete(`${articlesEndpoint}/hfd-fdfd-vwdcas-325525`)
+          .set('Authorization', firstUserToken);
 
-    it('should delete an article', async () => {
-      const response = await request
-        .delete(`${articlesEndpoint}/${slug}`)
-        .set('Authorization', firstUserToken);
-      expect(response.body.status).to.be.equal('Success');
-      expect(response.status).to.equal(200);
-      expect(response.body.message).to.be.deep.equals('Article deleted successfully');
-    });
-
-    it('should not delete an article', async () => {
-      const response = await request
-        .delete(`${articlesEndpoint}/${secondSlug}`)
-        .set('Authorization', 'jdkfdjkfdkf');
-
-      expect(response.status).to.equal(403);
-    });
-
-    it('should not delete an unknown article', async () => {
-      const response = await request
-        .delete(`${articlesEndpoint}/hfd-fdfd-vwdcas-325525`)
-        .set('Authorization', firstUserToken);
-
-      expect(response.body.status).to.be.equal('Fail');
-      expect(response.status).to.equal(404);
-      expect(response.body.message).to.be.deep.equals('Article not found');
+        expect(response.body.status).to.be.equal('Fail');
+        expect(response.status).to.equal(404);
+        expect(response.body.message).to.be.deep.equals('Article not found');
+      });
     });
   });
 });
