@@ -102,7 +102,7 @@ export default (sequelize, DataTypes) => {
     }
   );
   User.associate = (models) => {
-    User.hasMany(models.Article, { foreignKey: 'userId', as: 'author' });
+    User.hasMany(models.Article, { foreignKey: 'userId', as: 'articles' });
     User.hasMany(models.Comment, { foreignKey: 'userId', as: 'comments' });
     User.belongsToMany(models.User, {
       foreignKey: 'userId',

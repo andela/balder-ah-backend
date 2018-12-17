@@ -48,6 +48,14 @@ const completeProfileData = {
   image: 'http://google.com.ng'
 };
 
+const completeProfileData2 = {
+  username: 'juwonzy',
+  email: 'juwonzy@gmail.com',
+  password: 'marcpass123',
+  bio: 'This is a short bio',
+  image: 'http://google.com.ng.png'
+};
+
 const undefinedPassword = {
   username: 'jayboy',
   email: 'marcjay@gmail.com',
@@ -234,6 +242,7 @@ export {
   nonExistingEmail,
   incorrectPassword,
   completeProfileData,
+  completeProfileData2,
   updateProfile,
   successfulSignup,
   loginData,

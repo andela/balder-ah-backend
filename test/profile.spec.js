@@ -7,16 +7,17 @@ import models from '../src/db/models';
 
 import {
   completeProfileData,
+  completeProfileData2,
   addSeedUser,
   removeSeedUsers,
   fakeUsername,
-  lengthyUsername
+  lengthyUsername,
 } from '../src/db/seeders/user';
 import {
   getCurrentUser,
   getUserProfile,
   updateProfile
-} from '../src/controllers/userProfileHandler';
+} from '../src/controllers/userProfileController';
 import checkUsernameParam from '../src/middlewares/paramsHandler';
 
 const { User } = models;
@@ -24,6 +25,7 @@ const { User } = models;
 chai.should();
 chai.use(chaiHttp);
 chai.use(sinonChai);
+
 
 describe('Test for getting user profile', () => {
   before(async () => {
@@ -69,8 +71,8 @@ describe('Test for getting user profile', () => {
     };
 
     const response = {
-      status() {},
-      json() {}
+      status() { },
+      json() { }
     };
 
     sinon.stub(User, 'findOne').throws();
@@ -91,8 +93,8 @@ describe('Test for getting user profile', () => {
     };
 
     const response = {
-      status() {},
-      json() {}
+      status() { },
+      json() { }
     };
 
     sinon.stub(User, 'findOne').throws();
@@ -119,8 +121,8 @@ describe('Test for getting user profile', () => {
     };
 
     const response = {
-      status() {},
-      json() {}
+      status() { },
+      json() { }
     };
 
     const userModel = User;
@@ -148,8 +150,8 @@ describe('Test for getting user profile', () => {
     };
 
     const response = {
-      status() {},
-      json() {}
+      status() { },
+      json() { }
     };
 
     sinon.stub(User, 'findOne').throws();
@@ -167,13 +169,61 @@ describe('Test for getting user profile', () => {
       }
     };
     const response = {
-      status() {},
-      json() {}
+      status() { },
+      json() { }
     };
 
     sinon.stub(response, 'status').returnsThis();
     await checkUsernameParam(request, response);
 
     expect(response.status).to.have.been.calledWith(400);
+  });
+});
+
+describe('Test for getting all user profile', () => {
+  describe('Test for not getting any user', () => {
+    let userToken = '';
+    before(async () => {
+      await addSeedUser(completeProfileData);
+    });
+    before(async () => {
+      const response = await chai
+        .request(server)
+        .post('/api/users/login')
+        .send(completeProfileData);
+      userToken = response.body.token;
+    });
+
+    it('Should return 404 for fail if no user was found', async () => {
+      const response = await chai
+        .request(server)
+        .get('/api/profiles/')
+        .set('authorization', userToken);
+      expect(response).to.have.status(404);
+      expect(response.body.message).to.be.a('string');
+    });
+  });
+
+  describe('Test for not getting any user', () => {
+    let userToken = '';
+    before(async () => {
+      await addSeedUser(completeProfileData2);
+    });
+    before(async () => {
+      const response = await chai
+        .request(server)
+        .post('/api/users/login')
+        .send(completeProfileData);
+      userToken = response.body.token;
+    });
+
+    it('Should return 200 for returning all users', async () => {
+      const response = await chai
+        .request(server)
+        .get('/api/profiles/')
+        .set('authorization', userToken);
+      expect(response).to.have.status(200);
+      expect(response.body.message).to.be.a('string');
+    });
   });
 });

@@ -66,6 +66,12 @@ class UserProfileController {
       const foundUser = await User.findOne({
         where: { id: userId }
       });
+      if (!foundUser) {
+        return response.status(404).json({
+          status: 'Fail',
+          message: 'Please sign up'
+        });
+      }
       const updatedUser = await User.update(
         {
           username: request.body.username || foundUser.username,
@@ -130,8 +136,73 @@ class UserProfileController {
       });
     }
   }
+
+  /**
+   * @description - This method is responsible for retrieving all profiles of users on the patform
+   *
+   * @static
+   * @param {object} request - Request sent to the router
+   * @param {object} response - Response sent from the controller
+   *
+   * @returns {object} - object representing response message and user object
+   *
+   * @memberof UserProfileController
+   */
+  static async getAllProfiles(request, response) {
+    const { payload } = request.userData;
+    const { username } = payload;
+    try {
+      let allProfiles = await User.findAll({
+        where: {
+          username: {
+            $notLike: `${username}`
+          }
+        },
+        attributes: [
+          'username', 'bio', 'image'
+        ],
+        include: [
+          {
+            association: 'articles',
+          },
+        ]
+      });
+      if (allProfiles.length < 1) {
+        return response.status(404).json({
+          status: 'Fail',
+          message: 'No users found',
+        });
+      }
+      allProfiles = allProfiles.map((author) => {
+        author = author.toJSON();
+        author.articles = author.articles.length;
+        return author;
+      });
+
+      return response.status(200).json({
+        status: 'Success',
+        message: 'Retrieved profiles successfully',
+        allProfiles,
+      });
+    } catch (error) {
+      response.status(500).json({
+        status: 'Fail',
+        error: error.message
+      });
+    }
+  }
 }
 
-const { getCurrentUser, updateProfile, getUserProfile } = UserProfileController;
+const {
+  getCurrentUser,
+  updateProfile,
+  getUserProfile,
+  getAllProfiles
+} = UserProfileController;
 
-export { getCurrentUser, updateProfile, getUserProfile };
+export {
+  getCurrentUser,
+  updateProfile,
+  getUserProfile,
+  getAllProfiles
+};

@@ -657,7 +657,7 @@ export default {
     },
     '/user': {
       get: {
-        tags: ['users', 'profile'],
+        tags: ['profiles'],
         summary: 'Gets the profile/details of the currently logged in user',
         description: '',
         parameters: [],
@@ -701,8 +701,8 @@ export default {
         }
       },
       put: {
-        tags: ['users', 'profile'],
-        summary: 'Gets the profile/details of the currently logged in user',
+        tags: ['profiles'],
+        summary: 'Updates the profile/details of the currently logged in user',
         description: '',
         parameters: [
           {
@@ -756,22 +756,72 @@ export default {
         }
       }
     },
-    '/profiles/{username}': {
+    '/profiles': {
       get: {
         tags: ['profiles'],
-        summary: 'Get user profile',
+        summary: 'Gets a list of the profiles of users on the platform',
+        description: '',
+        parameters: [],
+        produces: ['application/json'],
+        responses: {
+          200: {
+            description: 'Retrieved profiles successfully',
+            schema: {
+              properties: {
+                status: {
+                  type: 'string'
+                },
+                message: {
+                  type: 'string'
+                },
+                allProfiles: {
+                  type: 'object',
+                  properties: [
+                    {
+                      username: { type: 'string' },
+                      bio: { type: 'string' },
+                      image: { type: 'string' },
+                      articles: { type: 'intger' }
+                    }
+                  ]
+                }
+              },
+              example: {
+                status: 'Success',
+                message: 'Retrieved profiles successfully',
+                allProfiles: [
+                  {
+                    username: 'juwizymanana',
+                    bio: null,
+                    image: null,
+                    articles: 0
+                  }
+                ]
+              }
+            }
+          },
+          404: {
+            description: 'No User found'
+          }
+        }
+      },
+    },
+    '/profiles/:username': {
+      get: {
+        tags: ['profiles'],
+        summary: 'Get profile of a user',
         description: '',
         parameters: [
           {
             name: 'username',
             in: 'path',
-            description: 'Username to be found',
+            description: 'Existing user to be found',
             schema: {
               properties: {
                 username: {
                   required: true,
                   type: 'string'
-                },
+                }
               }
             }
           }

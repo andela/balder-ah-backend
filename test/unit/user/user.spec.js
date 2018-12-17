@@ -31,9 +31,12 @@ import {
   resetPasswordWithWrongEmail,
   updatePasswordSuccessfully,
   updateWithWrongPassword,
-  emptyResetEmail
+  emptyResetEmail,
+  addSeedUser
 } from '../../../src/db/seeders/user';
 import { loginUser, registerUser } from '../../../src/controllers/userController';
+import { getAllProfiles } from '../../../src/controllers/userProfileController';
+
 
 const { User, Article } = models;
 const { expect } = chai;
@@ -465,6 +468,52 @@ describe('Users Authentication', () => {
         .to.contain('please enter a valid image URL');
     });
   });
+
+  describe('Test for updating user profile without the user existing', () => {
+    let userToken = '';
+    before(async () => {
+      await addSeedUser(successfulSignup);
+    });
+    before(async () => {
+      const response = await chai
+        .request(server)
+        .post('/api/users/login')
+        .send(loginData);
+      userToken = response.body.token;
+    });
+    before(async () => {
+      await removeSeedUsers();
+    });
+    it('Should return 404 for not successfully updating a profile if user doesn\'t exist', async () => {
+      const response = await chai
+        .request(server)
+        .put('/api/user')
+        .set('authorization', userToken)
+        .send(updateProfile);
+      expect(response.status).to.equal(404);
+      expect(response.body.message).to.be.a('string');
+    });
+
+    it('Should return 500 for not successfully updating a profile if user doesn\'t exist', async () => {
+      const requestObj = {
+        userData: {
+          payload: {
+            username: 'jaybaba'
+          }
+        }
+      };
+      const response = {
+        status() {},
+        json() {}
+      };
+
+      sinon.stub(response, 'status').returnsThis();
+      sinon.stub(User, 'findAll').throws();
+      await getAllProfiles(requestObj, response);
+      expect(response.status).to.have.been.calledWith(500);
+    });
+  });
+
   describe('Test for creating password reset token', () => {
     it('Should return 201 for success', async () => {
       const response = await request.post(signupEndpoint).send(successfulSignup);

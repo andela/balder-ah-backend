@@ -2,7 +2,7 @@ import express from 'express';
 import { resetToken, updateUserPassword } from '../controllers/sendResetToken';
 
 import { registerUser, loginUser } from '../controllers/userController';
-import { getCurrentUser, updateProfile } from '../controllers/userProfileHandler';
+import { getCurrentUser, updateProfile } from '../controllers/userProfileController';
 import { verifyToken } from '../middlewares/authentication';
 import {
   checkUndefined,
