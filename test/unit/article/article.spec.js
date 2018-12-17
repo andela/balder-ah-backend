@@ -73,6 +73,12 @@ describe('Test for article', () => {
   });
 
   describe('Test for no articles', () => {
+    it('should return empty array when page contains no article', async () => {
+      const response = await request.get(articlesEndpoint);
+      expect(response.redirects).to.have.length('0');
+      expect(response.body.message).to.equal('No article found');
+    });
+
     before(async () => {
       const secondUser = await request.post(loginEndpoint).send(successfulLogin2);
       secondUserToken = secondUser.body.token;
@@ -92,6 +98,7 @@ describe('Test for article', () => {
         .send(createArticle);
       // eslint-disable-next-line prefer-destructuring
       slug = response.body.newArticle.slug;
+
       expect(response.body)
         .to.have.property('message')
         .eql('Article created successfully');
@@ -243,7 +250,7 @@ describe('Test for article', () => {
         expect(response.body.message).to.be.deep.equals('Please add a tags field');
       });
 
-      it('should not post an article without a wrong type of tags input', async () => {
+      it('should not post an article with a wrong type of tags input', async () => {
         const response = await request
           .post(articlesEndpoint)
           .set('Authorization', firstUserToken)
@@ -271,6 +278,17 @@ describe('Test for article', () => {
         expect(response.status).to.equal(400);
         expect(response.body.message).to.be.deep.equals('Please all tags should be strings');
       });
+
+      it('should not get articles when page is not a number', async () => {
+        const response = await request.get(articlesEndpoint).query({ page: 'were' });
+        expect(response.status).to.equal(400);
+        expect(response.body.errors.body[0]).to.be.equal('Page can only be numbers');
+      });
+      it('should not get articles when page number is less than 1', async () => {
+        const response = await request.get(articlesEndpoint).query({ page: -1 });
+        expect(response.status).to.equal(400);
+        expect(response.body.errors.body[0]).to.be.equal('Page number must be 1 or greater than 1');
+      });
     });
 
     describe('Test for get articles', () => {
@@ -282,12 +300,6 @@ describe('Test for article', () => {
         const response = await request.get(articlesEndpoint);
         expect(response.body.status).to.be.equal('Success');
         expect(response.body.message).to.be.deep.equals('All articles found successfully');
-      });
-
-      it('should get all articles', async () => {
-        const response = await request.get(articlesEndpoint).query({ page: 'were' });
-        expect(response.status).to.equal(400);
-        expect(response.body.errors.body[0]).to.be.equal('Page can only be numbers');
       });
 
       it('should get one article', async () => {

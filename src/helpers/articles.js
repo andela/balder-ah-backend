@@ -42,9 +42,6 @@ class ArticleModel {
       offset: startFrom,
       limit: numberOfArtclesPerPage,
       order: [['createdAt', 'DESC']],
-      attributes: {
-        exclude: ['userId']
-      },
       include: [
         {
           association: 'author',
@@ -76,9 +73,6 @@ class ArticleModel {
     const oneArticle = await Article.findOne({
       where: {
         slug
-      },
-      attributes: {
-        exclude: ['userId']
       },
       include: [
         {

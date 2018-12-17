@@ -7,7 +7,11 @@ import verifySlug from '../middlewares/verifySlug';
 import { verifyToken, checkUser, checkAuthStatus } from '../middlewares/authentication';
 import checkInput from '../middlewares/validateArticle';
 import articleRatingValidatior from '../middlewares/validateRating';
+
 import PaginationHelper from '../helpers/paginationHelper';
+
+import { getReadStatistics } from '../controllers/statisticsController';
+import articleStatsValidatior from '../middlewares/validateStatistics';
 
 const articlesRouter = express.Router();
 
@@ -38,6 +42,10 @@ articlesRouter
   .put(verifyToken, slugChecker, checkUser, updateArticle)
   .delete(verifyToken, slugChecker, checkUser, deleteArticle)
   .post(verifyToken, slugChecker, articleRatingValidatior, rateArticle);
+
+articlesRouter
+  .route(`${articlesBaseEndpoint}/:slug/statistics`)
+  .get(verifyToken, slugChecker, articleStatsValidatior, getReadStatistics);
 
 articlesRouter
   .route(`${articlesBaseEndpoint}/:slug/comments`)

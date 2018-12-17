@@ -39,6 +39,10 @@ export default {
     {
       name: 'ratings',
       description: 'The ratings posted on articles on Author\'s Haven'
+    },
+    {
+      name: 'statistics',
+      description: 'The reading statistics of articles on Author\'s Haven'
     }
   ],
   schemes: ['https', 'http'],
@@ -327,7 +331,7 @@ export default {
         }
       },
       get: {
-        tags: ['articles'],
+        tags: ['articles', 'statistics'],
         summary: 'Get all article',
         operationId: 'ArticlesGet',
         produces: ['application/json'],
@@ -493,6 +497,52 @@ export default {
             name: 'commentId',
             in: 'path',
             required: true
+          }
+        ]
+      }
+    },
+    '/articles/{slug}/statistics?year={year}&month={month}': {
+      get: {
+        summary: 'Get reading statistics of an article',
+        description: '',
+        consumes: ['application/x-www-form-urlencoded'],
+        responses: {
+          200: {
+            description: 'Stats successfully fetched',
+            schema: {
+              properties: {
+                message: {
+                  type: 'string'
+                },
+                readCount: {
+                  type: 'string'
+                }
+              },
+              example: {
+                message: 'Total reading statistics',
+                lifeTimeReadCount: '3'
+              }
+            }
+          }
+        },
+        parameters: [
+          {
+            type: 'string',
+            name: 'slug',
+            in: 'path',
+            required: true
+          },
+          {
+            type: 'string',
+            name: 'year',
+            in: 'query',
+            required: true
+          },
+          {
+            type: 'string',
+            name: 'month',
+            in: 'query',
+            required: false
           }
         ]
       }
@@ -1023,6 +1073,28 @@ export default {
         },
         articleSlug: {
           type: 'string'
+        },
+        createdAt: {
+          readOnly: true,
+          type: 'string'
+        },
+        updatedAt: {
+          readOnly: true,
+          type: 'string'
+        }
+      }
+    },
+    statistics: {
+      required: ['author', 'articleSlug', 'readCount'],
+      properties: {
+        author: {
+          type: 'string'
+        },
+        articleSlug: {
+          type: 'string'
+        },
+        readCount: {
+          type: 'integer'
         },
         createdAt: {
           readOnly: true,

@@ -3,6 +3,7 @@ import ArticleModel from '../helpers/articles';
 import { articleAverageRating } from './articleRatingController';
 import TagHelpers from '../helpers/tagHelpers';
 import FavoriteModelHelper from '../helpers/favorite';
+import { hasReadArticle } from './statisticsController';
 
 /**
  * @description class representing Article Controller
@@ -119,13 +120,15 @@ class ArticleController {
     const { isLoggedIn } = request;
     try {
       const getOneArticle = (await ArticleModel.getOneArticle(articleSlug)).toJSON();
+
       getOneArticle.tags = getOneArticle.tags.map(tagname => tagname.name);
       getOneArticle.favoritesCount = getOneArticle.favoritesCount.length;
-      getOneArticle.favorited = isLoggedIn
-        ? await FavoriteModelHelper
-          .hasBeenFavorited(getOneArticle.id, request.userData.payload.id)
+      getOneArticle.favorited = isLoggedIn ? await FavoriteModelHelper
+        .hasBeenFavorited(getOneArticle.id, request.userData.payload.id)
         : false;
+
       const articleRatingStar = await articleAverageRating(request);
+      await hasReadArticle(request, getOneArticle.author.username);
 
       return response.status(200).json({
         status: 'Success',
