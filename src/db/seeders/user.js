@@ -234,6 +234,11 @@ const updateWithWrongPassword = {
 const emptyResetEmail = {
   email: '',
 };
+const successfulSignup3 = {
+  email: 'okoros@gmail.com',
+  username: 'okoro',
+  password: 'okoro1233456'
+};
 
 export {
   successfulSignup1,
@@ -277,5 +282,6 @@ export {
   thirdUserSignup,
   thirdUserLogin,
   fourthUserSignup,
-  fourthUserLogin
+  fourthUserLogin,
+  successfulSignup3
 };

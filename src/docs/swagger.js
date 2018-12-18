@@ -547,6 +547,38 @@ export default {
         ]
       }
     },
+    '/articles/{slug}/comments/highLightText': {
+      post: {
+        tags: ['articles'],
+        summary: 'Highlight and comment on a text in an article',
+        description: 'Creates comment on a highlighted text',
+        parameters: [
+          {
+            name: 'article',
+            in: 'body',
+            required: true,
+            description: '',
+            schema: {
+              text: {
+                required: true,
+                type: 'string'
+              },
+              comment: {
+                required: true,
+                type: 'string'
+              },
+            }
+          }
+        ],
+        produces: ['application/json'],
+        responses: {
+          201: {
+            description: '',
+            schema: {}
+          }
+        }
+      },
+    },
     '/auth/facebook': {
       get: {
         tags: ['users', 'social'],

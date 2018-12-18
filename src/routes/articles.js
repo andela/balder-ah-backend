@@ -3,6 +3,9 @@ import ArticleController from '../controllers/article';
 import Comment from '../controllers/comment';
 import { rateArticle } from '../controllers/articleRatingController';
 import FavoriteArticleController from '../controllers/favoriteArticleController';
+import HighLightedText from '../controllers/HighLightedText';
+import { validateInput } from '../middlewares/helper';
+
 import verifySlug from '../middlewares/verifySlug';
 import { verifyToken, checkUser, checkAuthStatus } from '../middlewares/authentication';
 import checkInput from '../middlewares/validateArticle';
@@ -69,5 +72,9 @@ articlesRouter
   .route(`${articlesBaseEndpoint}/:slug/favorite`)
   .post(verifyToken, slugChecker, favoriteArticle)
   .delete(verifyToken, slugChecker, unfavoriteArticle);
+
+articlesRouter
+  .route(`${articlesBaseEndpoint}/:slug/comments/highlight-text`)
+  .post(verifyToken, validateInput, HighLightedText.createComment);
 
 export default articlesRouter;

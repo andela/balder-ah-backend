@@ -13,6 +13,8 @@ const sendgrid = (toEmail, fromEmail, hostUrl, token) => {
   };
   return sgMail.send(email);
 };
+
+
 const verifyPasswordResetToken = (request, response, next) => {
   const { token } = request.query;
   if (token) {
@@ -36,4 +38,14 @@ const verifyPasswordResetToken = (request, response, next) => {
   }
 };
 
-export { sendgrid, verifyPasswordResetToken };
+const validateInput = (request, response, next) => {
+  const { text, comment } = request.body;
+  if (text.trim().length < 1 || comment.trim().length < 1) {
+    return response.status(400).json({
+      status: 'Fail',
+      message: 'Text and comment fields must not be empty'
+    });
+  }
+  return next();
+};
+export { sendgrid, verifyPasswordResetToken, validateInput };
