@@ -240,6 +240,17 @@ const successfulSignup3 = {
   password: 'okoro1233456'
 };
 
+const firstSearchUserSignup = {
+  username: 'peter',
+  email: 'peter@andela.com',
+  password: 'peterpeter'
+};
+const secondSearchUserSignup = {
+  username: 'odekwo',
+  email: 'odekwo@andela.com',
+  password: 'odekwopeter'
+};
+
 export {
   successfulSignup1,
   successfulSignup2,
@@ -283,5 +294,7 @@ export {
   thirdUserLogin,
   fourthUserSignup,
   fourthUserLogin,
-  successfulSignup3
+  successfulSignup3,
+  firstSearchUserSignup,
+  secondSearchUserSignup
 };
