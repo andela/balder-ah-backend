@@ -5,6 +5,7 @@ import TagHelpers from '../helpers/tagHelpers';
 import FavoriteModelHelper from '../helpers/favorite';
 import { hasReadArticle } from './statisticsController';
 import logTracker from '../../logger/logTraker';
+import NotificationsController from './notificationsController';
 
 const errorMessage = 'Could not complete action at this time';
 
@@ -40,6 +41,7 @@ class ArticleController {
         userId
       });
       await newArticle.setTags(tagResponse);
+      NotificationsController.newArticle(userId);
       return response.status(201).json({
         status: 'Success',
         message: 'Article created successfully',

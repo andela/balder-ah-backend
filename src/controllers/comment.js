@@ -1,6 +1,7 @@
 import models from '../db/models';
 import errorResponse from '../helpers';
 import logTracker from '../../logger/logTraker';
+import NotificationsController from './notificationsController';
 
 const { Comment: CommentModel, User } = models;
 
@@ -130,6 +131,7 @@ class Comment {
         return response.status(500).json(errorResponse(['Unable to post comment']));
       }
 
+      NotificationsController.newComment(articleId);
       return response.status(201).json({ comment: { body: commentBody } });
     } catch (error) {
       logTracker(error);

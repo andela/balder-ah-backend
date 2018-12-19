@@ -1302,6 +1302,72 @@ export default {
           }
         }
       }
+    },
+    '/user/notifications': {
+      get: {
+        tags: ['notifications'],
+        summary: 'Get all notifications for a user',
+        produces: ['application/json'],
+        responses: {
+          200: {
+            description: 'notifications found successfully',
+            schema: {
+              properties: {
+                status: { type: 'string' },
+                message: { type: 'string' },
+                notifications: {
+                  type: 'array',
+                  items: {
+                    type: 'object',
+                    properties: {
+                      message: { type: 'string' },
+                      createdAt: { type: 'string' }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          404: {
+            description: 'User has no notifications yet',
+            schema: {
+              properties: {
+                status: { type: 'string' },
+                message: { type: 'string' }
+              }
+            }
+          },
+          403: { description: 'User not authenticated' }
+        }
+      },
+      post: {
+        tags: ['notifications'],
+        summary: 'Update the notificaiton status of a user',
+        produces: ['application/json'],
+        parameters: [{
+          in: 'query',
+          name: 'email',
+          type: 'string',
+          description: 'either of yes or no; yes if user wants notifications, no if otherwise'
+        }, {
+          in: 'query',
+          name: 'app',
+          type: 'string',
+          description: 'either of yes or no; yes if user wants notifications, no if otherwise'
+        }],
+        responses: {
+          200: {
+            description: 'notification settings updated successfully',
+            schema: {
+              properties: {
+                status: { type: 'string' },
+                message: { type: 'string' }
+              }
+            }
+          },
+          403: { description: 'User not authenticated' }
+        }
+      }
     }
   },
   definitions: {

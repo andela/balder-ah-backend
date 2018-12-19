@@ -86,6 +86,16 @@ export default (sequelize, DataTypes) => {
       emailtoken: {
         type: DataTypes.STRING,
         allowNull: true
+      },
+      emailNotifications: {
+        type: DataTypes.BOOLEAN,
+        defaultValue: true,
+        allowNull: false
+      },
+      appNotifications: {
+        type: DataTypes.BOOLEAN,
+        defaultValue: true,
+        allowNull: false
       }
     },
     {

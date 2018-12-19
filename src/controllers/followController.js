@@ -1,6 +1,7 @@
 import Models from '../db/models';
 import errorResponse from '../helpers/index';
 import logTracker from '../../logger/logTraker';
+import NotificationsController from './notificationsController';
 
 const { User, Follow } = Models;
 const errorMessage = 'Could not complete action at this time';
@@ -37,6 +38,7 @@ class FollowController {
             if (!created) {
               return response.status(409).json(errorResponse([`You are already following ${username}`]));
             }
+            NotificationsController.newFollower(user.id, user.email, followingId);
             return response.status(200).json({
               message: `You are now following ${username}`
             });
