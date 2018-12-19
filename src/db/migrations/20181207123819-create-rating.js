@@ -6,6 +6,12 @@ export default {
       primaryKey: true,
       type: Sequelize.INTEGER
     },
+    authorId: {
+      type: Sequelize.INTEGER
+    },
+    author: {
+      type: Sequelize.STRING
+    },
     articleSlug: {
       type: Sequelize.STRING
     },

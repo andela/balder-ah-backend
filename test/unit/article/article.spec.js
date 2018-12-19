@@ -168,7 +168,7 @@ describe('Test for article', () => {
     describe('tests for article ratings', () => {
       it('should rate an article', async () => {
         const response = await request
-          .post(`${articlesEndpoint}/${slug}`)
+          .post(`${articlesEndpoint}/${slug}/rating`)
           .set('Authorization', firstUserToken)
           .send(rate2);
 
@@ -181,7 +181,7 @@ describe('Test for article', () => {
       });
       it('should rate an article', async () => {
         const response = await request
-          .post(`${articlesEndpoint}/${slug}`)
+          .post(`${articlesEndpoint}/${slug}/rating`)
           .set('Authorization', firstUserToken)
           .send(rate4);
 
@@ -195,7 +195,7 @@ describe('Test for article', () => {
 
       it('should rate an article', async () => {
         const response = await request
-          .post(`${articlesEndpoint}/${slug}`)
+          .post(`${articlesEndpoint}/${slug}/rating`)
           .set('Authorization', firstUserToken)
           .send(rate5);
 
@@ -214,13 +214,28 @@ describe('Test for article', () => {
           .get(`${articlesEndpoint}/${slug}`)
           .set('Authorization', firstUserToken);
         expect(response.status).to.equal(200);
-        expect(response.body).to.have.property('articleRatingStar');
-        expect(response.body.articleRatingStar).to.be.deep.equals(articleRatingStar.toFixed(1));
+        expect(response.body).to.have.property('getOneArticle');
+        expect(response.body.getOneArticle.articleRatingStar)
+          .to.be.deep.equals(articleRatingStar.toFixed(1));
+      });
+
+      it('should rate an article', async () => {
+        const response = await request
+          .post(`${articlesEndpoint}/${secondSlug}/rating`)
+          .set('Authorization', firstUserToken)
+          .send(rate5);
+
+        expect(response.status).to.equal(201);
+        expect(response.body.message).to.be.deep.equals('Rating recorded successfully');
+        expect(response.body).to.be.a('object');
+        expect(response.body).to.have.property('result');
+        expect(response.body.result).to.have.property('rating');
+        expect(response.body.result.rating).to.be.deep.equals('5');
       });
 
       it('should fail for undefined and empty rating', async () => {
         const response = await request
-          .post(`${articlesEndpoint}/${slug}`)
+          .post(`${articlesEndpoint}/${slug}/rating`)
           .set('Authorization', firstUserToken)
           .send(emptyRating);
 
@@ -232,7 +247,7 @@ describe('Test for article', () => {
 
       it('should fail for rating beyond 5 or non-integer', async () => {
         const response = await request
-          .post(`${articlesEndpoint}/${slug}`)
+          .post(`${articlesEndpoint}/${slug}/rating`)
           .set('Authorization', firstUserToken)
           .send(rate6);
         expect(response.status).to.equal(400);
@@ -240,6 +255,19 @@ describe('Test for article', () => {
           .to.have.property('body')
           .to.contain('rating should be a positive integer between 1 to 5');
       });
+
+      it('Should return 200 for success if authorRating is included in response', async () => {
+        const response = await chai
+          .request(server)
+          .get('/api/user')
+          .set('authorization', firstUserToken);
+        expect(response.status).to.equal(200);
+        expect(response.body.message).to.be.a('string');
+        expect(response.body).to.have.property('currentUser');
+        expect(response.body.currentUser).to.have.property('authorRating');
+        expect(response.body.currentUser.authorRating).to.equal('4.0');
+      });
+
       it('should not post an article without a tags field', async () => {
         const response = await request
           .post(articlesEndpoint)

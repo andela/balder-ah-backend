@@ -1,4 +1,5 @@
 import user from '../db/models';
+import { authorRating } from './ratingController';
 
 const { User } = user;
 
@@ -23,6 +24,7 @@ class UserProfileController {
     const { payload } = request.userData;
     const userId = payload.id;
     try {
+      const rating = await authorRating(request);
       const foundUser = await User.findOne({
         where: { id: userId }
       });
@@ -33,6 +35,7 @@ class UserProfileController {
         bio: foundUser.bio,
         image: foundUser.image
       };
+      currentUser.authorRating = rating;
       if (foundUser) {
         return response.status(200).json({
           status: 'Success',
@@ -120,6 +123,7 @@ class UserProfileController {
           bio: userProfileFound.bio,
           image: userProfileFound.image
         };
+        userProfile.authorRating = await authorRating(request);
         return response.status(200).json({
           status: 'Success',
           message: 'Profile retrieved successfully',

@@ -6,6 +6,18 @@ export default (sequelize, DataTypes) => {
       primaryKey: true,
       type: DataTypes.INTEGER
     },
+    authorId: {
+      allowNull: false,
+      type: DataTypes.INTEGER
+    },
+    author: {
+      allowNull: false,
+      type: DataTypes.STRING
+    },
+    articleSlug: {
+      allowNull: false,
+      type: DataTypes.STRING
+    },
     rating: {
       allowNull: false,
       type: DataTypes.STRING

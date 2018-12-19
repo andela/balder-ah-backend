@@ -1,6 +1,6 @@
 import Slug from 'slug';
 import ArticleModel from '../helpers/articles';
-import { articleAverageRating } from './articleRatingController';
+import { articleAverageRating } from './ratingController';
 import TagHelpers from '../helpers/tagHelpers';
 import FavoriteModelHelper from '../helpers/favorite';
 import { hasReadArticle } from './statisticsController';
@@ -127,14 +127,13 @@ class ArticleController {
         .hasBeenFavorited(getOneArticle.id, request.userData.payload.id)
         : false;
 
-      const articleRatingStar = await articleAverageRating(request);
+      getOneArticle.articleRatingStar = await articleAverageRating(request);
       await hasReadArticle(request, getOneArticle.author.username);
 
       return response.status(200).json({
         status: 'Success',
         message: 'Article found successfully',
-        getOneArticle,
-        articleRatingStar
+        getOneArticle
       });
     } catch (error) {
       return response.status(500).json({

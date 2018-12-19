@@ -1,7 +1,7 @@
 import express from 'express';
 import ArticleController from '../controllers/article';
 import Comment from '../controllers/comment';
-import { rateArticle } from '../controllers/articleRatingController';
+import { rateArticle } from '../controllers/ratingController';
 import FavoriteArticleController from '../controllers/favoriteArticleController';
 import HighLightedText from '../controllers/HighLightedText';
 import { validateInput } from '../middlewares/helper';
@@ -44,7 +44,10 @@ articlesRouter
   .route(`${articlesBaseEndpoint}/:slug`)
   .get(checkAuthStatus, slugChecker, getArticle)
   .put(verifyToken, slugChecker, checkUser, updateArticle)
-  .delete(verifyToken, slugChecker, checkUser, deleteArticle)
+  .delete(verifyToken, slugChecker, checkUser, deleteArticle);
+
+articlesRouter
+  .route(`${articlesBaseEndpoint}/:slug/rating`)
   .post(verifyToken, slugChecker, articleRatingValidatior, rateArticle);
 
 articlesRouter
