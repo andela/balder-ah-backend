@@ -12,6 +12,7 @@ import checkInput from '../middlewares/validateArticle';
 import articleRatingValidatior from '../middlewares/validateRating';
 
 import PaginationHelper from '../helpers/paginationHelper';
+import ReportArticle from '../controllers/reportArticle';
 
 import { getReadStatistics } from '../controllers/statisticsController';
 import articleStatsValidatior from '../middlewares/validateStatistics';
@@ -66,7 +67,11 @@ articlesRouter
 
 articlesRouter
   .route(`${articlesBaseEndpoint}/:slug/comments/:commentId`)
-  .get([slugChecker, Comment.getOne]);
+  .get(slugChecker, Comment.getOne);
+
+articlesRouter
+  .route(`${articlesBaseEndpoint}/:slug/report`)
+  .post(verifyToken, slugChecker, ReportArticle.report);
 
 articlesRouter
   .route(`${articlesBaseEndpoint}/:slug/favorite`)

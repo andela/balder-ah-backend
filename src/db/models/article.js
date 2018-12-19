@@ -76,8 +76,8 @@ export default (sequelize, DataTypes) => {
       foreignKey: 'articleId'
     });
     Article.hasMany(models.Favorite, { foreignKey: 'articleId', as: 'favoritesCount' });
-
     Article.hasMany(models.Statistics, { foreignKey: 'articleSlug', as: 'statistics' });
+    Article.hasMany(models.Report, { foreignKey: 'articleId' });
   };
   return Article;
 };

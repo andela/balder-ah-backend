@@ -186,7 +186,8 @@ export default {
               },
               example: {
                 message: 'Password reset link has been sent to your mail',
-                token: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJwYXlsb2FkIjp7ImlkIjoyNSwidXNlcm5hbWUiOiJtYXJjNTAifSwiaWF0IjoxNTQzNzAxMTY2LCJleHAiOjE1NDQ1NjUxNjZ9.jbGxB1LwW3CpT9KyFq9hXdSeztQ8xLrFWE-DQszcmkk'
+                token:
+                  'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJwYXlsb2FkIjp7ImlkIjoyNSwidXNlcm5hbWUiOiJtYXJjNTAifSwiaWF0IjoxNTQzNzAxMTY2LCJleHAiOjE1NDQ1NjUxNjZ9.jbGxB1LwW3CpT9KyFq9hXdSeztQ8xLrFWE-DQszcmkk'
               }
             }
           },
@@ -215,7 +216,7 @@ export default {
                 confirmPassword: {
                   required: true,
                   type: 'string'
-                },
+                }
               }
             }
           }
@@ -234,7 +235,7 @@ export default {
                 }
               },
               example: {
-                message: 'The passwords do not match, confirm and type again.',
+                message: 'The passwords do not match, confirm and type again.'
               }
             }
           },
@@ -543,6 +544,53 @@ export default {
             name: 'month',
             in: 'query',
             required: false
+          }
+        ]
+      }
+    },
+    '/articles/{slug}/report': {
+      post: {
+        summary: 'Report article',
+        description:
+          'Allows a user to report an article that violate terms of agreement or are plagiarised ',
+
+        consumes: ['application/x-www-form-urlencoded'],
+        responses: {
+          201: {
+            description: ''
+          }
+        },
+        parameters: [
+          {
+            type: 'string',
+            name: 'slug',
+            in: 'path',
+            description: 'slug of article to report',
+            required: true
+          },
+          {
+            type: 'string',
+            name: 'type',
+            description:
+              "The report type. Could be one of ['spam', 'harrassment', 'rules violation', 'terrorism']",
+            default: 'spam',
+            required: true,
+            in: 'formData'
+          },
+          {
+            type: 'string',
+            name: 'context',
+            description: "Context of the report you're filing",
+            default: '',
+            required: false,
+            in: 'formData'
+          },
+          {
+            type: 'string',
+            name: 'Authorization',
+            description: 'Authorization token',
+            required: true,
+            in: 'header'
           }
         ]
       }
@@ -900,9 +948,7 @@ export default {
       post: {
         summary: 'Follow user',
         operationId: 'FollowPost',
-        produces: [
-          'application/json'
-        ],
+        produces: ['application/json'],
         parameters: [],
         responses: {
           200: {
@@ -921,9 +967,7 @@ export default {
       delete: {
         summary: 'Unfollow user',
         operationId: 'UnfollowDelete',
-        produces: [
-          'application/json'
-        ],
+        produces: ['application/json'],
         parameters: [],
         responses: {
           200: {
@@ -942,9 +986,7 @@ export default {
       get: {
         summary: 'Get all following',
         operationId: 'FollowingsGet',
-        produces: [
-          'application/json'
-        ],
+        produces: ['application/json'],
         parameters: [],
         responses: {
           200: {
@@ -963,9 +1005,7 @@ export default {
       get: {
         summary: 'Get all followers',
         operationId: 'FollowersGet',
-        produces: [
-          'application/json'
-        ],
+        produces: ['application/json'],
         parameters: [],
         responses: {
           200: {
