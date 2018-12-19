@@ -19,7 +19,7 @@ class UpdateHandler {
     image = image.trim();
     const errors = [];
     const myRegex = /(https?:\/\/.*\.(?:png|jpg|JPEG|JPG|GIF))/i;
-    if (!myRegex.test(image)) {
+    if (image && !myRegex.test(image)) {
       const error = {
         message: 'please enter a valid image URL'
       };
@@ -43,7 +43,7 @@ class UpdateHandler {
    */
   static async checkUndefined(request, response, next) {
     const {
-      bio, image, email, username
+      bio, image, email, username, phoneNo
     } = request.body;
     const errors = [];
     if (bio === undefined) {
@@ -70,6 +70,12 @@ class UpdateHandler {
       };
       errors.push(error);
     }
+    if (phoneNo === undefined) {
+      const error = {
+        message: 'please add a phone number(phoneNo) field'
+      };
+      errors.push(error);
+    }
     if (errors.length > 0) {
       return response.status(400).json({
         errors: { body: errors.map(error => error.message) }
@@ -90,32 +96,27 @@ class UpdateHandler {
    */
   static async checkEmpty(request, response, next) {
     let {
-      bio, image, email, username
+      bio, image, email, username, phoneNo
     } = request.body;
-    const bioTrim = bio.trim();
-    const imageTrim = image.trim();
-    const emailTrim = email.trim();
-    const usernameTrim = username.trim();
     const errors = [];
-    if (bioTrim === '') {
-      const error = {
-        message: 'please enter a bio'
-      };
-      errors.push(error);
+    if (bio) {
+      bio = bio.trim();
     }
-    if (imageTrim === '') {
-      const error = {
-        message: 'please enter an image url'
-      };
-      errors.push(error);
+    if (image) {
+      image = image.trim();
     }
-    if (usernameTrim === '') {
+    if (phoneNo) {
+      phoneNo = phoneNo.trim();
+    }
+    username = username.trim();
+    if (username === '') {
       const error = {
         message: 'please enter a username'
       };
       errors.push(error);
     }
-    if (emailTrim === '') {
+    email = email.trim();
+    if (email === '') {
       const error = {
         message: 'please enter an email'
       };
@@ -126,16 +127,42 @@ class UpdateHandler {
         errors: { body: errors.map(error => error.message) }
       });
     }
-    bio = bioTrim;
-    image = imageTrim;
-    email = emailTrim;
-    username = usernameTrim;
     request.body = {
       bio,
       image,
       email,
-      username
+      username,
+      phoneNo
     };
+    next();
+  }
+
+  /**
+   * @description - This method is responsible for checking the type of the update fields
+   *
+   * @static
+   * @param {object} request - Request sent to the router
+   * @param {object} response - Response sent from the controller
+   * @param {object} next - callback function to transfer to the next method
+   * @returns {object} - object representing response message
+   * @memberof UpdateHandler
+   */
+  static async checkType(request, response, next) {
+    const {
+      phoneNo
+    } = request.body;
+    const errors = [];
+    if (phoneNo && !(/^[0-9]+$/.test(phoneNo))) {
+      const error = {
+        message: 'please enter a valid phone number'
+      };
+      errors.push(error);
+    }
+    if (errors.length > 0) {
+      return response.status(400).json({
+        errors: { body: errors.map(error => error.message) }
+      });
+    }
     next();
   }
 
@@ -152,7 +179,7 @@ class UpdateHandler {
   static async checkLength(request, response, next) {
     const { bio, username } = request.body;
     const errors = [];
-    if (bio.length > 240) {
+    if (bio && bio.length > 240) {
       const error = {
         message: 'please bio should not be more than 240 characters'
       };
@@ -177,12 +204,14 @@ const {
   checkUndefined,
   checkEmpty,
   checkImageUrl,
-  checkLength
+  checkLength,
+  checkType
 } = UpdateHandler;
 
 export {
   checkUndefined,
   checkEmpty,
   checkImageUrl,
-  checkLength
+  checkLength,
+  checkType
 };

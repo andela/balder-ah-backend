@@ -78,10 +78,17 @@ class UserController {
    * @memberof UserController
    */
   static async loginUser(request, response) {
-    const { email, password, rememberMe } = request.body;
+    const { emailOrPhone, password, rememberMe } = request.body;
+    let emailPhone;
+    const check = /^[0-9]+$/.test(emailOrPhone);
+    if (!check) {
+      emailPhone = 'email';
+    } else if (check) {
+      emailPhone = 'phoneNo';
+    }
     try {
       const foundUser = await User.findOne({
-        where: { email }
+        where: { [emailPhone]: emailOrPhone },
       });
       if (!foundUser) {
         return response.status(404).json({

@@ -79,7 +79,8 @@ class UserProfileController {
           username: request.body.username || foundUser.username,
           email: request.body.email || foundUser.email,
           bio: request.body.bio || foundUser.bio,
-          image: request.body.image || foundUser.image
+          image: request.body.image || foundUser.image,
+          phoneNo: request.body.phoneNo || foundUser.phoneNo
         },
         {
           where: { id: foundUser.id }

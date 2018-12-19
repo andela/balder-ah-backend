@@ -5,7 +5,7 @@ const { User } = user;
 const successfulSignup = {
   email: 'marc@gmail.com',
   username: 'marcus',
-  password: 'marcpass123'
+  password: 'marcpass123',
 };
 
 const successfulSignup1 = {
@@ -21,22 +21,27 @@ const successfulSignup2 = {
 };
 
 const loginData = {
-  email: 'marc@gmail.com',
+  emailOrPhone: 'marc@gmail.com',
+  password: 'marcpass123'
+};
+
+const loginDataPhone = {
+  emailOrPhone: '2345678900978',
   password: 'marcpass123'
 };
 
 const successfulLogin2 = {
-  email: 'andela@gmail.com',
+  emailOrPhone: 'andela@gmail.com',
   password: 'sagajones'
 };
 
 const nonExistingEmail = {
-  email: 'marc50@gmail.com',
+  emailOrPhone: 'marc50@gmail.com',
   password: 'marcpass123'
 };
 
 const incorrectPassword = {
-  email: 'marc@gmail.com',
+  emailOrPhone: 'marc@gmail.com',
   password: 'marcpass12'
 };
 
@@ -46,6 +51,11 @@ const completeProfileData = {
   password: 'marcpass123',
   bio: 'This is a short bio',
   image: 'http://google.com.ng'
+};
+
+const loginData2 = {
+  emailOrPhone: 'marcjay@gmail.com',
+  password: 'marcpass123'
 };
 
 const completeProfileData2 = {
@@ -60,65 +70,89 @@ const undefinedPassword = {
   username: 'jayboy',
   email: 'marcjay@gmail.com',
   bio: 'This is a short bio',
-  image: 'http://google.com.ng'
+  image: 'http://google.com.ng',
+  phoneNo: '+2345678900978'
 };
 
 const updateProfile = {
   username: 'jayboy',
   email: 'jaybaba@gmail.com',
   bio: 'This is a long bio',
-  image: 'http://www.googleeee.com.jpg'
+  image: 'http://www.googleeee.com.jpg',
+  phoneNo: '2345678900978'
+};
+
+const updateInvalidNumber = {
+  username: 'jayboy',
+  email: 'jaybaba@gmail.com',
+  bio: 'This is a long bio',
+  image: 'http://www.googleeee.com.jpg',
+  phoneNo: 'abcdefgh'
 };
 
 const undefinedEmail = {
   username: 'jayboy',
   bio: 'This is a long bio',
-  image: 'http://www.googleeee.com.jpg'
+  image: 'http://www.googleeee.com.jpg',
+  phoneNo: '2345678900978'
 };
 
 const undefinedBio = {
   username: 'jayboy',
   email: 'jaybaba@gmail.com',
-  image: 'http://www.googleeee.com.jpg'
+  image: 'http://www.googleeee.com.jpg',
+  phoneNo: '2345678900978'
 };
 
 const undefinedImage = {
   username: 'jayboy',
   email: 'jaybaba@gmail.com',
-  bio: 'This is a long bio'
+  bio: 'This is a long bio',
+  phoneNo: '2345678900978'
 };
 
 const undefinedUsername = {
   email: 'jaybaba@gmail.com',
   bio: 'This is a long bio',
-  image: 'http://www.googleeee.com.jpg'
+  image: 'http://www.googleeee.com.jpg',
+  phoneNo: '2345678900978'
+};
+
+const undefinedPhone = {
+  email: 'jaybaba@gmail.com',
+  bio: 'This is a long bio',
+  image: 'http://www.googleeee.com.jpg',
 };
 
 const noEmailUpdate = {
   username: 'jayboy',
   email: ' ',
   bio: 'This is a long bio',
-  image: 'http://www.googleeee.com.jpg'
+  image: 'http://www.googleeee.com.jpg',
+  phoneNo: '2345678900978'
 };
 const noUsernameUpdate = {
   username: '',
   email: 'jaybaba@gmail.com',
   bio: 'This is a long bio',
-  image: 'http://www.googleeee.com.jpg'
+  image: 'http://www.googleeee.com.jpg',
+  phoneNo: '2345678900978'
 };
 
 const noImageUpdate = {
   username: 'jayboy',
   email: 'jaybaba@gmail.com',
   bio: 'This is a long bio',
-  image: ''
+  image: '',
+  phoneNo: '2345678900978'
 };
 
 const noBioUpdate = {
   username: 'jayboy',
   email: 'jaybaba@gmail.com',
   bio: '',
-  image: 'http://www.googleeee.com.jpg'
+  image: 'http://www.googleeee.com.jpg',
+  phoneNo: '2345678900978'
 };
 
 const longBioUpdate = {
@@ -132,7 +166,8 @@ const longBioUpdate = {
   vrgtrgnngrniurngrngirvrgtrgnngrniurngrngirvrgtrgnngrniurngrngirvrgtrgnngrniurngrngirvrgtrgnngrniurngrngir
   vrgtrgnngrniurngrngirvrgtrgnngrniurngrngirvrgtrgnngrniurngrngirvrgtrgnngrniurngrngirvrgtrgnngrniurngrngir
   vrgtrgnngrniurngrngirvrgtrgnngrniurngrngirvrgtrgnngrniurngrngirvrgtrgnngrniurngrngir`,
-  image: 'http://www.googleeee.com.jpg'
+  image: 'http://www.googleeee.com.jpg',
+  phoneNo: '2345678900978'
 };
 
 const lengthyUsername = `vrgtrgnngrniurngrngirvrgtrgnngrniurngrngirvrgtrgnngrni
@@ -148,14 +183,16 @@ const longUsernameUpdate = {
   username: `${lengthyUsername}`,
   email: 'jaybaba@gmail.com',
   bio: 'This is a long bio',
-  image: 'http://www.googleeee.com.jpg'
+  image: 'http://www.googleeee.com.jpg',
+  phoneNo: '2345678900978'
 };
 
 const invalidImageUrl = {
   username: 'jayboy',
   email: 'jaybaba@gmail.com',
   bio: 'This is a long bio',
-  image: 'http://www.googleeee.com'
+  image: 'http://www.googleeee.com',
+  phoneNo: '2345678900978'
 };
 
 const emptyUsername = undefined;
@@ -189,17 +226,17 @@ const thirdUserSignup = {
 };
 
 const firstUserLogin = {
-  email: 'emkay@gmail.com',
+  emailOrPhone: 'emkay@gmail.com',
   password: 'emkay123'
 };
 
 const secondUserLogin = {
-  email: 'ogidan@gmail.com',
+  emailOrPhone: 'ogidan@gmail.com',
   password: 'ogidan123'
 };
 
 const thirdUserLogin = {
-  email: 'ejola@gmail.com',
+  emailOrPhone: 'ejola@gmail.com',
   password: 'ejola123'
 };
 
@@ -210,7 +247,7 @@ const fourthUserSignup = {
 };
 
 const fourthUserLogin = {
-  email: 'ejola@gmail.com',
+  emailOrPhone: 'ejola@gmail.com',
   username: 'ejola',
   password: 'ejola123'
 };
@@ -262,6 +299,8 @@ export {
   updateProfile,
   successfulSignup,
   loginData,
+  loginData2,
+  loginDataPhone,
   addSeedUser,
   removeSeedUsers,
   fakeToken,
@@ -277,6 +316,7 @@ export {
   undefinedBio,
   undefinedImage,
   undefinedUsername,
+  undefinedPhone,
   invalidImageUrl,
   noImageUpdate,
   noBioUpdate,
@@ -296,5 +336,6 @@ export {
   fourthUserLogin,
   successfulSignup3,
   firstSearchUserSignup,
-  secondSearchUserSignup
+  secondSearchUserSignup,
+  updateInvalidNumber
 };

@@ -12,6 +12,7 @@ import {
   removeSeedUsers,
   fakeUsername,
   lengthyUsername,
+  loginData2
 } from '../src/db/seeders/user';
 import {
   getCurrentUser,
@@ -190,7 +191,7 @@ describe('Test for getting all user profile', () => {
       const response = await chai
         .request(server)
         .post('/api/users/login')
-        .send(completeProfileData);
+        .send(loginData2);
       userToken = response.body.token;
     });
 
@@ -213,7 +214,7 @@ describe('Test for getting all user profile', () => {
       const response = await chai
         .request(server)
         .post('/api/users/login')
-        .send(completeProfileData);
+        .send(loginData2);
       userToken = response.body.token;
     });
 

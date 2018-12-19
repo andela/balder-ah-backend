@@ -8,7 +8,8 @@ import {
   checkUndefined,
   checkEmpty,
   checkLength,
-  checkImageUrl
+  checkImageUrl,
+  checkType
 } from '../middlewares/updateHandler';
 import checkUndefinedPass from '../middlewares/userAuthHandler';
 import { verifyPasswordResetToken } from '../middlewares/helper';
@@ -30,6 +31,7 @@ userRouter.put(
   checkUndefined,
   checkEmpty,
   checkLength,
+  checkType,
   checkImageUrl,
   updateProfile
 );

@@ -117,7 +117,7 @@ export default {
             description: 'Existing user that want to login',
             schema: {
               properties: {
-                email: {
+                emailOrPhone: {
                   required: true,
                   type: 'string'
                 },
@@ -810,6 +810,10 @@ export default {
                 image: {
                   required: true,
                   type: 'string'
+                },
+                phoneNo: {
+                  required: true,
+                  type: 'BIGINT'
                 }
               }
             }

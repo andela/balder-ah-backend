@@ -11,6 +11,7 @@ import {
   incorrectPassword,
   successfulSignup,
   loginData,
+  loginDataPhone,
   removeSeedUsers,
   fakeToken,
   updateProfile,
@@ -22,17 +23,17 @@ import {
   undefinedBio,
   undefinedImage,
   undefinedUsername,
+  undefinedPhone,
   longUsernameUpdate,
   invalidImageUrl,
-  noImageUpdate,
-  noBioUpdate,
   undefinedPassword,
   resetPasswordSuccessful,
   resetPasswordWithWrongEmail,
   updatePasswordSuccessfully,
   updateWithWrongPassword,
   emptyResetEmail,
-  addSeedUser
+  addSeedUser,
+  updateInvalidNumber,
 } from '../../../src/db/seeders/user';
 import { loginUser, registerUser } from '../../../src/controllers/userController';
 import { getAllProfiles } from '../../../src/controllers/userProfileController';
@@ -157,6 +158,7 @@ describe('Users Authentication', () => {
       expect(response.body.message).to.be.a('string');
       expect(response.body).to.have.property('token');
     });
+
     it('Should return 404 nonExistingEmail', async () => {
       const response = await request.post(loginEndpoint).send(nonExistingEmail);
       expect(response).to.have.status(404);
@@ -315,6 +317,7 @@ describe('Users Authentication', () => {
     after(async () => {
       await removeSeedUsers();
     });
+
     it('Should return 200 for success updating a profile', async () => {
       const response = await chai
         .request(server)
@@ -323,6 +326,13 @@ describe('Users Authentication', () => {
         .send(updateProfile);
       expect(response.status).to.equal(200);
       expect(response.body.message).to.be.a('string');
+    });
+
+    it('Should return 200 for successful login with moble number', async () => {
+      const response = await request.post(loginEndpoint).send(loginDataPhone);
+      expect(response).to.have.status(200);
+      expect(response.body.message).to.be.a('string');
+      expect(response.body).to.have.property('token');
     });
 
     it('Should return 400 for empty user email', async () => {
@@ -336,32 +346,6 @@ describe('Users Authentication', () => {
         .to.be.an('object')
         .to.have.property('body')
         .to.contain('please enter an email');
-    });
-
-    it('Should return 400 for empty user bio field', async () => {
-      const response = await chai
-        .request(server)
-        .put('/api/user')
-        .set('authorization', userToken)
-        .send(noBioUpdate);
-      expect(response.status).to.equal(400);
-      expect(response.body.errors)
-        .to.be.an('object')
-        .to.have.property('body')
-        .to.contain('please enter a bio');
-    });
-
-    it('Should return 400 for empty user image field', async () => {
-      const response = await chai
-        .request(server)
-        .put('/api/user')
-        .set('authorization', userToken)
-        .send(noImageUpdate);
-      expect(response.status).to.equal(400);
-      expect(response.body.errors)
-        .to.be.an('object')
-        .to.have.property('body')
-        .to.contain('please enter an image url');
     });
 
     it('Should return 400 for empty username', async () => {
@@ -455,6 +439,19 @@ describe('Users Authentication', () => {
         .to.contain('please add a username field');
     });
 
+    it('Should return 400 for undefined phone number field', async () => {
+      const response = await chai
+        .request(server)
+        .put('/api/user')
+        .set('authorization', userToken)
+        .send(undefinedPhone);
+      expect(response.status).to.equal(400);
+      expect(response.body.errors)
+        .to.be.an('object')
+        .to.have.property('body')
+        .to.contain('please add a phone number(phoneNo) field');
+    });
+
     it('Should return 400 for invalid image url', async () => {
       const response = await chai
         .request(server)
@@ -466,6 +463,19 @@ describe('Users Authentication', () => {
         .to.be.an('object')
         .to.have.property('body')
         .to.contain('please enter a valid image URL');
+    });
+
+    it('Should return 400 for invalid phone number', async () => {
+      const response = await chai
+        .request(server)
+        .put('/api/user')
+        .set('authorization', userToken)
+        .send(updateInvalidNumber);
+      expect(response.status).to.equal(400);
+      expect(response.body.errors)
+        .to.be.an('object')
+        .to.have.property('body')
+        .to.contain('please enter a valid phone number');
     });
   });
 

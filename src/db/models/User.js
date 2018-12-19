@@ -78,6 +78,14 @@ export default (sequelize, DataTypes) => {
           }
         }
       },
+      phoneNo: {
+        type: DataTypes.BIGINT,
+        allowNull: true,
+        unique: {
+          args: true,
+          msg: 'Phone number is already taken'
+        },
+      },
       isVerified: {
         type: DataTypes.BOOLEAN,
         defaultValue: false,

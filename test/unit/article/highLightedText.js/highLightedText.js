@@ -36,7 +36,7 @@ describe('Test for article', () => {
       article = await request.post(articlesEndpoint).set('Authorization', userToken).send(createArticle);
       articleslSlug = article.body.newArticle.slug;
     });
-    it('should return 201 for successfull comment on a highlighted test', async () => {
+    it('should return 201 for successfully comment on a highlighted test', async () => {
       const payLoad = {
         text: 'work assigned',
         comment: 'indeed'
@@ -48,6 +48,7 @@ describe('Test for article', () => {
       expect(response.body).to.be.an('object');
       expect(response.body.status).to.equal('Success');
       expect(response.body.message).to.equal('Comment created successfully');
+      expect(response.body).to.be.an('object').to.have.property('comment').to.have.property('userId');
     });
     it('should return 404 for highlighted text that is not part of an article', async () => {
       const payLoad = {

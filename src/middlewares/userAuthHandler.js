@@ -12,7 +12,7 @@ class userAuthHandler {
    * @param {object} response - Response sent from the controller
    * @param {object} next - callback function to transfer to the next method
    * @returns {object} - object representing response message
-   * @memberof UpdateHandler
+   * @memberof userAuthHandler
    */
   static async checkUndefinedPass(request, response, next) {
     const { password } = request.body;
