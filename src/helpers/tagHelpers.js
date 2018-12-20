@@ -29,5 +29,25 @@ class TagHelpers {
       return error.message;
     }
   }
+
+  /**
+   * @description - This method is responsible for retrieving all the top tag names
+   * @static
+   * @param {object} topTags - Array of the top tag IDs
+   * @returns {object} - an array of tags objects with name property
+   * @memberof TagHelpers
+   */
+  static async findTags(topTags) {
+    try {
+      const allTags = await Tag.findAll();
+      const tagNames = allTags.filter(tag => topTags.includes(tag.id));
+      const sortedTagNames = topTags.map(topTag => tagNames
+        .find(tag => tag.id === topTag))
+        .map(topTag => topTag.name);
+      return sortedTagNames;
+    } catch (error) {
+      return error.message;
+    }
+  }
 }
 export default TagHelpers;

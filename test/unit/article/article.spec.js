@@ -1,7 +1,11 @@
 import chai from 'chai';
 import chaiHttp from 'chai-http';
+import sinon from 'sinon';
+import sinonChai from 'sinon-chai';
 import server from '../../../src/server';
 import models from '../../../src/db/models';
+import { rateArticle } from '../../../src/controllers/ratingController';
+
 
 import {
   successfulSignup,
@@ -30,6 +34,7 @@ const { User, Article } = models;
 const { expect } = chai;
 
 chai.use(chaiHttp);
+chai.use(sinonChai);
 
 let firstUserToken;
 let secondUserToken;
@@ -231,6 +236,26 @@ describe('Test for article', () => {
         expect(response.body).to.have.property('result');
         expect(response.body.result).to.have.property('rating');
         expect(response.body.result.rating).to.be.deep.equals('5');
+      });
+
+      it('should throw 500 for server error while rating', async () => {
+        const newRequest = {
+          body: {
+            rating: 1
+          },
+          params: {
+            slug: 'andela-438493343'
+          }
+        };
+
+        const response = {
+          status() { },
+          send() { },
+          json() { }
+        };
+        sinon.stub(response, 'status').returnsThis();
+        await rateArticle(newRequest, response);
+        response.status.should.have.been.calledWith(500);
       });
 
       it('should fail for undefined and empty rating', async () => {

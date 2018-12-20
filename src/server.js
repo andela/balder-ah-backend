@@ -6,8 +6,9 @@ import {
   otherRouter,
   profileRouter,
   socialAuthRouter,
-  emailRouter,
-  searchRouter
+  searchRouter,
+  tagsRouter,
+  emailRouter
 } from './routes';
 import registerMiddlewares from './middlewares';
 import './services/passport';
@@ -26,6 +27,7 @@ app.use('/api', articlesRouter);
 app.use('/api', profileRouter);
 app.use('/api', searchRouter);
 app.use('/api/auth', socialAuthRouter);
+app.use('/api', tagsRouter);
 app.use('/', otherRouter);
 
 app.listen(PORT);

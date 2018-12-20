@@ -26,15 +26,15 @@ export default {
   tags: [
     {
       name: 'users',
-      description: "The users of Author's Haven"
+      description: 'The users of Author\'s Haven'
     },
     {
       name: 'articles',
-      description: "The articles created by Author's Haven users"
+      description: 'The articles created by Author\'s Haven users'
     },
     {
       name: 'profiles',
-      description: "The details of the users of Author's Haven"
+      description: 'The details of the users of Author\'s Haven'
     },
     {
       name: 'ratings',
@@ -43,6 +43,10 @@ export default {
     {
       name: 'statistics',
       description: 'The reading statistics of articles on Author\'s Haven'
+    },
+    {
+      name: 'tags',
+      description: 'The tags that have been used with articles on Author\'s Haven'
     }
   ],
   schemes: ['https', 'http'],
@@ -884,7 +888,7 @@ export default {
             description: 'No User found'
           }
         }
-      },
+      }
     },
     '/profiles/:username': {
       get: {
@@ -1049,7 +1053,7 @@ export default {
                     updatedAt: { type: 'string' },
                     author: { type: 'object' },
                     favoritesCount: { type: 'number' },
-                    favorited: { type: 'boolean' },
+                    favorited: { type: 'boolean' }
                   }
                 }
               }
@@ -1091,7 +1095,7 @@ export default {
                     updatedAt: { type: 'string' },
                     author: { type: 'object' },
                     favoritesCount: { type: 'number' },
-                    favorited: { type: 'boolean' },
+                    favorited: { type: 'boolean' }
                   }
                 }
               }
@@ -1104,7 +1108,83 @@ export default {
             description: 'User not authenticated'
           }
         }
-      },
+      }
+    },
+    '/tags': {
+      get: {
+        tags: ['tags'],
+        summary: 'Gets all the tags on the platform',
+        description: '',
+        parameters: [],
+        produces: ['application/json'],
+        responses: {
+          200: {
+            description: 'Retrieved all tags successfully',
+            schema: {
+              properties: {
+                status: {
+                  type: 'string'
+                },
+                message: {
+                  type: 'string'
+                },
+                allTags: {
+                  type: 'array',
+                  properties: {
+                    name: { type: 'string' }
+                  }
+                }
+              },
+              example: {
+                status: 'Success',
+                message: 'Retrieved all tags successfully',
+                allTags: ['tagone', 'tagtwo']
+              }
+            }
+          },
+          404: {
+            description: 'No tags found'
+          }
+        }
+      }
+    },
+    '/tags/trending': {
+      get: {
+        tags: ['tags'],
+        summary: 'Gets all the trending tags on the platform',
+        description: '',
+        parameters: [],
+        produces: ['application/json'],
+        responses: {
+          200: {
+            description: 'Retrieved all trending tags successfully',
+            schema: {
+              properties: {
+                status: {
+                  type: 'string'
+                },
+                message: {
+                  type: 'string'
+                },
+                trendingTags: {
+                  type: 'array',
+                  properties: {
+                    name: { type: 'string' }
+                  }
+                }
+              },
+              example: {
+                status: 'Success',
+                message: 'Retrieved all trending tags successfully',
+                trendingTags: ['tagone', 'tagtwo']
+              }
+            }
+          },
+          404: {
+            description: 'No trending tag found'
+          }
+        }
+      }
     },
   },
   definitions: {
@@ -1228,5 +1308,5 @@ export default {
         }
       }
     }
-  }
+  },
 };

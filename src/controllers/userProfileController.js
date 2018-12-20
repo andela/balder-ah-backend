@@ -28,15 +28,14 @@ class UserProfileController {
       const foundUser = await User.findOne({
         where: { id: userId }
       });
-
-      const currentUser = {
-        username: foundUser.username,
-        email: foundUser.email,
-        bio: foundUser.bio,
-        image: foundUser.image
-      };
-      currentUser.authorRating = rating;
       if (foundUser) {
+        const currentUser = {
+          username: foundUser.username,
+          email: foundUser.email,
+          bio: foundUser.bio,
+          image: foundUser.image
+        };
+        currentUser.authorRating = rating;
         return response.status(200).json({
           status: 'Success',
           message: 'Retrieved user successfully',
