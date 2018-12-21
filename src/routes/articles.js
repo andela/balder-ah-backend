@@ -13,6 +13,7 @@ import articleRatingValidatior from '../middlewares/validateRating';
 
 import PaginationHelper from '../helpers/paginationHelper';
 import ReportArticle from '../controllers/reportArticle';
+import CommentReaction from '../controllers/commentReaction';
 
 import { getReadStatistics } from '../controllers/statisticsController';
 import articleStatsValidatior from '../middlewares/validateStatistics';
@@ -34,6 +35,8 @@ const { slugChecker } = verifySlug;
 const articlesBaseEndpoint = '/articles';
 
 const { checkQueryparameter } = PaginationHelper;
+
+const { likeOrUnlikeOneComment } = CommentReaction;
 
 articlesRouter
   .route(articlesBaseEndpoint)
@@ -60,17 +63,13 @@ articlesRouter
   .post(verifyToken, slugChecker, Comment.create);
 
 articlesRouter
-  .route(`${articlesBaseEndpoint}/:slug/comments/:commentId`)
-  .get([slugChecker, Comment.getOne]);
-
-articlesRouter
   .route(`${articlesBaseEndpoint}/:slug/comments`)
   .get(slugChecker, Comment.getAll)
   .post(verifyToken, slugChecker, Comment.create);
 
 articlesRouter
   .route(`${articlesBaseEndpoint}/:slug/comments/:commentId`)
-  .get(slugChecker, Comment.getOne);
+  .get([slugChecker, Comment.getOneValidator, Comment.getOne]);
 
 articlesRouter
   .route(`${articlesBaseEndpoint}/:slug/report`)
@@ -84,5 +83,9 @@ articlesRouter
 articlesRouter
   .route(`${articlesBaseEndpoint}/:slug/comments/highlight-text`)
   .post(verifyToken, validateInput, HighLightedText.createComment);
+
+articlesRouter
+  .route(`${articlesBaseEndpoint}/:slug/comments/:commentId/reaction`)
+  .post(verifyToken, slugChecker, Comment.getOneValidator, likeOrUnlikeOneComment);
 
 export default articlesRouter;

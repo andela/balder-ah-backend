@@ -47,12 +47,13 @@ class Comment {
    * @static
    * @param {object} request - Request sent to the router
    * @param {object} response - Response sent from the controller
+   * @param {object} next - Callback sent to the next middleware
    *
    * @returns {object} - a single comment
    *
    * @memberof Comment
    */
-  static async getOne(request, response) {
+  static async getOneValidator(request, response, next) {
     const { article, params } = request;
     const { commentId } = params;
 
@@ -70,12 +71,28 @@ class Comment {
       });
 
       if (!comments.length) return response.status(404).send(errorResponse([`Comment with id ${commentId} not found`]));
-
-      const comment = comments[0];
-      response.send({ comment });
+      request.body.comments = comments;
+      return next();
     } catch (error) {
       response.status(500).send(errorResponse(['Server error. Failed to get comment']));
     }
+  }
+
+  /**
+   * @description - Gets an article comment by it's ID
+   *
+   * @static
+   * @param {object} request - Request sent to the router
+   * @param {object} response - Response sent from the controller
+   *
+   * @returns {object} - a single comment
+   *
+   * @memberof Comment
+   */
+  static async getOne(request, response) {
+    const { comments } = request.body;
+    const comment = comments[0];
+    response.send({ comment });
   }
 
   /**

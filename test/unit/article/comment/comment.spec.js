@@ -92,8 +92,35 @@ describe('Comment on article', () => {
   });
 
   it('should get a comment on an article by id', async () => {
-    const response = await request.get(`${articlesEndpoint}/${slug}/comments/1`);
+    const response = await request
+      .get(`${articlesEndpoint}/${slug}/comments/1`)
+      .set('Authorization', token);
     expect(response.status).to.equal(200);
+  });
+
+  it('should like a comment on an article', async () => {
+    const response = await request
+      .post(`${articlesEndpoint}/${slug}/comments/1/reaction`)
+      .set('Authorization', token);
+
+    expect(response.status).to.equal(201);
+    expect(response.body)
+      .to.have.property('message')
+      .eql('Comment liked successfully');
+    expect(response.body)
+      .to.have.property('status')
+      .eql('Success');
+  });
+
+  it('should unlike a comment on an article', async () => {
+    const response = await request
+      .post(`${articlesEndpoint}/${slug}/comments/1/reaction`)
+      .set('Authorization', token);
+
+    expect(response.status).to.equal(200);
+    expect(response.body)
+      .to.have.property('message')
+      .eql('Comment unliked successfully');
   });
 
   it('fake server error when getting a comment on an article by id', async () => {
@@ -110,7 +137,7 @@ describe('Comment on article', () => {
     sinon.stub(requestObj.article, 'getComments').throws();
     sinon.stub(response, 'status').returnsThis();
 
-    await Comment.getOne(requestObj, response);
+    await Comment.getOneValidator(requestObj, response);
 
     expect(response.status).to.have.been.calledWith(500);
   });
