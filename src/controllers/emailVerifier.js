@@ -1,4 +1,5 @@
 import models from '../db/models';
+import logTracker from '../../logger/logTraker';
 
 const { User } = models;
 
@@ -52,10 +53,10 @@ class EmailVerifier {
         message: 'User not found'
       });
     } catch (error) {
+      logTracker(error);
       return response.status(500).json({
         status: 'Fail',
-        message: 'Something went wrong',
-        error: error.messaage
+        message: 'Something went wrong'
       });
     }
   }

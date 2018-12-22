@@ -1,8 +1,10 @@
 import models from '../db/models';
 import { sendgrid } from '../middlewares/helper';
 import { generateToken } from '../middlewares/authentication';
+import logTracker from '../../logger/logTraker';
 
 const { User } = models;
+const errorMessage = 'Could not complete action at this time';
 
 /**
   * @description class representing reset user password
@@ -52,9 +54,10 @@ class SendResetToken {
         userToken
       });
     } catch (error) {
+      logTracker(error);
       response.status(500).json({
         status: 'Error',
-        error: error.message
+        message: errorMessage
       });
     }
   }
@@ -90,9 +93,10 @@ class SendResetToken {
         message: 'Password updated successfully',
       });
     } catch (error) {
+      logTracker(error);
       response.status(500).json({
         status: 'Error',
-        error: error.message,
+        message: errorMessage
       });
     }
   }

@@ -1,7 +1,9 @@
 import models from '../db/models';
 import ArticleModel from '../helpers/articles';
+import logTracker from '../../logger/logTraker';
 
 const { Rating } = models;
+const errorMessage = 'Could not complete action at this time';
 
 
 /**
@@ -43,9 +45,10 @@ class RatingController {
           result
         });
     } catch (error) {
+      logTracker(error);
       response.status(500).json({
         status: 'Fail',
-        error: error.message
+        message: errorMessage
       });
     }
   }

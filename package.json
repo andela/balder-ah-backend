@@ -41,7 +41,9 @@
     "request": "^2.87.0",
     "sequelize": "^4.41.2",
     "slug": "^0.9.2",
-    "swagger-ui-express": "4.0.1"
+    "swagger-ui-express": "4.0.1",
+    "winston": "^3.1.0",
+    "winston-daily-rotate-file": "^3.5.1"
   },
   "devDependencies": {
     "babel-cli": "^6.26.0",

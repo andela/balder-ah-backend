@@ -1,6 +1,9 @@
 import errorResponse from '../helpers/index';
 import ArticleModel from '../helpers/articles';
 import FavoriteModelHelper from '../helpers/favorite';
+import logTracker from '../../logger/logTraker';
+
+const errorMessage = 'Could not complete action at this time';
 
 /**
  * @class FavoriteArticleController
@@ -21,7 +24,8 @@ class FavoriteArticleController {
 
       response.redirect(`/api/articles/${slug}`);
     } catch (error) {
-      response.status(500).json(errorResponse([error.message]));
+      logTracker(error);
+      response.status(500).json(errorResponse([errorMessage]));
     }
   }
 
@@ -39,7 +43,8 @@ class FavoriteArticleController {
       await FavoriteModelHelper.unfavoriteArticle(articleId, userId);
       response.redirect(`/api/articles/${slug}`);
     } catch (error) {
-      response.status(500).json(errorResponse([error.message]));
+      logTracker(error);
+      response.status(500).json(errorResponse([errorMessage]));
     }
   }
 }

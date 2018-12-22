@@ -1,7 +1,9 @@
 import models from '../db/models';
 import errorResponse from '../helpers';
+import logTracker from '../../logger/logTraker';
 
 const { Comment: CommentModel, User } = models;
+const errorMessage = 'Could not complete action at this time';
 
 /**
  * @description A controller class for handling comment business logic
@@ -37,7 +39,8 @@ class Comment {
       const commentsCount = comments.length;
       response.send({ comments, commentsCount });
     } catch (error) {
-      response.status(500).send(errorResponse([error.message]));
+      logTracker(error);
+      response.status(500).send(errorResponse([errorMessage]));
     }
   }
 
@@ -74,7 +77,8 @@ class Comment {
       request.body.comments = comments;
       return next();
     } catch (error) {
-      response.status(500).send(errorResponse(['Server error. Failed to get comment']));
+      logTracker(error);
+      response.status(500).send(errorResponse([errorMessage]));
     }
   }
 
@@ -133,7 +137,8 @@ class Comment {
         }
       });
     } catch (error) {
-      return response.status(500).send(errorResponse(['Server error: Failed to post comment']));
+      logTracker(error);
+      return response.status(500).send(errorResponse([errorMessage]));
     }
   }
 }

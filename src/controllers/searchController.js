@@ -1,7 +1,9 @@
 import Models from '../db/models';
 import errorResponse from '../helpers/index';
+import logTracker from '../../logger/logTraker';
 
 const { User, Article, Tag } = Models;
+const errorMessage = 'Could not complete action at this time';
 
 /**
  * @description class representing Article Controller
@@ -44,7 +46,8 @@ class SearchController {
       }
       return response.status(404).json(errorResponse(['Author not found']));
     } catch (error) {
-      return response.status(500).json(errorResponse([error.message]));
+      logTracker(error);
+      return response.status(500).json(errorResponse([errorMessage]));
     }
   }
 
@@ -88,7 +91,8 @@ class SearchController {
         articles
       });
     } catch (error) {
-      return response.status(500).json(errorResponse([error.message]));
+      logTracker(error);
+      return response.status(500).json(errorResponse([errorMessage]));
     }
   }
 
@@ -124,7 +128,8 @@ class SearchController {
         articles
       });
     } catch (error) {
-      return response.status(500).json(errorResponse([error.message]));
+      logTracker(error);
+      return response.status(500).json(errorResponse([errorMessage]));
     }
   }
 }

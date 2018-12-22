@@ -4,6 +4,9 @@ import { articleAverageRating } from './ratingController';
 import TagHelpers from '../helpers/tagHelpers';
 import FavoriteModelHelper from '../helpers/favorite';
 import { hasReadArticle } from './statisticsController';
+import logTracker from '../../logger/logTraker';
+
+const errorMessage = 'Could not complete action at this time';
 
 /**
  * @description class representing Article Controller
@@ -43,9 +46,10 @@ class ArticleController {
         newArticle,
       });
     } catch (error) {
+      logTracker(error);
       return response.status(500).json({
         status: 'Fail',
-        error: error.message
+        message: errorMessage
       });
     }
   }
@@ -80,9 +84,10 @@ class ArticleController {
         allArticles
       });
     } catch (error) {
+      logTracker(error);
       return response.status(500).json({
         status: 'Fail',
-        error: error.message
+        message: errorMessage
       });
     }
   }
@@ -136,9 +141,10 @@ class ArticleController {
         getOneArticle
       });
     } catch (error) {
+      logTracker(error);
       return response.status(500).json({
         status: 'Fail',
-        error: error.message
+        message: errorMessage
       });
     }
   }
@@ -167,9 +173,10 @@ class ArticleController {
         message: 'Article deleted successfully'
       });
     } catch (error) {
+      logTracker(error);
       return response.status(500).json({
         status: 'Fail',
-        error: error.message
+        message: errorMessage
       });
     }
   }

@@ -1,8 +1,10 @@
 import models from '../db/models';
 import ArticleModel from '../helpers/articles';
 import errorResponse from '../helpers';
+import logTracker from '../../logger/logTraker';
 
 const { HighlightedText: HighLightedTextModel } = models;
+const errorMessage = 'Could not complete action at this time';
 /**
  * @description class representing comment on Highlightedtext Controller
  * @class HighLightedText
@@ -42,9 +44,10 @@ class HighLightedText {
         comment: createdComment
       });
     } catch (error) {
+      logTracker(error);
       response.status(500).json({
         status: 'Fail',
-        message: errorResponse(['Server error. Please try again']),
+        message: errorResponse([errorMessage]),
       });
     }
   }

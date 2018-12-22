@@ -1,7 +1,9 @@
 import Models from '../db/models';
 import errorResponse from '../helpers/index';
+import logTracker from '../../logger/logTraker';
 
 const { User, Follow } = Models;
+const errorMessage = 'Could not complete action at this time';
 
 /**
  * @description handles follow and unfollow
@@ -46,7 +48,8 @@ class FollowController {
         return response.status(404).json(errorResponse(['User not found']));
       }
     } catch (error) {
-      return response.status(500).json(errorResponse([error.message]));
+      logTracker(error);
+      return response.status(500).json(errorResponse([errorMessage]));
     }
   }
 
@@ -85,7 +88,8 @@ class FollowController {
       }
       return response.status(404).json(errorResponse(['User not found']));
     } catch (error) {
-      return response.status(500).json(errorResponse([error.message]));
+      logTracker(error);
+      return response.status(500).json(errorResponse([errorMessage]));
     }
   }
 
@@ -141,7 +145,8 @@ class FollowController {
         return response.status(404).json(errorResponse(['User not found']));
       }
     } catch (error) {
-      return response.status(500).json(errorResponse([error.message]));
+      logTracker(error);
+      return response.status(500).json(errorResponse([errorMessage]));
     }
   }
 
@@ -198,7 +203,8 @@ class FollowController {
         return response.status(404).json(errorResponse(['User not found']));
       }
     } catch (error) {
-      return response.status(500).json(errorResponse([error.message]));
+      logTracker(error);
+      return response.status(500).json(errorResponse([errorMessage]));
     }
   }
 }

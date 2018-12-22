@@ -1,8 +1,10 @@
 import sequelize from 'sequelize';
 import models from '../db/models';
 import TagHelpers from '../helpers/tagHelpers';
+import logTracker from '../../logger/logTraker';
 
 const { Tag, ArticleTags } = models;
+const errorMessage = 'Could not complete action at this time';
 
 /**
  * @description class representing article tags
@@ -46,9 +48,10 @@ class TagsController {
         allTags,
       });
     } catch (error) {
+      logTracker(error);
       response.status(500).json({
         status: 'Fail',
-        error: error.message
+        error: errorMessage
       });
     }
   }
@@ -92,9 +95,10 @@ class TagsController {
         trendingTags,
       });
     } catch (error) {
+      logTracker(error);
       response.status(500).json({
         status: 'Fail',
-        error: error.message
+        error: errorMessage
       });
     }
   }

@@ -1,6 +1,8 @@
 import Models from '../db/models';
+import logTracker from '../../logger/logTraker';
 
 const { Tag } = Models;
+const errorMessage = 'Could not complete action at this time';
 
 /**
  * @description class representing Tag Helpers
@@ -26,7 +28,8 @@ class TagHelpers {
       });
       return tagsNeeded;
     } catch (error) {
-      return error.message;
+      logTracker(error);
+      return errorMessage;
     }
   }
 
@@ -46,7 +49,8 @@ class TagHelpers {
         .map(topTag => topTag.name);
       return sortedTagNames;
     } catch (error) {
-      return error.message;
+      logTracker(error);
+      return errorMessage;
     }
   }
 }

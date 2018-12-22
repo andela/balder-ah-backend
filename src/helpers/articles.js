@@ -1,7 +1,9 @@
 import Models from '../db/models';
 import TagHelpers from './tagHelpers';
+import logTracker from '../../logger/logTraker';
 
 const { Article, ArticleTags } = Models;
+const errorMessage = 'Could not complete action at this time';
 
 
 /**
@@ -155,9 +157,10 @@ class ArticleModel {
         updatedArticle: updatedArticle[1][0]
       });
     } catch (error) {
+      logTracker(error);
       return response.status(500).json({
         status: 'Fail',
-        error: error.message
+        message: errorMessage
       });
     }
   }

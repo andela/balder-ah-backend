@@ -1,7 +1,9 @@
 import models from '../db/models';
 import errorResponse from '../helpers';
+import logTracker from '../../logger/logTraker';
 
 const { Report } = models;
+const errorMessage = 'Could not complete action at this time';
 
 /**
  * @description A controller class for handling comment business logic
@@ -53,7 +55,8 @@ class ReportArticle {
 
       return response.send({ success: { msg: 'Report received' } });
     } catch (error) {
-      return response.status(500).send(errorResponse(['An error occurred while reporting article.']));
+      logTracker(error);
+      return response.status(500).send(errorResponse([errorMessage]));
     }
   }
 }

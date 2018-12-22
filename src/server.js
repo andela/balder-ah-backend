@@ -12,6 +12,7 @@ import {
 } from './routes';
 import registerMiddlewares from './middlewares';
 import './services/passport';
+import appLogs from '../logger/logger';
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -30,6 +31,6 @@ app.use('/api/auth', socialAuthRouter);
 app.use('/api', tagsRouter);
 app.use('/', otherRouter);
 
-app.listen(PORT);
+app.listen(PORT, () => appLogs.info(`Server running on port ${PORT}`));
 
 export default app;

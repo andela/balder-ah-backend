@@ -1,7 +1,9 @@
 import user from '../db/models';
 import { authorRating } from './ratingController';
+import logTracker from '../../logger/logTraker';
 
 const { User } = user;
+const errorMessage = 'Could not complete action at this time';
 
 /**
  * @description class representing user profiles
@@ -43,9 +45,10 @@ class UserProfileController {
         });
       }
     } catch (error) {
+      logTracker(error);
       response.status(500).json({
         status: 'Fail',
-        error: error.message
+        error: errorMessage
       });
     }
   }
@@ -92,9 +95,10 @@ class UserProfileController {
         });
       }
     } catch (error) {
+      logTracker(error);
       response.status(500).json({
         status: 'Fail',
-        error: error.message
+        message: errorMessage
       });
     }
   }
@@ -133,9 +137,10 @@ class UserProfileController {
         message: 'user not found'
       });
     } catch (error) {
+      logTracker(error);
       response.status(500).json({
         status: 'Fail',
-        error: error.message
+        message: errorMessage
       });
     }
   }
@@ -188,9 +193,10 @@ class UserProfileController {
         allProfiles,
       });
     } catch (error) {
+      logTracker(error);
       response.status(500).json({
         status: 'Fail',
-        error: error.message
+        error: errorMessage
       });
     }
   }
