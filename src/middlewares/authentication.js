@@ -2,7 +2,7 @@ import jwt from 'jsonwebtoken';
 import Models from '../db/models';
 import 'dotenv/config';
 
-const { Article } = Models;
+const { Article, Bookmark } = Models;
 
 /**
  * @description class representing User Authentication with JWT
@@ -118,18 +118,51 @@ class VerifyUser {
       message: 'You are not allowed to perform this action'
     });
   }
+
+  /**
+   * @description - This method is responsible for checking if a user is valid
+   *
+   * @static
+   * @param {object} request - Request sent to the router
+   * @param {object} response - Response sent from the controller
+   * @param {object} next - callback function to transfer to the next method
+   *
+   * @returns {object} - object representing response message
+   *
+   * @memberof VerifyUser
+   */
+  static async checkBookmarkUser(request, response, next) {
+    const { id } = request.params;
+    const findArticle = await Bookmark.findOne({
+      where: {
+        id
+      }
+    });
+    const { userId } = findArticle.dataValues;
+    const decodedId = parseInt(request.userData.payload.id, 10);
+    const newId = parseInt(userId, 10);
+    if (decodedId === newId) {
+      return next();
+    }
+    return response.status(403).json({
+      status: 'Fail',
+      message: 'You are not allowed to perform this action'
+    });
+  }
 }
 
 const {
   generateToken,
   verifyToken,
   checkUser,
-  checkAuthStatus
+  checkAuthStatus,
+  checkBookmarkUser
 } = VerifyUser;
 
 export {
   generateToken,
   verifyToken,
   checkUser,
-  checkAuthStatus
+  checkAuthStatus,
+  checkBookmarkUser
 };

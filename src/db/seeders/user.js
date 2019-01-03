@@ -250,6 +250,17 @@ const secondSearchUserSignup = {
   email: 'odekwo@andela.com',
   password: 'odekwopeter'
 };
+const firstBookmarkSignup = {
+  email: 'bookmark@gmail.com',
+  username: 'Namesake',
+  password: 'namesake'
+};
+
+const secondBookmarkSignup = {
+  email: 'book@gmail.com',
+  username: 'Namesakeme',
+  password: 'namesakeme'
+};
 
 export {
   successfulSignup1,
@@ -296,5 +307,7 @@ export {
   fourthUserLogin,
   successfulSignup3,
   firstSearchUserSignup,
-  secondSearchUserSignup
+  secondSearchUserSignup,
+  firstBookmarkSignup,
+  secondBookmarkSignup
 };

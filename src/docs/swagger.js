@@ -47,6 +47,10 @@ export default {
     {
       name: 'tags',
       description: 'The tags that have been used with articles on Author\'s Haven'
+    },
+    {
+      name: 'bookmarks',
+      description: 'The bookmarks of articles on Author\'s Haven'
     }
   ],
   schemes: ['https', 'http'],
@@ -1224,6 +1228,81 @@ export default {
         }
       }
     },
+    '/articles/<slug>/bookmarks': {
+      post: {
+        description: 'TODO: bookmark article',
+        summary: 'Bookmark article',
+        tags: [
+          'bookamarks'
+        ],
+        operationId: 'ArticlesSlugBookmarksPost',
+        produces: [
+          'application/json'
+        ],
+        parameters: [],
+        responses: {
+          200: {
+            description: 'Article successfully bookmarked',
+            headers: {}
+          },
+          404: {
+            description: 'Article already bookmarked'
+          },
+          403: {
+            description: 'User not authenticated'
+          }
+        }
+      }
+    },
+    '/users/bookmarks/<id>': {
+      delete: {
+        description: 'TODO: Remove bookmark',
+        summary: 'Unbookmark article',
+        tags: [
+          'bookmarks'
+        ],
+        operationId: 'UsersBookmarksIdDelete',
+        produces: [
+          'application/json'
+        ],
+        parameters: [],
+        responses: {
+          202: {
+            description: 'Bookmarked removed successfully',
+            headers: {}
+          },
+          403: {
+            description: 'User not authenticated'
+          }
+        }
+      }
+    },
+    '/users/bookmarks': {
+      get: {
+        description: 'TODO: Get all bookmarks',
+        summary: 'Get all bookmarks',
+        tags: [
+          'bookmarks'
+        ],
+        operationId: 'UsersBookmarksGet',
+        produces: [
+          'application/json'
+        ],
+        parameters: [],
+        responses: {
+          200: {
+            description: 'All bookmarks retrieved',
+            headers: {}
+          },
+          404: {
+            description: 'No bookmark available'
+          },
+          403: {
+            description: 'User not authenticated'
+          }
+        }
+      }
+    }
   },
   definitions: {
     users: {

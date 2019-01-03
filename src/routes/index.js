@@ -6,6 +6,7 @@ import socialAuthRouter from './socialAuth';
 import emailRouter from './verifyEmail';
 import searchRouter from './search';
 import tagsRouter from './tags';
+import bookmarkRouter from './bookmark';
 
 
 export {
@@ -16,5 +17,6 @@ export {
   socialAuthRouter,
   searchRouter,
   tagsRouter,
+  bookmarkRouter,
   otherRouter
 };

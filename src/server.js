@@ -8,7 +8,8 @@ import {
   socialAuthRouter,
   searchRouter,
   tagsRouter,
-  emailRouter
+  emailRouter,
+  bookmarkRouter,
 } from './routes';
 import registerMiddlewares from './middlewares';
 import './services/passport';
@@ -29,6 +30,7 @@ app.use('/api', profileRouter);
 app.use('/api', searchRouter);
 app.use('/api/auth', socialAuthRouter);
 app.use('/api', tagsRouter);
+app.use('/api', bookmarkRouter);
 app.use('/', otherRouter);
 
 app.listen(PORT, () => appLogs.info(`Server running on port ${PORT}`));
