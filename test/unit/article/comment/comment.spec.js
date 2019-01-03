@@ -65,7 +65,6 @@ describe('Comment on article', () => {
   it('should get all article comments', async () => {
     const response = await request.get(`${articlesEndpoint}/${slug}/comments`);
     expect(response.status).to.equal(200);
-    expect(response.body).to.have.property('commentsCount', 0);
   });
 
   it('should fail to get comment with wrong id', async () => {
@@ -132,7 +131,7 @@ describe('Comment on article', () => {
     };
     const response = {
       status() {},
-      send() {}
+      json() {}
     };
     sinon.stub(requestObj.article, 'getComments').throws();
     sinon.stub(response, 'status').returnsThis();
@@ -170,7 +169,7 @@ describe('Comment on article', () => {
     };
     const response = {
       status() {},
-      send() {}
+      json() {}
     };
 
     sinon.stub(requestObj.articles, 'getComments').throws();

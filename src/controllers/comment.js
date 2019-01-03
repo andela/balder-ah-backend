@@ -3,10 +3,9 @@ import errorResponse from '../helpers';
 import logTracker from '../../logger/logTraker';
 
 const { Comment: CommentModel, User } = models;
-const errorMessage = 'Could not complete action at this time';
 
 /**
- * @description A controller class for handling comment business logic
+ * @description Controller class for handling comment business logic
  *
  * @class Comment
  */
@@ -26,7 +25,7 @@ class Comment {
     const { article } = request;
     try {
       const comments = await article.getComments({
-        attributes: ['id', 'createdAt', 'userId', 'updatedAt', 'body'],
+        attributes: ['id', 'createdAt', 'userId', 'updatedAt', 'body', 'edited'],
         include: [
           {
             model: User,
@@ -37,10 +36,10 @@ class Comment {
       });
 
       const commentsCount = comments.length;
-      response.send({ comments, commentsCount });
+      return response.json({ comments, commentsCount });
     } catch (error) {
       logTracker(error);
-      response.status(500).send(errorResponse([errorMessage]));
+      return response.status(500).json(errorResponse(['Server error. Falied to get article comments']));
     }
   }
 
@@ -62,7 +61,7 @@ class Comment {
 
     try {
       const comments = await article.getComments({
-        attributes: ['id', 'createdAt', 'userId', 'updatedAt', 'body'],
+        attributes: ['id', 'createdAt', 'userId', 'updatedAt', 'body', 'edited', 'history'],
         where: { id: parseInt(commentId, 10) },
         include: [
           {
@@ -78,7 +77,7 @@ class Comment {
       return next();
     } catch (error) {
       logTracker(error);
-      response.status(500).send(errorResponse([errorMessage]));
+      return response.status(500).json(errorResponse(['Server error. Failed to get comment']));
     }
   }
 
@@ -113,7 +112,7 @@ class Comment {
   static async create(request, response) {
     const { body: commentBody = '' } = request.body;
 
-    if (!commentBody || !commentBody.trim()) return response.status(400).send(errorResponse(['Comment body is required']));
+    if (!commentBody || !commentBody.trim()) return response.status(400).json(errorResponse(['Comment body is required']));
 
     const { userData: user, article } = request;
     const articleId = article.get('id');
@@ -128,17 +127,64 @@ class Comment {
       });
 
       if (!postComment) {
-        return response.status(500).send(errorResponse(['Unable to post comment']));
+        return response.status(500).json(errorResponse(['Unable to post comment']));
       }
 
-      return response.status(201).send({
-        comment: {
-          body: commentBody
-        }
-      });
+      return response.status(201).json({ comment: { body: commentBody } });
     } catch (error) {
       logTracker(error);
-      return response.status(500).send(errorResponse([errorMessage]));
+      return response.status(500).json(errorResponse(['Server error: Failed to post comment']));
+    }
+  }
+
+  /**
+   * @description - Update/Edit a comment by ID
+   *
+   * @static
+   * @param {object} request - Request sent to the router
+   * @param {object} response - Response sent from the controller
+   *
+   * @returns {object} - object representing response message
+   *
+   * @memberof Comment
+   */
+  static async update(request, response) {
+    const { commentId = '' } = request.params;
+
+    if (!commentId) return response.status(400).json(errorResponse(['Please provide ID of comment to update']));
+    if (!parseInt(commentId, 10)) return response.status(400).json(errorResponse(['Please enter a valid comment ID']));
+
+    try {
+      const { id: userId } = request.userData.payload;
+
+      const existingComment = await CommentModel.findByPk(commentId);
+
+      if (!existingComment) return response.status(404).json(errorResponse(['Comment not found']));
+      if (userId !== existingComment.userId) return response.status(403).json(errorResponse(['Not allowed']));
+
+      const { body: newComment } = request.body;
+
+      if (!newComment || !newComment.trim()) return response.status(400).json(errorResponse(['Comment body is required']));
+      if (newComment === existingComment.body) return response.status(200).json({ message: 'Comment was not edited because content is the same' });
+
+      const newEditHistory = {
+        body: existingComment.body,
+        time: existingComment.updatedAt,
+      };
+
+      existingComment.history = !existingComment.history[0]
+        ? existingComment.history = [newEditHistory]
+        : existingComment.history.concat([newEditHistory]);
+
+      existingComment.body = newComment;
+      existingComment.edited = true;
+
+      await existingComment.save();
+
+      return response.status(200).json({ message: 'Comment edited successfully' });
+    } catch (error) {
+      logTracker(error);
+      return response.status(500).json(errorResponse(['Failed to find comment']));
     }
   }
 }

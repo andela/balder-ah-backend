@@ -504,6 +504,44 @@ export default {
             required: true
           }
         ]
+      },
+      put: {
+        summary: 'Update/Edit a comment on an article',
+        description: 'Updates/Edit a comment on an article and keep track of its edit history',
+
+        consumes: ['application/x-www-form-urlencoded'],
+        responses: {
+          200: {
+            description: ''
+          }
+        },
+        parameters: [
+          {
+            type: 'string',
+            name: 'slug',
+            in: 'path',
+            required: true
+          },
+          {
+            type: 'string',
+            name: 'commentId',
+            in: 'path',
+            required: true
+          },
+          {
+            type: 'string',
+            name: 'Authorization',
+            description: 'Authorization token',
+            required: true,
+            in: 'header'
+          },
+          {
+            type: 'string',
+            name: 'body',
+            required: true,
+            in: 'formData'
+          }
+        ]
       }
     },
     '/articles/{slug}/statistics?year={year}&month={month}': {

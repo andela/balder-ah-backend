@@ -63,13 +63,14 @@ articlesRouter
   .post(verifyToken, slugChecker, Comment.create);
 
 articlesRouter
+  .route(`${articlesBaseEndpoint}/:slug/comments/:commentId`)
+  .get(slugChecker, Comment.getOneValidator, Comment.getOne)
+  .put(verifyToken, slugChecker, Comment.update);
+
+articlesRouter
   .route(`${articlesBaseEndpoint}/:slug/comments`)
   .get(slugChecker, Comment.getAll)
   .post(verifyToken, slugChecker, Comment.create);
-
-articlesRouter
-  .route(`${articlesBaseEndpoint}/:slug/comments/:commentId`)
-  .get([slugChecker, Comment.getOneValidator, Comment.getOne]);
 
 articlesRouter
   .route(`${articlesBaseEndpoint}/:slug/report`)
