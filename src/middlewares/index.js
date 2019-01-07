@@ -12,7 +12,11 @@ module.exports = (app) => {
   app.use(cors());
   app.use(bodyParser.json());
   app.use(bodyParser.urlencoded({ extended: false }));
-  app.use(expressSession({ secret: process.env.SESSION_SECRET }));
+  app.use(expressSession({
+    secret: process.env.SESSION_SECRET,
+    resave: false,
+    saveUninitialized: false
+  }));
   app.use(morgan('dev'));
   app.use('/api/docs', swaggerUI.serve, swaggerUI.setup(swaggerDocument));
 };
