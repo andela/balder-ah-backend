@@ -12,6 +12,7 @@ import {
 } from '../middlewares/updateHandler';
 import checkUndefinedPass from '../middlewares/userAuthHandler';
 import { verifyPasswordResetToken } from '../middlewares/helper';
+import NotificationsController from '../controllers/notificationsController';
 
 const userRouter = express.Router();
 
@@ -33,5 +34,9 @@ userRouter.put(
   checkImageUrl,
   updateProfile
 );
+
+// notifications
+userRouter.post('/user/notifications', verifyToken, NotificationsController.optInOut);
+userRouter.get('/user/notifications', verifyToken, NotificationsController.getNotifications);
 
 export default userRouter;

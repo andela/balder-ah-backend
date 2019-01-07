@@ -45,3 +45,6 @@ dist/
 
 # application logs
 applicationLogs/
+
+#vscode
+.vscode
