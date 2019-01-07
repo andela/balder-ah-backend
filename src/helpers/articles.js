@@ -47,7 +47,7 @@ class ArticleModel {
       include: [
         {
           association: 'author',
-          attributes: ['username']
+          attributes: ['username', 'bio', 'image']
         },
         {
           association: 'tags',
@@ -79,7 +79,7 @@ class ArticleModel {
       include: [
         {
           association: 'author',
-          attributes: ['username']
+          attributes: ['username', 'bio', 'image']
         },
         {
           association: 'tags',
