@@ -1,6 +1,6 @@
 import user from '../db/models';
 import { authorRating } from './ratingController';
-import logTracker from '../../logger/logTraker';
+import logTracker from '../../logger/logTracker';
 
 const { User } = user;
 const errorMessage = 'Could not complete action at this time';

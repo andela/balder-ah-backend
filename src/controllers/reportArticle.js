@@ -1,6 +1,6 @@
 import models from '../db/models';
 import errorResponse from '../helpers';
-import logTracker from '../../logger/logTraker';
+import logTracker from '../../logger/logTracker';
 
 const { Report } = models;
 const errorMessage = 'Could not complete action at this time';
@@ -27,7 +27,7 @@ class ReportArticle {
     reportType = reportType ? reportType.toLowerCase() : '';
     context = context || '';
 
-    const reportTypes = ['spam', 'harrassment', 'rules violation', 'terrorism', 'other'];
+    const reportTypes = ['spam', 'harassment', 'rules violation', 'terrorism', 'other'];
 
     if (!reportType || !reportTypes.includes(reportType)) {
       return response
@@ -38,7 +38,7 @@ class ReportArticle {
     if (reportType === reportTypes[reportTypes.length - 1] && !context) {
       return response
         .status(400)
-        .send(errorResponse(['Please help us understand why you\'re reporting this article by providing context.']));
+        .send(errorResponse(["Please help us understand why you're reporting this article by providing context."]));
     }
 
     const { userData: user, article } = request;

@@ -29,19 +29,23 @@ describe('Test for article', () => {
     let user;
     let article;
     let userToken;
-    let articleslSlug;
+    let articlesSlug;
     before(async () => {
       user = await request.post(signupEndpoint).send(successfulSignup3);
       userToken = user.body.token;
-      article = await request.post(articlesEndpoint).set('Authorization', userToken).send(createArticle);
-      articleslSlug = article.body.newArticle.slug;
+      article = await request
+        .post(articlesEndpoint)
+        .set('Authorization', userToken)
+        .send(createArticle);
+      articlesSlug = article.body.newArticle.slug;
     });
     it('should return 201 for successfull comment on a highlighted test', async () => {
       const payLoad = {
         text: 'work assigned',
         comment: 'indeed'
       };
-      const response = await request.post(`${articlesEndpoint}/${articleslSlug}/comments/highlight-text`)
+      const response = await request
+        .post(`${articlesEndpoint}/${articlesSlug}/comments/highlight-text`)
         .set('Authorization', userToken)
         .send(payLoad);
       expect(response).to.have.status(201);
@@ -54,7 +58,8 @@ describe('Test for article', () => {
         text: 'he comes finally',
         comment: 'Indeed'
       };
-      const response = await request.post(`${articlesEndpoint}/${articleslSlug}/comments/highlight-text`)
+      const response = await request
+        .post(`${articlesEndpoint}/${articlesSlug}/comments/highlight-text`)
         .set('Authorization', userToken)
         .send(payLoad);
       expect(response).to.have.status(404);
@@ -67,7 +72,8 @@ describe('Test for article', () => {
         text: '',
         comment: ''
       };
-      const response = await request.post(`${articlesEndpoint}/${articleslSlug}/comments/highlight-text`)
+      const response = await request
+        .post(`${articlesEndpoint}/${articlesSlug}/comments/highlight-text`)
         .set('Authorization', userToken)
         .send(payLoad);
       expect(response).to.have.status(400);

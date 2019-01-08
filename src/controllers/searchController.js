@@ -1,6 +1,6 @@
 import Models from '../db/models';
 import errorResponse from '../helpers/index';
-import logTracker from '../../logger/logTraker';
+import logTracker from '../../logger/logTracker';
 
 const { User, Article, Tag } = Models;
 const errorMessage = 'Could not complete action at this time';

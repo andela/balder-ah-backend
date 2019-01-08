@@ -15,7 +15,7 @@ class StatisticsController {
    * @param {object} request - Request sent to the router
    * @param {object} author - Username of the author of the article
    *
-   * @returns {object} - Indication of the end of codeblock
+   * @returns {object} - Indication of the end of code block
    *
    * @memberof StatisticsController
    */
@@ -77,11 +77,10 @@ class StatisticsController {
       annualRead.forEach((count) => {
         annualReadCount += count.readCount;
       });
-      return response.status(200)
-        .json({
-          message: `Statistics for the year ${year}`,
-          annualReadCount
-        });
+      return response.status(200).json({
+        message: `Statistics for the year ${year}`,
+        annualReadCount
+      });
     }
     if (year && month) {
       const monthlyRead = allReadData.find((data) => {
@@ -90,11 +89,10 @@ class StatisticsController {
       });
       const monthlyReadCount = monthlyRead.readCount;
 
-      return response.status(200)
-        .json({
-          message: `Statistics for ${month} ${year}`,
-          monthlyReadCount
-        });
+      return response.status(200).json({
+        message: `Statistics for ${month} ${year}`,
+        monthlyReadCount
+      });
     }
   }
 }

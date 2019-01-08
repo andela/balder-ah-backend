@@ -15,7 +15,7 @@ class VerifyUser {
    *
    * @static
    * @param {object} payload - Object representing encoded data that makes up the token
-   * @param {object} time - Object represnting time taken for the token to expire
+   * @param {object} time - Object representing time taken for the token to expire
    *
    * @returns {object} - object representing response message
    *
@@ -152,17 +152,9 @@ class VerifyUser {
 }
 
 const {
-  generateToken,
-  verifyToken,
-  checkUser,
-  checkAuthStatus,
-  checkBookmarkUser
+  generateToken, verifyToken, checkUser, checkAuthStatus, checkBookmarkUser
 } = VerifyUser;
 
 export {
-  generateToken,
-  verifyToken,
-  checkUser,
-  checkAuthStatus,
-  checkBookmarkUser
+  generateToken, verifyToken, checkUser, checkAuthStatus, checkBookmarkUser
 };

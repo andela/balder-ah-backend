@@ -21,8 +21,7 @@ class Notifier {
         .map(user => user.email);
       return users;
     }
-    const users = (await User.findAll({ where: { appNotifications: false } }))
-      .map(user => user.id);
+    const users = (await User.findAll({ where: { appNotifications: false } })).map(user => user.id);
     return users;
   }
 
@@ -31,7 +30,7 @@ class Notifier {
    * @static
    * @param {string} emailOfFollowed - email address of author who was followed
    * @param {number} followerId - id of author who did the following
-   * @returns {object[]} - array containing the notificaiton message
+   * @returns {object[]} - array containing the notification message
    */
   static async forNewFollower(emailOfFollowed, followerId) {
     const unsubscribedUsers = await this.getUnsubscribedUsers('email');
@@ -52,24 +51,27 @@ class Notifier {
    * @static
    * @param {number} articleId - id of article which has new comments
    * @returns {object[]} - array contain an array of userIds who have favorited the article,
-   * and the notificaiton message
+   * and the notification message
    */
   static async forNewComment(articleId) {
     const unsubscribedUsers = await this.getUnsubscribedUsers('email');
     const article = await Article.findByPk(articleId, {
-      include: [{
-        association: 'favoritesCount',
-        include: [{
-          association: 'author'
-        }]
-      }]
+      include: [
+        {
+          association: 'favoritesCount',
+          include: [
+            {
+              association: 'author'
+            }
+          ]
+        }
+      ]
     });
 
     const emailsOfFavoriters = article.favoritesCount
       .map(fav => fav.author.email)
       .filter(email => !unsubscribedUsers.includes(email));
-    const idsOfFavoriters = article.favoritesCount
-      .map(fav => fav.author.id);
+    const idsOfFavoriters = article.favoritesCount.map(fav => fav.author.id);
 
     sgMail.setApiKey(SENDGRID_API_KEY);
     const msg = {
@@ -87,7 +89,7 @@ class Notifier {
    * @static
    * @param {number} authorId - id of the new article's author
    * @returns {object[]} - array contain an array of userIds who follow the article author,
-   * and the notificaiton message
+   * and the notification message
    */
   static async forNewArticle(authorId) {
     const unsubscribedUsers = await this.getUnsubscribedUsers('email');
@@ -98,8 +100,7 @@ class Notifier {
     const authorFollowersEmails = user.followers
       .map(follower => follower.email)
       .filter(email => !unsubscribedUsers.includes(email));
-    const authorFollowersIds = user.followers
-      .map(follower => follower.id);
+    const authorFollowersIds = user.followers.map(follower => follower.id);
     sgMail.setApiKey(SENDGRID_API_KEY);
     const msg = {
       to: authorFollowersEmails,

@@ -1,7 +1,7 @@
 import models from '../db/models';
 import ArticleModel from '../helpers/articles';
 import errorResponse from '../helpers';
-import logTracker from '../../logger/logTraker';
+import logTracker from '../../logger/logTracker';
 
 const { HighlightedText: HighLightedTextModel } = models;
 const errorMessage = 'Could not complete action at this time';

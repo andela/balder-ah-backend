@@ -2,10 +2,7 @@ import chai from 'chai';
 import chaiHttp from 'chai-http';
 import server from '../src/server';
 import Models from '../src/db/models';
-import {
-  firstBookmarkSignup,
-  secondBookmarkSignup
-} from '../src/db/seeders/user';
+import { firstBookmarkSignup, secondBookmarkSignup } from '../src/db/seeders/user';
 import { createArticle } from '../src/db/seeders/articles';
 
 const { User } = Models;
@@ -68,13 +65,13 @@ describe('Test for follows', () => {
         .set('Authorization', firstUserToken);
       expect(response.status).to.equal(400);
     });
-    it('should return 500 when a user tries to bookmark an unknow article', async () => {
+    it('should return 500 when a user tries to bookmark an unknown article', async () => {
       const response = await request
         .post(`${articlesEndpoint}/The-chum-chum-of4555555955/bookmarks`)
         .set('Authorization', firstUserToken);
       expect(response.status).to.equal(500);
     });
-    it('should get a user\'s bookmarks', async () => {
+    it("should get a user's bookmarks", async () => {
       const response = await request
         .get('/api/user/bookmarks')
         .set('Authorization', firstUserToken);
@@ -83,7 +80,7 @@ describe('Test for follows', () => {
         .eql('All bookmarks retrieved');
       expect(response.status).to.equal(200);
     });
-    it('should return 404 if a user\'s bookmark is empty', async () => {
+    it("should return 404 if a user's bookmark is empty", async () => {
       const response = await request
         .get('/api/user/bookmarks')
         .set('Authorization', secondUserToken);
@@ -101,7 +98,7 @@ describe('Test for follows', () => {
         .to.have.property('message')
         .eql('No bookmark found');
     });
-    it('should not allow a user remove another user\' bookmark', async () => {
+    it("should not allow a user remove another user' bookmark", async () => {
       const response = await request
         .delete('/api/user/bookmarks/1')
         .set('Authorization', secondUserToken);
@@ -110,7 +107,7 @@ describe('Test for follows', () => {
         .to.have.property('message')
         .eql('You are not allowed to perform this action');
     });
-    it('should remove a user\'s bookmark successfully', async () => {
+    it("should remove a user's bookmark successfully", async () => {
       const response = await request
         .delete('/api/user/bookmarks/1')
         .set('Authorization', firstUserToken);

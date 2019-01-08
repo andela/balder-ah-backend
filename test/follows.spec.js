@@ -112,7 +112,7 @@ describe('Test for follows', () => {
       fourthUserToken = fourthUser.body.token;
     });
 
-    it('Should get all users that is following a particulart user', async () => {
+    it('Should get all users that is following a particular user', async () => {
       const response = await request
         .get('/api/profiles/ogidan/followings')
         .set('Authorization', secondUserToken);

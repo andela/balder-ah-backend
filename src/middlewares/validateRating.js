@@ -1,19 +1,19 @@
 /**
- * @description class responsible for rating artcles
+ * @description class responsible for rating articles
  *
  * @class ValidateRating
  */
 class ValidateRating {
   /**
-    * @description - This method is responsible for validating rating input from users
-    * @static
-    * @param {object} request - Request sent to the middleware
-    * @param {object} response - Response sent from the middleware
-    * @param {object} next - callback function that transfers to the next method
-    * @returns {object} - object representing response message
-    * @memberof ValidateRating
-    */
-  static async articleRatingValidatior(request, response, next) {
+   * @description - This method is responsible for validating rating input from users
+   * @static
+   * @param {object} request - Request sent to the middleware
+   * @param {object} response - Response sent from the middleware
+   * @param {object} next - callback function that transfers to the next method
+   * @returns {object} - object representing response message
+   * @memberof ValidateRating
+   */
+  static async articleRatingValidator(request, response, next) {
     let { rating } = request.body;
     const errors = [];
     if (rating === undefined || rating === '') {
@@ -39,6 +39,6 @@ class ValidateRating {
   }
 }
 
-const { articleRatingValidatior } = ValidateRating;
+const { articleRatingValidator } = ValidateRating;
 
-export default articleRatingValidatior;
+export default articleRatingValidator;

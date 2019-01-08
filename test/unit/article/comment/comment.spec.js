@@ -119,7 +119,7 @@ describe('Comment on article', () => {
     expect(response.status).to.equal(200);
     expect(response.body)
       .to.have.property('message')
-      .eql('Comment unliked successfully');
+      .eql('Comment un-liked successfully');
   });
 
   it('fake server error when getting a comment on an article by id', async () => {

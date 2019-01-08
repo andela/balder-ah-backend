@@ -5,7 +5,7 @@ export default (sequelize, DataTypes) => {
       report_type: {
         type: DataTypes.ENUM,
         allowNull: false,
-        values: ['spam', 'harrassment', 'rules violation', 'terrorism', 'other']
+        values: ['spam', 'harassment', 'rules violation', 'terrorism', 'other']
       },
       userId: {
         type: DataTypes.INTEGER,

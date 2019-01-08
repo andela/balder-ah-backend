@@ -1,5 +1,5 @@
 import Models from '../db/models';
-import logTracker from '../../logger/logTraker';
+import logTracker from '../../logger/logTracker';
 
 const { Tag } = Models;
 const errorMessage = 'Could not complete action at this time';
@@ -44,8 +44,8 @@ class TagHelpers {
     try {
       const allTags = await Tag.findAll();
       const tagNames = allTags.filter(tag => topTags.includes(tag.id));
-      const sortedTagNames = topTags.map(topTag => tagNames
-        .find(tag => tag.id === topTag))
+      const sortedTagNames = topTags
+        .map(topTag => tagNames.find(tag => tag.id === topTag))
         .map(topTag => topTag.name);
       return sortedTagNames;
     } catch (error) {

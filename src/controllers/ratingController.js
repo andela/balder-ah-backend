@@ -1,13 +1,12 @@
 import models from '../db/models';
 import ArticleModel from '../helpers/articles';
-import logTracker from '../../logger/logTraker';
+import logTracker from '../../logger/logTracker';
 
 const { Rating } = models;
 const errorMessage = 'Could not complete action at this time';
 
-
 /**
- * @description class responsible for rating artcles
+ * @description class responsible for rating articles
  *
  * @class ArticleRatingController
  */
@@ -39,11 +38,10 @@ class RatingController {
         articleSlug,
         rating
       });
-      response.status(201)
-        .json({
-          message: 'Rating recorded successfully',
-          result
-        });
+      response.status(201).json({
+        message: 'Rating recorded successfully',
+        result
+      });
     } catch (error) {
       logTracker(error);
       response.status(500).json({

@@ -4,11 +4,11 @@ import errorResponse from '../helpers/index';
 const { CommentReaction } = LikeComment;
 
 /**
- * @description this class handles methods for liking and unliking comment
+ * @description this class handles methods for liking and un-liking comment
  */
 class ReactionController {
   /**
-   * @description - This method is responsible for liking or unliking a comment
+   * @description - This method is responsible for liking or un-liking a comment
    * @static
    * @param {object} request - Request sent to the router
    * @param {object} response - Response sent from the controller
@@ -25,7 +25,7 @@ class ReactionController {
       if (commentReaction) {
         await CommentReaction.destroy({ where });
         return response.status(200).json({
-          message: 'Comment unliked successfully'
+          message: 'Comment un-liked successfully'
         });
       }
       await CommentReaction.create({

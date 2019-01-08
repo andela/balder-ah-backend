@@ -1,7 +1,7 @@
 import errorResponse from '../helpers/index';
 import ArticleModel from '../helpers/articles';
 import FavoriteModelHelper from '../helpers/favorite';
-import logTracker from '../../logger/logTraker';
+import logTracker from '../../logger/logTracker';
 
 const errorMessage = 'Could not complete action at this time';
 
@@ -35,12 +35,12 @@ class FavoriteArticleController {
    * @param {*} response - response object
    * @returns {void} - redirects to article page
    */
-  static async unfavoriteArticle(request, response) {
+  static async unFavoriteArticle(request, response) {
     const { slug } = request.params;
     const userId = request.userData.payload.id;
     try {
       const articleId = (await ArticleModel.queryForArticle(slug)).id;
-      await FavoriteModelHelper.unfavoriteArticle(articleId, userId);
+      await FavoriteModelHelper.unFavoriteArticle(articleId, userId);
       response.redirect(`/api/articles/${slug}`);
     } catch (error) {
       logTracker(error);

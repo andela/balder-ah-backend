@@ -1,13 +1,13 @@
 import Models from '../db/models';
 import errorResponse from '../helpers/index';
-import logTracker from '../../logger/logTraker';
+import logTracker from '../../logger/logTracker';
 import NotificationsController from './notificationsController';
 
 const { User, Follow } = Models;
 const errorMessage = 'Could not complete action at this time';
 
 /**
- * @description handles follow and unfollow
+ * @description handles follow and un-follow
  * @class FollowController
  */
 class FollowController {
@@ -36,7 +36,9 @@ class FollowController {
             }
           }).spread((check, created) => {
             if (!created) {
-              return response.status(409).json(errorResponse([`You are already following ${username}`]));
+              return response
+                .status(409)
+                .json(errorResponse([`You are already following ${username}`]));
             }
             NotificationsController.newFollower(user.id, user.email, followingId);
             return response.status(200).json({
@@ -62,7 +64,7 @@ class FollowController {
    * @returns {object} An object containing all the data related to the unfollowed user
    * @memberof FollowController
    */
-  static async unfollowUser(request, response) {
+  static async unFollowUser(request, response) {
     const { username } = request.params;
     const user = await User.findOne({
       where: {
@@ -73,13 +75,13 @@ class FollowController {
       if (user) {
         const followingId = request.userData.payload.id;
         if (followingId !== user.id) {
-          const unfollow = await Follow.destroy({
+          const unFollow = await Follow.destroy({
             where: {
               userId: user.id,
               followerId: followingId
             }
           });
-          if (unfollow) {
+          if (unFollow) {
             return response.status(200).json({
               message: `You have Unfollowed ${username}`
             });
@@ -96,19 +98,19 @@ class FollowController {
   }
 
   /**
-     * @description Handles getting all users a user is following
-     * @param {object} request - Request object
-     * @param {object} response - Response object
-     * @returns {Array} An array of object containing required user data
-     * @memberof FollowController
-     */
+   * @description Handles getting all users a user is following
+   * @param {object} request - Request object
+   * @param {object} response - Response object
+   * @returns {Array} An array of object containing required user data
+   * @memberof FollowController
+   */
   static async getAllFollowing(request, response) {
     const { username } = request.params;
     try {
       const foundUser = await User.findOne({
         where: {
           username
-        },
+        }
       });
       if (foundUser) {
         const userId = request.userData.payload.id;
@@ -124,13 +126,7 @@ class FollowController {
             }
           ],
           attributes: {
-            exclude: [
-              'id',
-              'userId',
-              'followerId',
-              'createdAt',
-              'updatedAt'
-            ],
+            exclude: ['id', 'userId', 'followerId', 'createdAt', 'updatedAt']
           }
         });
         if (user.rows.length === 0) {
@@ -153,19 +149,19 @@ class FollowController {
   }
 
   /**
-     * @description Handles getting all users a user is following
-     * @param {object} request - Request object
-     * @param {object} response - Response object
-     * @returns {Array} An array of object containing required user data
-     * @memberof FollowController
-     */
+   * @description Handles getting all users a user is following
+   * @param {object} request - Request object
+   * @param {object} response - Response object
+   * @returns {Array} An array of object containing required user data
+   * @memberof FollowController
+   */
   static async getAllFollowers(request, response) {
     const { username } = request.params;
     try {
       const foundUser = await User.findOne({
         where: {
           username
-        },
+        }
       });
       if (foundUser) {
         const userId = request.userData.payload.id;
@@ -181,13 +177,7 @@ class FollowController {
             }
           ],
           attributes: {
-            exclude: [
-              'id',
-              'userId',
-              'followerId',
-              'createdAt',
-              'updatedAt'
-            ],
+            exclude: ['id', 'userId', 'followerId', 'createdAt', 'updatedAt']
           }
         });
 

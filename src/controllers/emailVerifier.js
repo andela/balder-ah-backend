@@ -1,5 +1,5 @@
 import models from '../db/models';
-import logTracker from '../../logger/logTraker';
+import logTracker from '../../logger/logTracker';
 
 const { User } = models;
 

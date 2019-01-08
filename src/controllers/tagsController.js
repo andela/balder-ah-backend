@@ -1,7 +1,7 @@
 import sequelize from 'sequelize';
 import models from '../db/models';
 import TagHelpers from '../helpers/tagHelpers';
-import logTracker from '../../logger/logTraker';
+import logTracker from '../../logger/logTracker';
 
 const { Tag, ArticleTags } = models;
 const errorMessage = 'Could not complete action at this time';

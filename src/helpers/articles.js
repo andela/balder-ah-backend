@@ -1,10 +1,9 @@
 import Models from '../db/models';
 import TagHelpers from './tagHelpers';
-import logTracker from '../../logger/logTraker';
+import logTracker from '../../logger/logTracker';
 
 const { Article, ArticleTags } = Models;
 const errorMessage = 'Could not complete action at this time';
-
 
 /**
  * @description class representing Article Helpers
@@ -14,7 +13,7 @@ class ArticleModel {
   /**
    * @description - This method is responsible for creating a new article
    * @static
-   * @param {object} all arguments conatining objects needed to create a new article
+   * @param {object} all arguments containing objects needed to create a new article
    * @returns {object} - object representing newly created article
    * @memberof ArticleModel
    */
@@ -33,16 +32,16 @@ class ArticleModel {
   static async getAllArticle(page) {
     const allArticles = await Article.findAndCountAll();
     const articleCount = allArticles.count;
-    const numberOfArtclesPerPage = 10;
+    const numberOfArticlesPerPage = 10;
 
     const currentPage = page || 1;
-    const startFrom = numberOfArtclesPerPage * (currentPage - 1);
+    const startFrom = numberOfArticlesPerPage * (currentPage - 1);
     if (articleCount < 1) {
       return [];
     }
     const allArticle = await Article.findAll({
       offset: startFrom,
-      limit: numberOfArtclesPerPage,
+      limit: numberOfArticlesPerPage,
       order: [['createdAt', 'DESC']],
       include: [
         {
@@ -66,7 +65,7 @@ class ArticleModel {
   }
 
   /**
-   * @description - This method is responsible for quering the database for an article
+   * @description - This method is responsible for querying the database for an article
    * @param {string} slug
    * @returns {object} article which found
    * @memberof ArticleModel
@@ -90,14 +89,14 @@ class ArticleModel {
         },
         {
           association: 'favoritesCount'
-        },
+        }
       ]
     });
     return oneArticle;
   }
 
   /**
-   * @description - This method is responsible for quering the database for an article
+   * @description - This method is responsible for querying the database for an article
    * @static
    * @param {string} slug
    * @returns {object} - object representing response message
@@ -116,7 +115,7 @@ class ArticleModel {
   }
 
   /**
-   * @description - This method is responsible for the update query of the datbase
+   * @description - This method is responsible for the update query of the database
    * @static
    * @param {object} request - Request sent to the router
    * @param {object} response - Response sent from the controller

@@ -1,6 +1,6 @@
 import models from '../db/models';
 import errorResponse from '../helpers';
-import logTracker from '../../logger/logTraker';
+import logTracker from '../../logger/logTracker';
 import NotificationsController from './notificationsController';
 
 const { Comment: CommentModel, User } = models;
@@ -40,7 +40,9 @@ class Comment {
       return response.json({ comments, commentsCount });
     } catch (error) {
       logTracker(error);
-      return response.status(500).json(errorResponse(['Server error. Falied to get article comments']));
+      return response
+        .status(500)
+        .json(errorResponse(['Server error. Failed to get article comments']));
     }
   }
 
@@ -167,15 +169,19 @@ class Comment {
       const { body: newComment } = request.body;
 
       if (!newComment || !newComment.trim()) return response.status(400).json(errorResponse(['Comment body is required']));
-      if (newComment === existingComment.body) return response.status(200).json({ message: 'Comment was not edited because content is the same' });
+      if (newComment === existingComment.body) {
+        return response
+          .status(200)
+          .json({ message: 'Comment was not edited because content is the same' });
+      }
 
       const newEditHistory = {
         body: existingComment.body,
-        time: existingComment.updatedAt,
+        time: existingComment.updatedAt
       };
 
       existingComment.history = !existingComment.history[0]
-        ? existingComment.history = [newEditHistory]
+        ? (existingComment.history = [newEditHistory])
         : existingComment.history.concat([newEditHistory]);
 
       existingComment.body = newComment;

@@ -30,8 +30,8 @@ describe('Article Controller', () => {
 
     await request.post(signupEndpoint).send(successfulSignup);
 
-    const loginResponnse = await request.post(loginEndpoint).send(loginData);
-    const { body: responseBody } = loginResponnse;
+    const loginResponse = await request.post(loginEndpoint).send(loginData);
+    const { body: responseBody } = loginResponse;
     const { token: responseToken } = responseBody;
 
     token = responseToken;
@@ -62,7 +62,7 @@ describe('Article Controller', () => {
   });
 
   describe('createArticle', () => {
-    it('ecnounter server error creating article', async () => {
+    it('encountered server error creating article', async () => {
       const newRequest = {
         body: { title: 'A nice blog post' },
         userData: { payload: { id: 4000 } }

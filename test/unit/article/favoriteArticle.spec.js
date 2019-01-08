@@ -14,7 +14,8 @@ const { expect } = chai;
 describe('Test for favoriting articles', () => {
   const data = {};
   before(async () => {
-    const response = await chai.request(app)
+    const response = await chai
+      .request(app)
       .post('/api/users/signup')
       .send({
         email: 'kay@gmail.com',
@@ -23,7 +24,8 @@ describe('Test for favoriting articles', () => {
       });
 
     data.token = response.body.token;
-    const response2 = await chai.request(app)
+    const response2 = await chai
+      .request(app)
       .post('/api/articles')
       .set('Authorization', data.token)
       .send(createArticle);
@@ -31,7 +33,8 @@ describe('Test for favoriting articles', () => {
   });
 
   it('should favorite an article', async () => {
-    const response = await chai.request(app)
+    const response = await chai
+      .request(app)
       .post(`/api/articles/${data.articleSlug}/favorite`)
       .set('Authorization', data.token);
 
@@ -42,7 +45,8 @@ describe('Test for favoriting articles', () => {
   });
 
   it('should unfavorite an article', async () => {
-    const response = await chai.request(app)
+    const response = await chai
+      .request(app)
       .del(`/api/articles/${data.articleSlug}/favorite`)
       .set('Authorization', data.token);
 
@@ -53,24 +57,21 @@ describe('Test for favoriting articles', () => {
   });
 
   it('should not favorite an article if unauthenticated', async () => {
-    const response = await chai.request(app)
-      .post(`/api/articles/${data.articleSlug}/favorite`);
+    const response = await chai.request(app).post(`/api/articles/${data.articleSlug}/favorite`);
 
     expect(response.status).to.eql(403);
     expect(response.body.status).to.have.eql('Fail');
   });
 
   it('should not unfavorite an article if unauthenticated', async () => {
-    const response = await chai.request(app)
-      .del(`/api/articles/${data.articleSlug}/favorite`);
+    const response = await chai.request(app).del(`/api/articles/${data.articleSlug}/favorite`);
 
     expect(response.status).to.eql(403);
     expect(response.body.status).to.have.eql('Fail');
   });
 
   it('should show favorites count even if user is authenticated', async () => {
-    const response = await chai.request(app)
-      .get(`/api/articles/${data.articleSlug}`);
+    const response = await chai.request(app).get(`/api/articles/${data.articleSlug}`);
 
     expect(response.status).to.eql(200);
     expect(response.body).to.have.property('getOneArticle');
@@ -94,10 +95,10 @@ describe('Test for favoriting articles', () => {
     const request = { userData: { payload: { id: 1 } }, params: { slug: 'some-article' } };
     const response = { status() {}, json() {} };
 
-    sinon.stub(FavoriteModelHelper, 'unfavoriteArticle').throws();
+    sinon.stub(FavoriteModelHelper, 'unFavoriteArticle').throws();
     sinon.stub(response, 'status').returnsThis();
 
-    await FavoriteArticleController.unfavoriteArticle(request, response);
+    await FavoriteArticleController.unFavoriteArticle(request, response);
 
     expect(response.status).to.have.been.calledWith(500);
   });

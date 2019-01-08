@@ -9,14 +9,14 @@ import { validateInput } from '../middlewares/helper';
 import verifySlug from '../middlewares/verifySlug';
 import { verifyToken, checkUser, checkAuthStatus } from '../middlewares/authentication';
 import checkInput from '../middlewares/validateArticle';
-import articleRatingValidatior from '../middlewares/validateRating';
+import articleRatingValidator from '../middlewares/validateRating';
 
 import PaginationHelper from '../helpers/paginationHelper';
 import ReportArticle from '../controllers/reportArticle';
 import CommentReaction from '../controllers/commentReaction';
 
 import { getReadStatistics } from '../controllers/statisticsController';
-import articleStatsValidatior from '../middlewares/validateStatistics';
+import articleStatsValidator from '../middlewares/validateStatistics';
 
 const articlesRouter = express.Router();
 
@@ -28,19 +28,19 @@ const {
   deleteArticle
 } = ArticleController;
 
-const { favoriteArticle, unfavoriteArticle } = FavoriteArticleController;
+const { favoriteArticle, unFavoriteArticle } = FavoriteArticleController;
 
 const { slugChecker } = verifySlug;
 
 const articlesBaseEndpoint = '/articles';
 
-const { checkQueryparameter } = PaginationHelper;
+const { checkQueryParameter } = PaginationHelper;
 
 const { likeOrUnlikeOneComment } = CommentReaction;
 
 articlesRouter
   .route(articlesBaseEndpoint)
-  .get(checkAuthStatus, checkQueryparameter, getAllArticles)
+  .get(checkAuthStatus, checkQueryParameter, getAllArticles)
   .post(verifyToken, checkInput, createArticle);
 
 articlesRouter
@@ -51,11 +51,11 @@ articlesRouter
 
 articlesRouter
   .route(`${articlesBaseEndpoint}/:slug/rating`)
-  .post(verifyToken, slugChecker, articleRatingValidatior, rateArticle);
+  .post(verifyToken, slugChecker, articleRatingValidator, rateArticle);
 
 articlesRouter
   .route(`${articlesBaseEndpoint}/:slug/statistics`)
-  .get(verifyToken, slugChecker, articleStatsValidatior, getReadStatistics);
+  .get(verifyToken, slugChecker, articleStatsValidator, getReadStatistics);
 
 articlesRouter
   .route(`${articlesBaseEndpoint}/:slug/comments`)
@@ -79,7 +79,7 @@ articlesRouter
 articlesRouter
   .route(`${articlesBaseEndpoint}/:slug/favorite`)
   .post(verifyToken, slugChecker, favoriteArticle)
-  .delete(verifyToken, slugChecker, unfavoriteArticle);
+  .delete(verifyToken, slugChecker, unFavoriteArticle);
 
 articlesRouter
   .route(`${articlesBaseEndpoint}/:slug/comments/highlight-text`)

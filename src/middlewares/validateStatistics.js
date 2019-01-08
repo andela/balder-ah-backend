@@ -3,21 +3,21 @@ import models from '../db/models';
 const { Statistics } = models;
 
 /**
- * @description class responsible for validating artcle stats input queries
+ * @description class responsible for validating article stats input queries
  *
  * @class ValidateStatistics
  */
 class ValidateStatistics {
   /**
-    * @description - This method is responsible for validating statistics query from users
-    * @static
-    * @param {object} request - Request sent to the middleware
-    * @param {object} response - Response sent from the middleware
-    * @param {object} next - callback function that transfers to the next method
-    * @returns {object} - object representing response message
-    * @memberof ValidateStatistics
-    */
-  static async articleStatsValidatior(request, response, next) {
+   * @description - This method is responsible for validating statistics query from users
+   * @static
+   * @param {object} request - Request sent to the middleware
+   * @param {object} response - Response sent from the middleware
+   * @param {object} next - callback function that transfers to the next method
+   * @returns {object} - object representing response message
+   * @memberof ValidateStatistics
+   */
+  static async articleStatsValidator(request, response, next) {
     const articleSlug = request.params.slug;
     const author = request.userData.payload.username;
 
@@ -29,21 +29,19 @@ class ValidateStatistics {
         }
       });
       if (!allReadData.length) {
-        return response.status(404)
-          .json({
-            message: 'Sorry, you have no statistics to view at this time',
-          });
+        return response.status(404).json({
+          message: 'Sorry, you have no statistics to view at this time'
+        });
       }
       if (!year && !month) {
         let lifeTimeReadCount = 0;
         allReadData.forEach((count) => {
           lifeTimeReadCount += count.readCount;
         });
-        return response.status(200)
-          .json({
-            message: 'Total reading statistics',
-            lifeTimeReadCount
-          });
+        return response.status(200).json({
+          message: 'Total reading statistics',
+          lifeTimeReadCount
+        });
       }
 
       if (year) {
@@ -58,7 +56,20 @@ class ValidateStatistics {
         if (month) {
           month = month.toLowerCase().trim();
           month = month.charAt(0).toUpperCase() + month.substr(1);
-          const validMonth = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+          const validMonth = [
+            'Jan',
+            'Feb',
+            'Mar',
+            'Apr',
+            'May',
+            'Jun',
+            'Jul',
+            'Aug',
+            'Sep',
+            'Oct',
+            'Nov',
+            'Dec'
+          ];
 
           if (!validMonth.includes(month)) {
             const error = {
@@ -78,18 +89,16 @@ class ValidateStatistics {
         request.body.allReadData = allReadData;
         return next();
       }
-      return response.status(400)
-        .json({
-          message: 'Please specify the year you want to query',
-        });
+      return response.status(400).json({
+        message: 'Please specify the year you want to query'
+      });
     } catch (error) {
-      response.status(500)
-        .json({
-          message: error.message
-        });
+      response.status(500).json({
+        message: error.message
+      });
     }
   }
 }
 
-const { articleStatsValidatior } = ValidateStatistics;
-export default articleStatsValidatior;
+const { articleStatsValidator } = ValidateStatistics;
+export default articleStatsValidator;

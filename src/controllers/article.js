@@ -4,7 +4,7 @@ import { articleAverageRating } from './ratingController';
 import TagHelpers from '../helpers/tagHelpers';
 import FavoriteModelHelper from '../helpers/favorite';
 import { hasReadArticle } from './statisticsController';
-import logTracker from '../../logger/logTraker';
+import logTracker from '../../logger/logTracker';
 import NotificationsController from './notificationsController';
 
 const errorMessage = 'Could not complete action at this time';

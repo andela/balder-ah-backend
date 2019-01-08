@@ -14,8 +14,7 @@ class FavoriteModel {
    * @memberof FavoriteModel
    */
   static async favoriteArticle(articleId, userId) {
-    await Favorite
-      .findOrCreate({ where: { articleId, userId }, defaults: { articleId, userId } });
+    await Favorite.findOrCreate({ where: { articleId, userId }, defaults: { articleId, userId } });
   }
 
   /**
@@ -37,7 +36,7 @@ class FavoriteModel {
    * @param {number} userId
    * @returns {void}
    */
-  static async unfavoriteArticle(articleId, userId) {
+  static async unFavoriteArticle(articleId, userId) {
     await Favorite.destroy({ where: { articleId, userId } });
   }
 }

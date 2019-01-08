@@ -5,10 +5,7 @@ import sinonChai from 'sinon-chai';
 import server from '../../../../src/server';
 import models from '../../../../src/db/models';
 
-import {
-  successfulSignup,
-  loginData,
-} from '../../../../src/db/seeders/user';
+import { successfulSignup, loginData } from '../../../../src/db/seeders/user';
 import { createArticle, createArticle3 } from '../../../../src/db/seeders/articles';
 import { getAllTags, getTrendingTags } from '../../../../src/controllers/tagsController';
 
@@ -25,7 +22,7 @@ let request;
 let firstUserToken;
 
 const tagsEndpoint = '/api/tags';
-const tredingTagsEndpoint = '/api/tags/trending';
+const trendingTagsEndpoint = '/api/tags/trending';
 const articlesEndpoint = '/api/articles';
 const loginEndpoint = '/api/users/login';
 
@@ -60,15 +57,13 @@ describe('Test for Tags', () => {
     });
 
     it('should return 200 for getting all tags successfully', async () => {
-      const response = await request
-        .get(tagsEndpoint);
+      const response = await request.get(tagsEndpoint);
       expect(response.status).to.equal(200);
       expect(response.body.message).to.be.deep.equals('Retrieved all tags successfully');
     });
 
     it('should return 200 for getting all tags successfully', async () => {
-      const response = await request
-        .get(tredingTagsEndpoint);
+      const response = await request.get(trendingTagsEndpoint);
       expect(response.status).to.equal(200);
       expect(response.body.message).to.be.deep.equals('Retrieved all trending tags successfully');
     });
@@ -76,15 +71,13 @@ describe('Test for Tags', () => {
 
   describe('Test for not getting any tag', () => {
     it('should return 404 for not getting any tag', async () => {
-      const response = await request
-        .get(tagsEndpoint);
+      const response = await request.get(tagsEndpoint);
       expect(response.status).to.equal(404);
       expect(response.body.message).to.be.deep.equals('No tags found');
     });
 
     it('should return 404 for not getting any trending tag', async () => {
-      const response = await request
-        .get(tredingTagsEndpoint);
+      const response = await request.get(trendingTagsEndpoint);
       expect(response.status).to.equal(404);
       expect(response.body.message).to.be.deep.equals('No trending tag found');
     });
@@ -93,8 +86,8 @@ describe('Test for Tags', () => {
   describe('Test for server errors when retrieving tags', () => {
     it('fakes server error when getting all tags', async () => {
       const response = {
-        status() { },
-        json() { }
+        status() {},
+        json() {}
       };
       sinon.stub(Tag, 'findAll').throws();
       sinon.stub(response, 'status').returnsThis();
@@ -104,8 +97,8 @@ describe('Test for Tags', () => {
 
     it('fakes server error when getting all trending tags', async () => {
       const response = {
-        status() { },
-        json() { }
+        status() {},
+        json() {}
       };
       sinon.stub(ArticleTags, 'findAll').throws();
       sinon.stub(response, 'status').returnsThis();

@@ -10,15 +10,15 @@ const { User, Notification } = models;
  */
 class NotificationsController {
   /**
-   * @description - this method handles opting in or out of both email and inapp notifications
+   * @description - this method handles opting in or out of both email and in-app notifications
    * @static
    * @param {Object} request - request object
-   * @param {Object} response - reponse object
-   * @returns {Object} - sucess response or error message
+   * @param {Object} response - response object
+   * @returns {Object} - success response or error message
    */
   static async optInOut(request, response) {
     const { id } = request.userData.payload;
-    const validQuery = param => (param === 'yes' || param === 'no');
+    const validQuery = param => param === 'yes' || param === 'no';
 
     try {
       const user = await User.findByPk(id);
@@ -31,13 +31,18 @@ class NotificationsController {
       app = app.toLowerCase();
 
       if (!validQuery(email) || !validQuery(app)) {
-        return response.status(400).json(errorResponse(['query params should be either yes or no']));
+        return response
+          .status(400)
+          .json(errorResponse(['query params should be either yes or no']));
       }
 
-      await User.update({
-        emailNotifications: (email === 'yes'),
-        appNotifications: (app === 'yes')
-      }, { where: { id } });
+      await User.update(
+        {
+          emailNotifications: email === 'yes',
+          appNotifications: app === 'yes'
+        },
+        { where: { id } }
+      );
 
       return response.json({
         status: 'Success',
