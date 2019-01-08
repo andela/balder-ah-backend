@@ -262,6 +262,39 @@ const secondBookmarkSignup = {
   password: 'namesakeme'
 };
 
+const successfulSignup4 = {
+  email: 'okorosolo@gmail.com',
+  username: 'okoro solo',
+  password: 'okoro1233456'
+};
+const successfulSignup5 = {
+  email: 'ebuka@gmail.com',
+  username: 'ebuks',
+  password: 'ebuka23456'
+};
+const successfulSignup6 = {
+  email: 'somto@gmail.com',
+  username: 'somto',
+  password: 'somto23456'
+};
+const userToDelete = {
+  email: 'somto@gmail.com'
+};
+const userToDelete1 = {
+  email: 'chukwuma@gmail.com'
+};
+const userToAssignRole = {
+  email: 'ebuka@gmail.com',
+  role: 'admin'
+};
+const successfulLogin4 = {
+  email: 'okorosolo@gmail.com',
+  password: 'okoro1233456'
+};
+const loginSuperUser = {
+  email: process.env.SUPER_ADMIN_EMAIL,
+  password: process.env.SUPER_ADMIN_PASSWORD
+};
 export {
   successfulSignup1,
   successfulSignup2,
@@ -309,5 +342,13 @@ export {
   firstSearchUserSignup,
   secondSearchUserSignup,
   firstBookmarkSignup,
-  secondBookmarkSignup
+  secondBookmarkSignup,
+  successfulSignup4,
+  loginSuperUser,
+  successfulLogin4,
+  successfulSignup5,
+  successfulSignup6,
+  userToAssignRole,
+  userToDelete,
+  userToDelete1
 };

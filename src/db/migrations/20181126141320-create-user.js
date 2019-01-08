@@ -66,6 +66,11 @@ export default {
     updatedAt: {
       allowNull: false,
       type: Sequelize.DATE
+    },
+    role: {
+      type: Sequelize.STRING,
+      defaultValue: 'user',
+      allowNull: false
     }
   }),
   down: queryInterface => queryInterface.dropTable('Users')

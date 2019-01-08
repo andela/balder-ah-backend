@@ -96,6 +96,11 @@ export default (sequelize, DataTypes) => {
         type: DataTypes.BOOLEAN,
         defaultValue: true,
         allowNull: false
+      },
+      role: {
+        type: DataTypes.STRING,
+        defaultValue: 'user',
+        allowNull: false
       }
     },
     {

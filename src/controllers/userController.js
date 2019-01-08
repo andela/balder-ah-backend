@@ -31,10 +31,8 @@ class UserController {
         email,
         password
       });
-      const payload = {
-        id: userInfo.id,
-        username: userInfo.username
-      };
+      const { id, role } = userInfo;
+      const payload = { id, username: userInfo.username, role };
       try {
         if (userInfo) {
           const generatedEmailToken = crypto.randomBytes(16).toString('hex');
@@ -97,10 +95,8 @@ class UserController {
           message: 'Incorrect login credentials'
         });
       }
-      const payload = {
-        id: foundUser.id,
-        username: foundUser.username
-      };
+      const { id, username, role } = foundUser;
+      const payload = { id, username, role };
       const time = {};
       if (!rememberMe) {
         time.expiresIn = '24h';
@@ -123,8 +119,87 @@ class UserController {
       });
     }
   }
+
+  /**
+   * @description - This method is responsible for assigning roles to users
+   *
+   * @static
+   * @param {object} request - Request sent to the router
+   * @param {object} response - Response sent from the controller
+   *
+   * @returns {object} - object representing response message
+   *
+   * @memberof UserController
+   */
+  static async assignRole(request, response) {
+    try {
+      const { email, role } = request.body;
+      if (role !== 'admin' && role !== 'user') {
+        return response.status(400).json({
+          status: 'Fail',
+          message: `Status can only be ${"'admin'"} or ${"'user'"}`
+        });
+      }
+      const fieldToUpdate = {
+        role
+      };
+      const updatedUser = await User.update(fieldToUpdate, {
+        where: {
+          email
+        },
+        returning: true
+      });
+      return response.status(200).json({
+        status: 'Success',
+        message: 'User role updated successfully',
+        updatedUser
+      });
+    } catch (error) {
+      response.status(500).json({
+        status: 'Fail',
+        message: errorResponse(['internal server error, please try again later']),
+      });
+    }
+  }
+
+  /**
+   * @description - This method is responsible for deleting users
+   *
+   * @static
+   * @param {object} request - Request sent to the router
+   * @param {object} response - Response sent from the controller
+   *
+   * @returns {object} - object representing response message
+   *
+   * @memberof UserController
+   */
+  static async deleteUser(request, response) {
+    const { email } = request.body;
+    try {
+      await User.destroy({ where: { email } });
+      return response.status(200).json({
+        status: 'Success',
+        message: 'User deleted successfully'
+      });
+    } catch (error) {
+      return response.status(500).json({
+        status: 'Fail',
+        message: errorResponse(['internal server error, please try again later'])
+      });
+    }
+  }
 }
 
-const { registerUser, loginUser } = UserController;
+const {
+  registerUser,
+  loginUser,
+  assignRole,
+  deleteUser
+} = UserController;
 
-export { registerUser, loginUser };
+export {
+  registerUser,
+  loginUser,
+  assignRole,
+  deleteUser
+};

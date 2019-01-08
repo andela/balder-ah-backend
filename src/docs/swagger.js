@@ -253,6 +253,98 @@ export default {
         }
       }
     },
+    'users/assignrole': {
+      post: {
+        tags: ['users'],
+        summary: 'Assigns role to a user',
+        description: '',
+        parameters: [
+          {
+            name: 'role',
+            in: 'body',
+            description: 'Updating the role of a user by a super admin',
+            schema: {
+              properties: {
+                email: {
+                  required: true,
+                  type: 'string'
+                },
+                role: {
+                  required: true,
+                  type: 'string'
+                },
+              }
+            }
+          }
+        ],
+        produces: ['application/json'],
+        responses: {
+          200: {
+            description: 'successful operation',
+            schema: {
+              properties: {
+                message: {
+                  type: 'string'
+                },
+                token: {
+                  type: 'string'
+                }
+              },
+              example: {
+                message: 'User role updated successfully',
+              }
+            }
+          },
+          400: {
+            description: `Status can only be ${"'admin'"} or ${"'user'"}`
+          },
+          404: {
+            description: 'User does not exist'
+          }
+        }
+      }
+    },
+    '/users/deleteuser': {
+      post: {
+        tags: ['users'],
+        summary: 'Delete user from the app',
+        description: '',
+        parameters: [
+          {
+            name: 'email',
+            in: 'body',
+            description: 'Existing user that needs to be deleted',
+            schema: {
+              properties: {
+                email: {
+                  required: true,
+                  type: 'string'
+                }
+              }
+            }
+          }
+        ],
+        produces: ['application/json'],
+        responses: {
+          200: {
+            description: 'successful operation',
+            schema: {
+              properties: {
+                message: {
+                  type: 'string'
+                }
+              },
+              example: {
+                message: 'User deleted successfully',
+              }
+            }
+          },
+          404: {
+            description: 'The User you want to delete does not exist'
+          }
+        }
+      }
+    },
     '/verification': {
       get: {
         tags: ['users, email'],

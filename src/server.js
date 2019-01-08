@@ -1,5 +1,8 @@
 import express from 'express';
 import passport from 'passport';
+
+import registerSuperAdmin from './db/seeders/createSuperAdmin';
+
 import {
   userRouter,
   articlesRouter,
@@ -32,6 +35,7 @@ app.use('/api/auth', socialAuthRouter);
 app.use('/api', tagsRouter);
 app.use('/api', bookmarkRouter);
 app.use('/', otherRouter);
+registerSuperAdmin();
 
 app.listen(PORT, () => appLogs.info(`Server running on port ${PORT}`));
 
