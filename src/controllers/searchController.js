@@ -32,7 +32,7 @@ class SearchController {
             attributes: ['slug', 'title', 'description', 'body', 'imgUrl']
           }
         ],
-        attributes: ['id', 'username', 'image', 'email', 'image']
+        attributes: ['id', 'username', 'bio', 'email', 'image']
       });
       if (author) {
         if (author.dataValues.articles.length < 1) {

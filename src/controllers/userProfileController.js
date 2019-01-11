@@ -1,8 +1,8 @@
-import user from '../db/models';
+import models from '../db/models';
 import { authorRating } from './ratingController';
 import logTracker from '../../logger/logTracker';
 
-const { User } = user;
+const { User, Article } = models;
 const errorMessage = 'Could not complete action at this time';
 
 /**
@@ -28,16 +28,25 @@ class UserProfileController {
     try {
       const rating = await authorRating(request);
       const foundUser = await User.findOne({
-        where: { id: userId }
+        where: { id: userId },
+        include: [
+          {
+            model: Article,
+            as: 'articles',
+            attributes: ['slug', 'title', 'description', 'imgUrl']
+          }
+        ],
       });
       if (foundUser) {
         const currentUser = {
+          id: foundUser.id,
           username: foundUser.username,
           email: foundUser.email,
           bio: foundUser.bio,
-          image: foundUser.image
+          image: foundUser.image,
+          authorRating: rating,
+          articles: foundUser.articles
         };
-        currentUser.authorRating = rating;
         return response.status(200).json({
           status: 'Success',
           message: 'Retrieved user successfully',
@@ -118,15 +127,23 @@ class UserProfileController {
     const { username } = request.params;
     try {
       const userProfileFound = await User.findOne({
-        where: { username }
+        where: { username },
+        include: [
+          {
+            model: Article,
+            as: 'articles',
+            attributes: ['slug', 'title', 'description', 'imgUrl']
+          }
+        ],
       });
       if (userProfileFound) {
         const userProfile = {
           username: userProfileFound.username,
           bio: userProfileFound.bio,
-          image: userProfileFound.image
+          image: userProfileFound.image,
+          authorRating: await authorRating(request),
+          articles: userProfileFound.articles,
         };
-        userProfile.authorRating = await authorRating(request);
         return response.status(200).json({
           status: 'Success',
           message: 'Profile retrieved successfully',

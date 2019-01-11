@@ -44,6 +44,8 @@ describe('Test for getting user profile', () => {
       .get(`/api/profiles/${completeProfileData.username}`);
     expect(response).to.have.status(200);
     expect(response.body.message).to.be.a('string');
+    expect(response.body).to.have.property('userProfile')
+      .to.be.an('object').to.have.property('articles');
   });
 
   it('Should return 404 if user can not be found', async () => {

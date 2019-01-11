@@ -276,6 +276,8 @@ describe('Users Authentication', () => {
       expect(response.status).to.equal(200);
       expect(response.body.message).to.be.a('string');
       expect(response.body).to.have.property('currentUser');
+      expect(response.body).to.have.property('currentUser')
+        .to.be.an('object').to.have.property('articles');
     });
 
     it('Should return 403 for forbidden user if token is unavailable', async () => {
