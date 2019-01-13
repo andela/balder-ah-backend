@@ -78,7 +78,7 @@ describe('Article Controller', () => {
 
       await ArticleController.createArticle(newRequest, response);
 
-      response.status.should.have.been.calledOnce;
+      expect(response.status.calledOnce).to.eql(true);
       response.status.should.have.been.calledWith(500);
     });
   });
@@ -97,7 +97,7 @@ describe('Article Controller', () => {
       stubList.push(sinon.stub(ArticleModel, 'getAllArticle').returns(false));
       await ArticleController.getAllArticles(newRequest, response);
 
-      response.status.should.have.been.calledOnce;
+      expect(response.status.calledOnce).to.eql(true);
       response.status.should.have.been.calledWith(404);
     });
 
@@ -112,7 +112,7 @@ describe('Article Controller', () => {
 
       await ArticleController.getAllArticles(newRequest, response);
 
-      response.status.should.have.been.calledOnce;
+      expect(response.status.calledOnce).to.eql(true);
       response.status.should.have.been.calledWith(500);
     });
   });
@@ -136,7 +136,7 @@ describe('Article Controller', () => {
 
       await ArticleController.updateArticle(newRequest, response);
 
-      response.status.should.have.been.calledOnce;
+      expect(response.status.calledOnce).to.eql(true);
       response.status.should.have.been.calledWith(404);
     });
 
@@ -156,7 +156,7 @@ describe('Article Controller', () => {
 
       await ArticleModel.update(newRequest, response, {}, slug);
 
-      response.status.should.have.been.calledOnce;
+      expect(response.status.calledOnce).to.eql(true);
       response.status.should.have.been.calledWith(500);
     });
   });
@@ -180,7 +180,7 @@ describe('Article Controller', () => {
 
       await ArticleController.getArticle(newRequest, response);
 
-      response.status.should.have.been.calledOnce;
+      expect(response.status.calledOnce).to.eql(true);
       response.status.should.have.been.calledWith(500);
     });
   });
@@ -204,7 +204,7 @@ describe('Article Controller', () => {
 
       await ArticleController.deleteArticle(newRequest, response);
 
-      response.status.should.have.been.calledOnce;
+      expect(response.status.calledOnce).to.eql(true);
       response.status.should.have.been.calledWith(404);
     });
 
@@ -228,7 +228,7 @@ describe('Article Controller', () => {
 
       await ArticleController.deleteArticle(newRequest, response);
 
-      response.status.should.have.been.calledOnce;
+      expect(response.status.calledOnce).to.eql(true);
       response.status.should.have.been.calledWith(500);
     });
   });
@@ -257,7 +257,7 @@ describe('Article Controller', () => {
 
         await checkUser(newRequest, response, next);
 
-        response.status.should.have.been.calledOnce;
+        expect(response.status.calledOnce).to.eql(true);
         response.status.should.have.been.calledWith(403);
       });
     });

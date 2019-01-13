@@ -188,7 +188,7 @@ describe('Users Authentication', () => {
 
       await loginUser(newRequest, response);
 
-      response.status.should.have.been.calledOnce;
+      expect(response.status.calledOnce).to.eql(true);
       response.status.should.have.been.calledWith(200);
     });
 
@@ -211,7 +211,7 @@ describe('Users Authentication', () => {
 
       await loginUser(newRequest, response);
 
-      response.status.should.have.been.calledOnce;
+      expect(response.status.calledOnce).to.eql(true);
       response.status.should.have.been.calledWith(500);
     });
 
@@ -235,7 +235,7 @@ describe('Users Authentication', () => {
       sinon.stub(response, 'status').returnsThis();
       await registerUser(newRequest, response);
 
-      response.status.should.have.been.calledOnce;
+      expect(response.status.calledOnce).to.eql(true);
       response.status.should.have.been.calledWith(500);
     });
 

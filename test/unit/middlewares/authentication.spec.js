@@ -20,7 +20,7 @@ describe('VerifyUser', () => {
   describe('generateToken()', () => {
     it('should generate a token', () => {
       token = generateToken(fakePayload, { expiresIn: '1hr' });
-      expect(token).to.exist;
+      expect(token).not.to.eql(undefined);
     });
 
     it('should verify generated token', () => {
@@ -34,7 +34,7 @@ describe('VerifyUser', () => {
 
       verifyToken(request, response, next);
 
-      expect(next.calledOnce).to.be.true;
+      expect(next.calledOnce).to.eql(true);
     });
   });
 
@@ -67,7 +67,7 @@ describe('VerifyUser', () => {
       const verifyTokenResponse = verifyToken(request, response, next);
 
       expect(response.status).to.have.been.calledWith(403);
-      response.json.should.have.been.calledOnce;
+      expect(response.json.calledOnce).to.eql(true);
       expect(verifyTokenResponse).to.equals(errorMsg);
     });
 
@@ -98,7 +98,7 @@ describe('VerifyUser', () => {
       response.status.should.have.been.calledWith(403);
       response.json.should.have.been.calledWith(errorMsg);
       expect(verifyTokenResponse).to.equals(errorMsg);
-      expect(next.calledOnce).to.be.false;
+      expect(next.calledOnce).to.eql(false);
     });
     it('error for expired token', () => {
       const expiredToken = jwt.sign(
@@ -123,7 +123,7 @@ describe('VerifyUser', () => {
       // wait 5seconds after token has expired
       setTimeout((done) => {
         verifyToken(request, response, next);
-        expect(next.calledOnce).to.be.false;
+        expect(next.calledOnce).to.eql(false);
         response.status.should.have.been.calledWith(403);
         done();
       }, 5000);
