@@ -1,0 +1,13 @@
+{
+  "presets": [
+    "stage-2",
+    [
+      "env", {
+        "targets": {
+          "node": "10.13.0"
+        }
+      }
+    ]
+  ],
+  "plugins": ["transform-object-rest-spread", "add-module-exports"]
+}

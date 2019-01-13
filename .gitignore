@@ -34,3 +34,17 @@ node_modules
 # Optional REPL history
 .node_repl_history
 
+# custom
+.env
+
+# Transpiled folder
+dist/
+
+# test coverage data
+.nyc_output/
+
+# application logs
+applicationLogs/
+
+#vscode
+.vscode

@@ -1,3 +1,7 @@
+
+[![Reviewed by Hound](https://img.shields.io/badge/Reviewed_by-Hound-8E64B0.svg)](https://houndci.com) [![Build Status](https://travis-ci.org/andela/balder-ah-backend.svg?branch=staging)](https://travis-ci.org/andela/balder-ah-backend) [![Coverage Status](https://coveralls.io/repos/github/andela/balder-ah-backend/badge.svg?branch=staging)](https://coveralls.io/github/andela/balder-ah-backend?branch=staging)
+
+
 Authors Haven - A Social platform for the creative at heart.
 =======
 
