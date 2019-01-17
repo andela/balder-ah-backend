@@ -21,8 +21,10 @@ class FavoriteArticleController {
     try {
       const articleId = (await ArticleModel.queryForArticle(slug)).id;
       await FavoriteModelHelper.favoriteArticle(articleId, userId);
-
-      response.redirect(`/api/articles/${slug}`);
+      return response.status(200).json({
+        message: 'Article favorited successully',
+        favorited: true
+      });
     } catch (error) {
       logTracker(error);
       response.status(500).json(errorResponse([errorMessage]));
@@ -41,7 +43,10 @@ class FavoriteArticleController {
     try {
       const articleId = (await ArticleModel.queryForArticle(slug)).id;
       await FavoriteModelHelper.unFavoriteArticle(articleId, userId);
-      response.redirect(`/api/articles/${slug}`);
+      return response.status(200).json({
+        message: 'Article unfavorited successully',
+        favorited: false
+      });
     } catch (error) {
       logTracker(error);
       response.status(500).json(errorResponse([errorMessage]));

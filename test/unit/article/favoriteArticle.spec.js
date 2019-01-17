@@ -39,9 +39,9 @@ describe('Test for favoriting articles', () => {
       .set('Authorization', data.token);
 
     expect(response.status).to.eql(200);
-    expect(response.body).to.have.property('getOneArticle');
-    expect(response.body.getOneArticle.favoritesCount).to.eql(1);
-    expect(response.body.getOneArticle.favorited).to.eql(true);
+    expect(response.body)
+      .to.have.property('message')
+      .eql('Article favorited successully');
   });
 
   it('should unfavorite an article', async () => {
@@ -51,9 +51,9 @@ describe('Test for favoriting articles', () => {
       .set('Authorization', data.token);
 
     expect(response.status).to.eql(200);
-    expect(response.body).to.have.property('getOneArticle');
-    expect(response.body.getOneArticle.favoritesCount).to.eql(0);
-    expect(response.body.getOneArticle.favorited).to.eql(false);
+    expect(response.body)
+      .to.have.property('message')
+      .eql('Article unfavorited successully');
   });
 
   it('should not favorite an article if unauthenticated', async () => {
