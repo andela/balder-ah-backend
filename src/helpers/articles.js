@@ -126,7 +126,7 @@ class ArticleModel {
    */
   static async update(request, response, data, slug) {
     const {
-      title, description, body, tags
+      title, description, body, tags, imgUrl,
     } = request.body;
     try {
       const updatedData = {};
@@ -138,6 +138,9 @@ class ArticleModel {
       }
       if (body) {
         updatedData.body = body;
+      }
+      if (imgUrl) {
+        updatedData.imgUrl = imgUrl;
       }
       const tagResponse = await TagHelpers.addNewTag(tags);
       const updatedArticle = await Article.update(updatedData, {

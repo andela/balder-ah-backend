@@ -19,6 +19,7 @@ import {
   updateArticle,
   inCompleteArticle,
   badTitle,
+  badImgUrl,
   badDescription,
   rate2,
   rate4,
@@ -126,16 +127,30 @@ describe('Test for article', () => {
       expect(response.body.newArticle.readtime).to.be.equal('4 mins');
     });
 
+    it('should not post a new article with wrong image url', async () => {
+      const response = await request
+        .post(articlesEndpoint)
+        .set('Authorization', firstUserToken)
+        .send(badImgUrl);
+
+      expect(response.status).to.equal(400);
+      expect(response.body.errors)
+        .to.be.an('object')
+        .to.have.property('body')
+        .to.contain('please enter a valid image URL');
+    });
+
     it('should not post a new article with low title length', async () => {
       const response = await request
         .post(articlesEndpoint)
         .set('Authorization', firstUserToken)
         .send(badTitle);
 
-      expect(response.body)
-        .to.have.property('message')
-        .eql('Please enter characters between 3 and 50');
       expect(response.status).to.equal(400);
+      expect(response.body.errors)
+        .to.be.an('object')
+        .to.have.property('body')
+        .to.contain('Title characters should be between 3 and 50');
     });
 
     it('should not post a new article with low description length', async () => {
@@ -144,10 +159,11 @@ describe('Test for article', () => {
         .set('Authorization', firstUserToken)
         .send(badDescription);
 
-      expect(response.body)
-        .to.have.property('message')
-        .eql('Please enter characters between 5 and 100');
       expect(response.status).to.equal(400);
+      expect(response.body.errors)
+        .to.be.an('object')
+        .to.have.property('body')
+        .to.contain('Description characters should be between 3 and 50');
     });
 
     it('should not post a new article with an unknown user', async () => {
@@ -165,9 +181,10 @@ describe('Test for article', () => {
         .set('Authorization', firstUserToken)
         .send(inCompleteArticle);
 
-      expect(response.body.status).to.be.equal('Fail');
-      expect(response.status).to.equal(400);
-      expect(response.body.message).to.be.deep.equals('All fields are required');
+      expect(response.body.errors)
+        .to.be.an('object')
+        .to.have.property('body')
+        .to.contain('The title, description and the article body are required');
     });
 
     describe('tests for article ratings', () => {
@@ -298,9 +315,10 @@ describe('Test for article', () => {
           .post(articlesEndpoint)
           .set('Authorization', firstUserToken)
           .send(noTagsArticle);
-        expect(response.body.status).to.be.equal('Fail');
-        expect(response.status).to.equal(400);
-        expect(response.body.message).to.be.deep.equals('Please add a tags field');
+        expect(response.body.errors)
+          .to.be.an('object')
+          .to.have.property('body')
+          .to.contain('Please add a tags field');
       });
 
       it('should not post an article with a wrong type of tags input', async () => {
@@ -308,18 +326,10 @@ describe('Test for article', () => {
           .post(articlesEndpoint)
           .set('Authorization', firstUserToken)
           .send(wrongTagsInputArticle);
-        expect(response.body.status).to.be.equal('Fail');
-        expect(response.status).to.equal(400);
-        expect(response.body.message).to.be.deep.equals('Please tags should be an array of tags');
-      });
-      it('should not post an article with empty string of tags', async () => {
-        const response = await request
-          .post(articlesEndpoint)
-          .set('Authorization', firstUserToken)
-          .send(emptyStringTagsInput);
-        expect(response.body.status).to.be.equal('Fail');
-        expect(response.status).to.equal(400);
-        expect(response.body.message).to.be.deep.equals('Please all tags should be strings');
+        expect(response.body.errors)
+          .to.be.an('object')
+          .to.have.property('body')
+          .to.contain('Please all tags should be strings');
       });
 
       it('should not post an article with empty string of tags', async () => {
@@ -327,9 +337,21 @@ describe('Test for article', () => {
           .post(articlesEndpoint)
           .set('Authorization', firstUserToken)
           .send(emptyStringTagsInput);
-        expect(response.body.status).to.be.equal('Fail');
-        expect(response.status).to.equal(400);
-        expect(response.body.message).to.be.deep.equals('Please all tags should be strings');
+        expect(response.body.errors)
+          .to.be.an('object')
+          .to.have.property('body')
+          .to.contain('Please all tags should be strings');
+      });
+
+      it('should not post an article with empty string of tags', async () => {
+        const response = await request
+          .post(articlesEndpoint)
+          .set('Authorization', firstUserToken)
+          .send(emptyStringTagsInput);
+        expect(response.body.errors)
+          .to.be.an('object')
+          .to.have.property('body')
+          .to.contain('Please all tags should be strings');
       });
 
       it('should not get articles when page is not a number', async () => {

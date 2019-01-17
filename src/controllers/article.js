@@ -27,7 +27,8 @@ class ArticleController {
       title,
       description,
       body,
-      tags
+      tags,
+      imgUrl,
     } = request.body;
     const userId = request.userData.payload.id;
     try {
@@ -38,7 +39,8 @@ class ArticleController {
         title,
         description,
         body,
-        userId
+        userId,
+        imgUrl
       });
       await newArticle.setTags(tagResponse);
       NotificationsController.newArticle(userId);
