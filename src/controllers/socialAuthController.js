@@ -131,22 +131,12 @@ class SocialAuthController {
    * @memberof SocialAuthController
    */
   static getToken(request, response) {
-    const { id, username, isNewUser } = request.user;
+    const { id, username } = request.user;
     const payload = { id, username };
     const time = {};
     time.expiresIn = '240h';
     const token = generateToken(payload, time);
-
-    if (isNewUser) {
-      return response.status(201).json({
-        message: 'Signed up successfully',
-        token
-      });
-    }
-    return response.status(200).json({
-      message: `Welcome back ${username}`,
-      token
-    });
+    return response.redirect(`${process.env.CLIENT_APP_URL}/social?token=${token}`);
   }
 }
 

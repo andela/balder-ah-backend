@@ -74,51 +74,7 @@ describe('Social Login', () => {
         twitterCallbackData.profile,
         twitterCallbackData.done
       );
-
       expect(twitterUserDetails).to.eql(undefined);
-    });
-  });
-
-  describe('get token for social auth', () => {
-    const newUserRequest = {
-      user: {
-        id: 21,
-        username: 'somebody',
-        isNewUser: true
-      }
-    };
-
-    const existingUserRequest = {
-      user: {
-        id: 21,
-        username: 'somebody',
-        isNewUser: false
-      }
-    };
-
-    const response = {
-      status() {
-        return this;
-      },
-      json(obj) {
-        return obj;
-      }
-    };
-
-    it('should successfully provide JWT for social signup', async () => {
-      const userDetails = SocialAuthController.getToken(newUserRequest, response);
-
-      expect(userDetails).to.be.an('object');
-      expect(userDetails.token).to.be.a('string');
-      expect(userDetails.message).to.eql('Signed up successfully');
-    });
-
-    it('should successfully provide JWT for social login', async () => {
-      const userDetails = SocialAuthController.getToken(existingUserRequest, response);
-
-      expect(userDetails).to.be.an('object');
-      expect(userDetails.token).to.be.a('string');
-      expect(userDetails.message).to.contain('Welcome back');
     });
   });
 });

@@ -13,7 +13,7 @@ const sendgrid = (toEmail, fromEmail, hostUrl, token) => {
     to: `${toEmail}`,
     subject: 'noreply',
     text: 'Email reset link',
-    html: `<a href='#'>follow the link to reset your password${hostUrl}/${token}</a>`
+    html: `<a href=${hostUrl}/${token}>Click here to reset your password</a>`
   };
   return sgMail.send(email);
 };
