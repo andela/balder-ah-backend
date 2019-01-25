@@ -3,6 +3,7 @@ import ArticleModel from '../helpers/articles';
 import { articleAverageRating } from './ratingController';
 import TagHelpers from '../helpers/tagHelpers';
 import FavoriteModelHelper from '../helpers/favorite';
+import BookmarkModel from '../helpers/bookmarkModel';
 import { hasReadArticle } from './statisticsController';
 import logTracker from '../../logger/logTracker';
 import NotificationsController from './notificationsController';
@@ -69,6 +70,7 @@ class ArticleController {
   static async getAllArticles(request, response) {
     try {
       const { page } = request.query;
+      const { isLoggedIn } = request;
       let allArticles = await ArticleModel.getAllArticle(page);
       if (!allArticles.length) {
         return response.status(404).json({
@@ -76,12 +78,18 @@ class ArticleController {
           message: 'No article found'
         });
       }
-      allArticles = allArticles.map((article) => {
+      allArticles = await Promise.all(allArticles.map(async (article) => {
         article = article.toJSON();
         article.tags = article.tags.map(tagname => tagname.name);
+
         article.favoritesCount = article.favoritesCount.length;
+
+        article.bookmarked = isLoggedIn ? await BookmarkModel
+          .hasBeenBookmarked(article.id, request.userData.payload.id)
+          : false;
+
         return article;
-      });
+      }));
       return response.status(200).json({
         status: 'Success',
         message: 'All articles found successfully',
@@ -132,6 +140,11 @@ class ArticleController {
 
       getOneArticle.tags = getOneArticle.tags.map(tagname => tagname.name);
       getOneArticle.favoritesCount = getOneArticle.favoritesCount.length;
+
+      getOneArticle.bookmarked = isLoggedIn ? await BookmarkModel
+        .hasBeenBookmarked(getOneArticle.id, request.userData.payload.id)
+        : false;
+
       getOneArticle.favorited = isLoggedIn ? await FavoriteModelHelper
         .hasBeenFavorited(getOneArticle.id, request.userData.payload.id)
         : false;

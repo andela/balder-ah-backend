@@ -30,10 +30,16 @@ class BookmarkController {
   static async getAllBookmark(request, response) {
     try {
       const userId = request.userData.payload.id;
-      const bookmarks = await BookmarkModel.getBookmarks(userId);
+      let bookmarks = await BookmarkModel.getBookmarks(userId);
       if (!bookmarks.length) {
         return response.status(404).json({ message: 'No bookmark available' });
       }
+      bookmarks = bookmarks.map((bookmark) => {
+        bookmark = bookmark.toJSON();
+        bookmark.Article.tags = bookmark.Article.tags.map(tagname => tagname.name);
+        return bookmark;
+      });
+
       return response.status(200).json({
         status: 'Success',
         message: 'All bookmarks retrieved',

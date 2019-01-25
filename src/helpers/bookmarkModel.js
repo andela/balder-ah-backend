@@ -2,7 +2,7 @@ import Models from '../db/models';
 import ArticleModel from './articles';
 import errorResponse from '.';
 
-const { Article, Bookmark } = Models;
+const { Article, Bookmark, User } = Models;
 
 /**
  * @description class representing Bookmark Helpers
@@ -68,7 +68,21 @@ class BookmarkModel {
             'title',
             'description',
             'imgUrl',
-            'createdAt'
+            'createdAt',
+          ],
+          include: [
+            {
+              model: User,
+              as: 'author',
+              attributes: ['username']
+            },
+            {
+              association: 'tags',
+              attributes: ['name'],
+              through: {
+                attributes: []
+              }
+            }
           ]
         }
       ]
@@ -90,6 +104,19 @@ class BookmarkModel {
       }
     });
     return foundBookmark;
+  }
+
+  /**
+   * @static
+   * @param {number} articleId - article id to check
+   * @param {number} userId - user id who's checking
+   * @returns {Boolean} - true if user has bookmarked the article
+   */
+  static async hasBeenBookmarked(articleId, userId) {
+    const bookmarkExists = await Bookmark.findOne({
+      where: { articleId, userId }
+    });
+    return !!bookmarkExists;
   }
 
   /**
