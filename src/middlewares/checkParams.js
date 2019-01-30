@@ -19,7 +19,7 @@ const paramsChecker = {
     const { id } = request.params;
     const validBookmark = await Bookmark.findOne({
       where: {
-        id
+        articleId: id,
       }
     });
     if (!validBookmark) {

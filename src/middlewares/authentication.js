@@ -135,7 +135,7 @@ class VerifyUser {
     const { id } = request.params;
     const findArticle = await Bookmark.findOne({
       where: {
-        id
+        articleId: id,
       }
     });
     const { userId } = findArticle.dataValues;

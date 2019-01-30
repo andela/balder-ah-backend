@@ -65,6 +65,7 @@ class BookmarkModel {
         {
           model: Article,
           attributes: [
+            'id',
             'title',
             'description',
             'imgUrl',
@@ -100,7 +101,7 @@ class BookmarkModel {
   static async getBookmarkById(id) {
     const foundBookmark = await Bookmark.findOne({
       where: {
-        id
+        articleId: id,
       }
     });
     return foundBookmark;
