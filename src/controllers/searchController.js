@@ -29,8 +29,20 @@ class SearchController {
           {
             model: Article,
             as: 'articles',
-            attributes: ['slug', 'title', 'description', 'body', 'imgUrl']
-          }
+            attributes: ['slug', 'title', 'description', 'body', 'imgUrl'],
+            include: [
+              {
+                model: Tag,
+                as: 'tags',
+                attributes: ['name']
+              },
+              {
+                model: User,
+                as: 'author',
+                attributes: ['id', 'username', 'email', 'image']
+              },
+            ]
+          },
         ],
         attributes: ['id', 'username', 'bio', 'email', 'image']
       });
@@ -41,7 +53,7 @@ class SearchController {
         return response.status(200).json({
           status: 'Success',
           message: 'Articles found successfully',
-          author
+          articles: author.articles
         });
       }
       return response.status(404).json(errorResponse(['Author not found']));
@@ -78,6 +90,11 @@ class SearchController {
             model: User,
             as: 'author',
             attributes: ['id', 'username', 'email', 'image']
+          },
+          {
+            model: Tag,
+            as: 'tags',
+            attributes: ['name']
           }
         ],
         attributes: ['slug', 'title', 'description', 'body', 'imgUrl', 'readtime']
@@ -115,9 +132,22 @@ class SearchController {
           {
             model: Article,
             as: 'articles',
-            attributes: ['slug', 'title', 'description', 'body', 'imgUrl', 'readtime']
+            attributes: ['slug', 'title', 'description', 'body', 'imgUrl', 'readtime'],
+            include: [
+              {
+                model: Tag,
+                as: 'tags',
+                attributes: ['name']
+              },
+              {
+                model: User,
+                as: 'author',
+                attributes: ['id', 'username', 'email', 'image']
+              },
+            ]
           }
-        ]
+        ],
+        attributes: ['name']
       });
       if (!articles) {
         return response.status(404).json(errorResponse(['No article with such tag found']));
@@ -125,7 +155,7 @@ class SearchController {
       return response.status(200).json({
         status: 'Success',
         message: 'Articles found successfully',
-        articles
+        articles: articles.articles
       });
     } catch (error) {
       logTracker(error);
