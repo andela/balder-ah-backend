@@ -1,5 +1,6 @@
 import Slug from 'slug';
 import ArticleModel from '../helpers/articles';
+import Models from '../db/models';
 import { articleAverageRating } from './ratingController';
 import TagHelpers from '../helpers/tagHelpers';
 import FavoriteModelHelper from '../helpers/favorite';
@@ -8,6 +9,7 @@ import { hasReadArticle } from './statisticsController';
 import logTracker from '../../logger/logTracker';
 import NotificationsController from './notificationsController';
 
+const { Article } = Models;
 const errorMessage = 'Could not complete action at this time';
 
 /**
@@ -25,11 +27,7 @@ class ArticleController {
    */
   static async createArticle(request, response) {
     const {
-      title,
-      description,
-      body,
-      tags,
-      imgUrl,
+      title, description, body, tags, imgUrl
     } = request.body;
     const userId = request.userData.payload.id;
     try {
@@ -48,7 +46,7 @@ class ArticleController {
       return response.status(201).json({
         status: 'Success',
         message: 'Article created successfully',
-        newArticle,
+        newArticle
       });
     } catch (error) {
       logTracker(error);
@@ -78,22 +76,28 @@ class ArticleController {
           message: 'No article found'
         });
       }
+
       allArticles = await Promise.all(allArticles.map(async (article) => {
         article = article.toJSON();
         article.tags = article.tags.map(tagname => tagname.name);
 
         article.favoritesCount = article.favoritesCount.length;
 
-        article.bookmarked = isLoggedIn ? await BookmarkModel
-          .hasBeenBookmarked(article.id, request.userData.payload.id)
+        article.bookmarked = isLoggedIn
+          ? await BookmarkModel.hasBeenBookmarked(article.id, request.userData.payload.id)
           : false;
 
         return article;
       }));
+      const allTheArticles = await Article.count();
+      const pageCount = Math.ceil(allTheArticles / 10);
+
       return response.status(200).json({
         status: 'Success',
         message: 'All articles found successfully',
-        allArticles
+        allArticles,
+        allTheArticles,
+        pageCount
       });
     } catch (error) {
       logTracker(error);
@@ -141,12 +145,12 @@ class ArticleController {
       getOneArticle.tags = getOneArticle.tags.map(tagname => tagname.name);
       getOneArticle.favoritesCount = getOneArticle.favoritesCount.length;
 
-      getOneArticle.bookmarked = isLoggedIn ? await BookmarkModel
-        .hasBeenBookmarked(getOneArticle.id, request.userData.payload.id)
+      getOneArticle.bookmarked = isLoggedIn
+        ? await BookmarkModel.hasBeenBookmarked(getOneArticle.id, request.userData.payload.id)
         : false;
 
-      getOneArticle.favorited = isLoggedIn ? await FavoriteModelHelper
-        .hasBeenFavorited(getOneArticle.id, request.userData.payload.id)
+      getOneArticle.favorited = isLoggedIn
+        ? await FavoriteModelHelper.hasBeenFavorited(getOneArticle.id, request.userData.payload.id)
         : false;
 
       getOneArticle.articleRatingStar = await articleAverageRating(request);

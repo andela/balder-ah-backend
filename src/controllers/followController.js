@@ -58,7 +58,7 @@ class FollowController {
   }
 
   /**
-   * @description Handles the unfollow feature
+   * @description Handles the unfollowing a user
    * @param {object} request - Request object
    * @param {object} response - Response object
    * @returns {object} An object containing all the data related to the unfollowed user
@@ -98,7 +98,7 @@ class FollowController {
   }
 
   /**
-   * @description Handles getting all users a user is following
+   * @description Handles getting all users following a particular user
    * @param {object} request - Request object
    * @param {object} response - Response object
    * @returns {Array} An array of object containing required user data
@@ -113,7 +113,7 @@ class FollowController {
         }
       });
       if (foundUser) {
-        const userId = request.userData.payload.id;
+        const userId = foundUser.id;
         const user = await Follow.findAndCountAll({
           where: {
             followerId: userId
@@ -164,7 +164,7 @@ class FollowController {
         }
       });
       if (foundUser) {
-        const userId = request.userData.payload.id;
+        const userId = foundUser.id;
         const user = await Follow.findAndCountAll({
           where: {
             userId

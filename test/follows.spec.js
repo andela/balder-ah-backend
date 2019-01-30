@@ -175,7 +175,7 @@ describe('Test for follows', () => {
 
     it('Should allow a user unfollow another user', async () => {
       const response = await request
-        .delete('/api/profiles/ogidan/unfollow')
+        .post('/api/profiles/ogidan/unfollow')
         .set('Authorization', firstUserToken);
       expect(response).to.have.status(200);
       expect(response.body)
@@ -184,7 +184,7 @@ describe('Test for follows', () => {
     });
     it('Should allow user follow another user', async () => {
       const response = await request
-        .delete('/api/profiles/emkay/unfollow')
+        .post('/api/profiles/emkay/unfollow')
         .set('Authorization', secondUserToken);
       expect(response).to.have.status(200);
       expect(response.body)
@@ -193,7 +193,7 @@ describe('Test for follows', () => {
     });
     it('Should allow user follow another user', async () => {
       const response = await request
-        .delete('/api/profiles/ogidan/unfollow')
+        .post('/api/profiles/ogidan/unfollow')
         .set('Authorization', thirdUserToken);
       expect(response).to.have.status(200);
       expect(response.body)
@@ -202,19 +202,19 @@ describe('Test for follows', () => {
     });
     it('Should not allow a user unfollow another user multiple times', async () => {
       const response = await request
-        .delete('/api/profiles/ogidan/unfollow')
+        .post('/api/profiles/ogidan/unfollow')
         .set('Authorization', firstUserToken);
       expect(response).to.have.status(400);
     });
     it('Should not allow a user unfollow themself', async () => {
       const response = await request
-        .delete('/api/profiles/emkay/unfollow')
+        .post('/api/profiles/emkay/unfollow')
         .set('Authorization', firstUserToken);
       expect(response).to.have.status(409);
     });
     it('Should not allow a user unfollow an unknown user', async () => {
       const response = await request
-        .delete('/api/profiles/fibonacci/unfollow')
+        .post('/api/profiles/fibonacci/unfollow')
         .set('Authorization', firstUserToken);
       expect(response).to.have.status(404);
     });

@@ -25,6 +25,6 @@ profileRouter.get(
 );
 profileRouter.get('/profiles', verifyToken, getAllProfiles);
 profileRouter.post('/profiles/:username/follow', verifyToken, checkUsernameParam, followUser);
-profileRouter.delete('/profiles/:username/unfollow', verifyToken, checkUsernameParam, unFollowUser);
+profileRouter.post('/profiles/:username/unfollow', verifyToken, checkUsernameParam, unFollowUser);
 
 export default profileRouter;
