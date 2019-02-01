@@ -45,7 +45,9 @@ class UserProfileController {
           bio: foundUser.bio,
           image: foundUser.image,
           authorRating: rating,
-          articles: foundUser.articles
+          articles: foundUser.articles,
+          emailNotification: foundUser.emailNotifications,
+          appNotification: foundUser.appNotifications
         };
         return response.status(200).json({
           status: 'Success',
