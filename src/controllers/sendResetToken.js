@@ -23,7 +23,7 @@ class SendResetToken {
    *
    */
   static async resetToken(request, response) {
-    const { HOST_URL, NO_REPLY_MAIL } = process.env;
+    const { FRONT_END_DEV_URL, NO_REPLY_MAIL } = process.env;
     try {
       const { email } = request.body;
       if (email.trim().length < 1) {
@@ -47,11 +47,10 @@ class SendResetToken {
       const payload = { id, email, username };
       const time = { expiresIn: '24hr' };
       const userToken = generateToken({ payload }, time);
-      sendgrid(userData.email, NO_REPLY_MAIL, HOST_URL, userToken);
+      sendgrid(userData.email, NO_REPLY_MAIL, FRONT_END_DEV_URL, userToken);
       response.status(200).json({
         status: 'Success',
         message: 'Password reset link has been sent to your mail',
-        userToken
       });
     } catch (error) {
       logTracker(error);
