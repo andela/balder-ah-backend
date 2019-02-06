@@ -187,9 +187,12 @@ class FollowController {
           });
         }
         const followerList = user.rows.map(follow => follow.myFollowers);
+        const followerId = request.userData.payload.id;
+        const checkIsFollowing = followerList.filter(arr => arr.id === followerId);
         response.status(200).json({
           followerCount: user.count,
-          follower: followerList
+          follower: followerList,
+          isFollowing: checkIsFollowing.length > 0
         });
       } else {
         return response.status(404).json(errorResponse(['User not found']));
